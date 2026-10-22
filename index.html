@@ -147,7 +147,7 @@ const SPECIES=RAW.map(([name,rarity,life,flavor],i)=>{
     legs:r()<.6};
 });
 const STAGES=["Egg","Baby","Child","Teen","Adult"];
-const STAGE_AT=[0,.03,.18,.42,.70]; // fraction of lifespan
+const STAGE_AT=[0,0,.18,.42,.70]; // fraction of lifespan
 const VARIANTS={radiant:{n:"Radiant",d:"Raised with tons of love: glowing and confident."},classic:{n:"Classic",d:"A balanced, happy upbringing."},wild:{n:"Wild",d:"A bit scruffy and independent."}};
 
 // ---------- DRAW ----------
@@ -240,9 +240,9 @@ function save(){localStorage.setItem(KEY,JSON.stringify(S))}
 function newPet(spId){const sp=SPECIES[spId];const r=Math.random;
   return{id:S?S.nextId++:0,sp:spId,nick:sp.name,born:S?S.gameNow:Date.now(),
     life:sp.life*DAY*(0.85+r()*0.3), hunger:80,happy:80,energy:90,clean:90,health:100,
-    sleeping:false,care:0,careN:0,variant:null,stage:0,lastAct:{}}}
+    sleeping:false,care:0,careN:0,variant:null,stage:0,lastAct:{},hatchAt:Date.now()+60000}}
 // ---------- SIM ----------
-function stageOf(p){const f=(S.gameNow-p.born)/p.life;let st=0;STAGE_AT.forEach((a,i)=>{if(f>=a)st=i});return st}
+function stageOf(p){if(p.stage===0&&Date.now()<(p.hatchAt||0))return 0;const f=(S.gameNow-p.born)/p.life;let st=1;STAGE_AT.forEach((a,i)=>{if(i>0&&f>=a)st=i});return st}
 function step(p,dtH){ // advance pet by dtH game hours
   if(p.stage===0){return}
   const sleepMul=p.sleeping?.35:1;
@@ -362,7 +362,7 @@ function viewHome(){
   const say=p.stage===0?"The egg wiggles... 🥚":p.sleeping?"Zzz...":m==="sick"?"I don't feel so good...":m==="sad"?"I need some attention!":pick(rng(Math.floor(Date.now()/8000)+p.id),["I love you!","Let's play!","Snacks?","*happy alien noises*","Look at the stars!","Bloop!"]);
   return tabs+`<div class="stage ${p.sleeping?'sleep':''}">${starsHTML(30)}<div class="bub">${say}</div><div class="ground"></div>${petSVG(sp,p.stage,p.variant,m,"pet")}</div>
   <div class="card"><div class="row" style="justify-content:space-between"><div><b style="font-size:17px">${p.nick}</b> <span class="tag t-${sp.rarity}">${sp.rarity}</span><div class="muted">${p.variant?VARIANTS[p.variant].n+" ":""}${STAGES[p.stage]} ${sp.name} · age ${fmtDur(age)} / ~${fmtDur(p.life)}</div></div><button class="btn ghost" style="padding:6px 10px;font-size:12px" onclick="rename()">✏️</button></div>
-  <div class="muted" style="margin-top:4px">${p.ready?"Ready to move out!":p.stage<4?"Next stage ("+STAGES[p.stage+1]+") in "+fmtDur(nextStage):"Moves out in "+fmtDur(nextStage)}</div>
+  <div class="muted" style="margin-top:4px">${p.ready?"Ready to move out!":p.stage===0?"Hatching in "+Math.max(0,Math.ceil(((p.hatchAt||0)-Date.now())/1000))+"s":p.stage<4?"Next stage ("+STAGES[p.stage+1]+") in "+fmtDur(nextStage):"Moves out in "+fmtDur(nextStage)}</div>
   ${p.stage>0?`<div class="stats" style="margin-top:9px">${STATS.map(k=>`<div>${STAT_UI[k][0]} ${STAT_UI[k][1]} <span style="float:right">${Math.round(p[k])}</span><div class="bar"><i style="width:${p[k]}%;background:${p[k]<25?'#ff4d6d':STAT_UI[k][2]}"></i></div></div>`).join("")}</div>
   <div class="muted" style="margin-top:8px">Care quality: <b>${Math.round(quality(p))}</b>/100 ${p.stage<3?"(decides its evolution at Teen)":""}</div>`:`<p class="muted">${sp.flavor}</p>`}</div>
   ${p.ready?`<button class="btn gold" style="width:100%;margin-bottom:10px" onclick="moveOut()">🚀 Help ${p.nick} move out!</button>`:""}
