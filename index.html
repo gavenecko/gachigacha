@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#1b1440">
-<title>GachiGacha</title>
+<title>GachiGacha</title><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:#0d0a24;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overscroll-behavior:none}
@@ -151,6 +151,40 @@ h3{margin:4px 0 8px}
 .hole .mt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:52px;transform:translateY(100%);transition:transform .12s}
 .hole .mt.up{transform:none}
 .big{font-size:44px;font-weight:800;margin:6px 0}
+/* ---- v3 ---- */
+.traits{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{background:#ffffff14;border:1px solid #ffffff26;border-radius:12px;padding:3px 8px;font-size:11.5px;color:#fff}
+.chip.big2{font-size:13px;padding:6px 10px}
+.deco{position:absolute;transform:translateX(-50%);z-index:1;pointer-events:none;line-height:1;filter:drop-shadow(0 3px 3px #0007);user-select:none;-webkit-user-select:none}
+.deco.fly{animation:dfly 4s ease-in-out infinite}
+@keyframes dfly{50%{translate:0 -6px}}
+.deco.rug{width:130px;height:30px;border-radius:50%;opacity:.9;z-index:0;filter:none}
+.deco-edit .deco{pointer-events:auto;outline:2px dashed #ffd86baa;outline-offset:2px;border-radius:10px;touch-action:none;cursor:grab}
+.deco-edit #walker{pointer-events:none;opacity:.55}
+.stage .ground{z-index:0}
+.shopi{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid #ffffff10}
+.shopi .e{font-size:32px;width:44px;text-align:center}
+.swatch{display:inline-block;width:40px;height:16px;border-radius:50%}
+.walls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:6px}
+.wall{border:2px solid #ffffff22;border-radius:12px;height:70px;color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 3px #000;display:flex;align-items:flex-end;justify-content:center;padding:4px}
+.wall.on{border-color:#ffd86b;box-shadow:0 0 10px #ffd86b88}
+.quest{display:flex;gap:10px;align-items:center;background:#ffffff0d;border-radius:14px;padding:8px;margin:7px 0;text-align:left}
+.quest .e{font-size:26px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
+.cd{background:#ffffff10;border-radius:10px;padding:5px 1px;font-size:10px;text-align:center;border:1px solid #ffffff1a}
+.cd b{display:block;font-size:18px}.cd small{display:block;color:#b9b3dd;font-size:9px}
+.cd.got{opacity:.5;background:#8dff8a22}.cd.now{border-color:#ffd86b;box-shadow:0 0 8px #ffd86b88}
+.tog{border:1px solid #ffffff33;background:#ffffff14;color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;min-width:60px}
+.tog.on{background:#8dff8a;color:#032}
+nav button{position:relative;font-size:10px}nav button b{font-size:19px}
+nav button.dot::after{content:"";position:absolute;top:6px;right:22%;width:9px;height:9px;border-radius:50%;background:#ff4d6d;box-shadow:0 0 6px #ff4d6d}
+.rground{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#8a86b8,#4a4680);border-top:3px solid #c9c6ef;border-radius:30% 30% 0 0/20px 20px 0 0}
+.lane{position:absolute;top:0;bottom:0;border-right:1px solid #ffffff14}
+.lpad{position:absolute;left:12%;right:12%;height:40px;border:3px solid;border-radius:20px;opacity:.5;transition:opacity .1s,transform .1s}
+.lpad.lit{opacity:1;transform:scale(1.1);background:#ffffff33}
+.hline{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff7ad9,#ffd86b,#7af0ff);box-shadow:0 0 12px #fff}
+.bmsg{position:absolute;width:100%;text-align:center;font-weight:800;font-size:20px}
+.bmsg.pop{animation:pop .4s cubic-bezier(.3,1.8,.5,1)}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -447,7 +481,7 @@ function viewHome(){
   const age=S.gameNow-p.born,m=mood(p);
   const tabs=`<div class="tabs">${S.pets.map((q,i)=>`<button class="${i===cur?'on':''}" onclick="cur=${i};render()">${petSVG(SPECIES[q.sp],q.stage,q.variant,mood(q))}${q.nick}${q.ready?' 🚀':''}</button>`).join("")}</div>`;
   const nextStage=p.stage<4?STAGE_AT[p.stage+1]*p.life-age:p.life-age;
-  const say=p.stage===0?"The egg wiggles... 🥚":p.sleeping?"Zzz...":m==="sick"?"I don't feel so good...":m==="sad"?"I need some attention!":pick(rng(Math.floor(Date.now()/8000)+p.id),["I love you!","Let's play!","Snacks?","*happy alien noises*","Look at the stars!","Bloop!"]);
+  const say=p.stage===0?"The egg wiggles... 🥚":p.sleeping?"Zzz...":m==="sick"?"I don't feel so good...":m==="sad"?"I need some attention!":pick(rng(Math.floor(Date.now()/8000)+p.id),["I love you!","Let's play!","Snacks?","*happy alien noises*","Look at the stars!","Bloop!"].concat(traitLines(p)));
   return tabs+`<div class="stage ${p.sleeping?'sleep':''}">${starsHTML(30)}<div class="bub" id="bub">${say}</div><div class="ground"></div><div id="walker"><div id="flip"><div id="petbox" class="petbox m-${p.stage===0?"egg":m}">${petSVG(sp,p.stage,p.variant,m,"pet")}<div id="dirt"></div></div></div></div></div>
   <div class="card"><div class="row" style="justify-content:space-between"><div><b style="font-size:17px">${p.nick}</b> <span class="tag t-${sp.rarity}">${sp.rarity}</span><div class="muted">${p.variant?VARIANTS[p.variant].n+" ":""}${STAGES[p.stage]} ${sp.name} · age ${fmtDur(age)} / ~${fmtDur(p.life)}</div></div><button class="btn ghost" style="padding:6px 10px;font-size:12px" onclick="rename()">✏️</button></div>
   <div class="muted" id="info" style="margin-top:4px">${p.ready?"Ready to move out!":p.stage===0?"Hatching in "+Math.max(0,Math.ceil(((p.hatchAt||0)-Date.now())/1000))+"s":p.stage<4?"Next stage ("+STAGES[p.stage+1]+") in "+fmtDur(nextStage):"Moves out in "+fmtDur(nextStage)}</div>
@@ -484,8 +518,8 @@ const NAV=[["home","🏠","Nest"],["gacha","🎰","Gacha"],["dex","📖","Dex"],
 function render(){
   $("stars").textContent=S.stars;
   $("clock").textContent=S.speed>1?"⏩"+S.speed+"×":"1×";
-  $("main").innerHTML={home:viewHome,gacha:viewGacha,dex:viewDex,alumni:viewAlumni,set:viewSet}[tab]();
-  $("nav").innerHTML=NAV.map(([k,e,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()"><b>${e}</b>${l}${k==='home'&&S.pets.some(p=>p.ready)?' 🚀':''}</button>`).join("");
+  $("main").innerHTML=viewOf(tab);
+  $("nav").innerHTML=NAV.map(([k,e,l])=>`<button class="${tab===k?'on':''}" data-t="${k}" onclick="tab='${k}';render()"><b>${e}</b>${l}${k==='home'&&S.pets.some(p=>p.ready)?' 🚀':''}</button>`).join("");
 }
 function flush(){if(notes.length){const n=notes.splice(0);toast(n[n.length-1]);}}
 // ================= v2: live nest, animations, interactive care, minigames =================
@@ -625,7 +659,7 @@ function gAnim(cls){const g=$("gpet");if(!g)return;const s=g.firstElementChild;s
 function startGame(id){const def=GAMES.find(g=>g.id===id);
   gameShell(`<div class="gh"><span>${def.e} ${def.n}</span><span>⏱ <span id="gt">--</span> · Score <span id="gs">0</span></span></div><div class="ga" id="ga"></div>`);
   const ga=$("ga"),R=ga.getBoundingClientRect();G={id,def,score:0,over:false,t0:now(),dur:id==="echo"?40000:25000,w:R.width,h:R.height,items:[]};
-  ({catch:gCatch,echo:gEcho,meteor:gMeteor})[id](ga);
+  GFN[id](ga);
   const tick=()=>{if(!G||G.over)return;const left=Math.max(0,G.dur-(now()-G.t0));$("gt").textContent=Math.ceil(left/1000)+"s";$("gs").textContent=G.score;
     if(G.frame)G.frame();if(left<=0){endGame();return}requestAnimationFrame(tick)};requestAnimationFrame(tick)}
 function addScore(n,x,y){G.score=Math.max(0,G.score+n);const r=$("ga").getBoundingClientRect();particle(n>0?"+"+n:""+n,r.left+x,r.top+y,"float",null,1000)}
@@ -667,6 +701,280 @@ function endGame(){if(!G||G.over)return;G.over=true;clearTimeout(G.to);const p=S
    <h2 style="margin:4px">${rank}</h2><div class="big">${sc}</div><div class="muted">points</div>
    <div class="card">💖 +${gain} happiness<br>${stars?`⭐ +${stars} stars`:`⭐ Star reward cooling down — play again a bit later`}<br><span class="muted">⚡ -12 energy</span></div>
    <div class="row" style="justify-content:center"><button class="btn gold" onclick="${p.energy>=15?`startGame('${def.id}')`:`toast('Too tired!')`}">Play again</button><button class="btn" onclick="openPicker()">Other games</button><button class="btn ghost" onclick="closeGame()">Nest</button></div></div>`)},400)}
+
+// ================= v3: sound, decor, more games, traits, notifications, quests =================
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function today(){return new Date().toLocaleDateString("en-CA")}
+function dayDiff(a,b){return Math.round((new Date(b+"T12:00")-new Date(a+"T12:00"))/864e5)}
+let awayMs=0,decoEdit=false;
+function ensure3(){
+  S.audio=Object.assign({sfx:true,music:false,vol:.6},S.audio||{});
+  S.decor=Object.assign({owned:{},placed:[],walls:{default:1},bg:"default",nu:1},S.decor||{});
+  S.notif=Object.assign({on:false},S.notif||{});
+  S.login=Object.assign({last:"",streak:0,claimed:true},S.login||{});
+  S.quests=S.quests||{day:"",list:[]};
+  S.stats3=Object.assign({},S.stats3||{});
+  S.pets.forEach(giveTraits);
+}
+const _load=load;load=function(){_load();awayMs=Math.max(0,Date.now()-(S.last||Date.now()));ensure3();checkLogin();ensureQuests()};
+// ---------- AUDIO ----------
+let AC=null,MG,SG,MuG,musTimer=null,musT=0,musStep=0,musDeg=2;const sfxLast={};
+function audioInit(){if(AC){if(AC.state==="suspended")AC.resume();return}
+  try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+  MG=AC.createGain();MG.connect(AC.destination);SG=AC.createGain();SG.connect(MG);MuG=AC.createGain();
+  const dl=AC.createDelay(),fb=AC.createGain();dl.delayTime.value=.63;fb.gain.value=.3;MuG.connect(MG);MuG.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(MG);
+  setVol();if(S.audio.music)musicStart()}
+function setVol(){if(!AC)return;MG.gain.value=S.audio.vol;SG.gain.value=S.audio.sfx?1:0;MuG.gain.value=S.audio.music?.5:0}
+function tone(f,d,o){o=o||{};if(!AC)return;const t=AC.currentTime+(o.at||0),os=AC.createOscillator(),g=AC.createGain();os.type=o.type||"sine";os.frequency.setValueAtTime(f,t);
+  if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(o.v||.2,t+(o.att||.01));g.gain.exponentialRampToValueAtTime(.0008,t+d);
+  os.connect(g);g.connect(o.dest||SG);os.start(t);os.stop(t+d+.05)}
+let NB=null;function noise(d,o){o=o||{};if(!AC)return;if(!NB){NB=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const a=NB.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1}
+  const t=AC.currentTime+(o.at||0),s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;f.type="bandpass";f.frequency.value=o.f||800;f.Q.value=o.q||1.5;
+  g.gain.setValueAtTime(o.v||.25,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f);f.connect(g);g.connect(SG);s.start(t);s.stop(t+d+.02)}
+const N=s=>440*2**((s-9)/12)/2; // semitone from C4... N(12)=C5
+const ARP=(ns,step,o)=>ns.forEach((s,i)=>tone(N(s),o&&o.d||.25,Object.assign({type:"triangle",v:.16,at:i*step},o||{})));
+function sfx(n,arg){if(!AC||!S.audio.sfx)return;const t=performance.now();if(t-(sfxLast[n]||0)<(n==="bubble"?70:40))return;sfxLast[n]=t;
+  switch(n){
+  case"tap":tone(1320,.05,{type:"triangle",v:.07});break;
+  case"chomp":noise(.08,{f:500,v:.35});tone(180,.09,{type:"square",v:.05,to:110});break;
+  case"bubble":tone(500+Math.random()*700,.13,{to:1500+Math.random()*900,v:.07});break;
+  case"giggle":[0,1,2].forEach(i=>tone(800+i*180+Math.random()*60,.08,{type:"triangle",v:.09,at:i*.07,to:1000+i*200}));break;
+  case"yuck":tone(330,.35,{type:"sawtooth",to:140,v:.06});break;
+  case"sleep":ARP([19,16,12,7],.18,{type:"sine",d:.5,v:.12});break;
+  case"wake":ARP([12,16,19,24],.09,{type:"sine",d:.3,v:.12});break;
+  case"hatch":noise(.12,{f:2500,v:.3});noise(.1,{f:1800,v:.3,at:.15});ARP([12,16,19,24,28],.08,{at:.3,d:.35});break;
+  case"evolve":tone(300,.9,{type:"sine",to:1200,v:.1});ARP([24,28,31,36,40,43],.07,{at:.7,d:.4});break;
+  case"pull":tone(150,1.1,{type:"sawtooth",to:700,v:.04});for(let i=0;i<8;i++)noise(.03,{f:3000,v:.2,at:i*.13});break;
+  case"reveal":{const r=arg||"common";if(r==="common")ARP([12,19],.1);else if(r==="rare")ARP([12,16,19,24],.09);
+    else if(r==="epic"){ARP([12,16,19,24,28,31],.08);for(let i=0;i<6;i++)tone(2000+Math.random()*1500,.15,{v:.04,at:.5+i*.06})}
+    else{ARP([12,12,12,16,19],.12,{type:"square",v:.07,d:.2});[0,4,7,12].forEach(s=>tone(N(s+24),1.4,{type:"triangle",v:.08,at:.65,att:.05}));for(let i=0;i<10;i++)tone(1800+Math.random()*2500,.18,{v:.035,at:.7+i*.07})}break}
+  case"hit":tone(980+Math.random()*120,.09,{type:"triangle",v:.12});break;
+  case"good":ARP([24,31],.05,{d:.12,v:.1});break;
+  case"miss":tone(220,.22,{type:"square",to:90,v:.07});break;
+  case"jump":tone(380,.16,{type:"square",to:880,v:.05});break;
+  case"note":tone(N([12,16,19,24,28][arg%5]),.3,{type:"triangle",v:.15});break;
+  case"win":ARP([12,16,19,24],.1,{d:.4});break;
+  case"lose":ARP([19,16,12],.14,{type:"sine",d:.4});break;
+  case"coin":tone(N(31),.08,{type:"square",v:.06});tone(N(36),.3,{type:"square",v:.06,at:.08});break;
+  case"place":noise(.06,{f:300,v:.3});tone(200,.1,{v:.1});break;
+  }}
+// music: gentle procedural space lullaby (C-Am-F-G, pentatonic melody random walk)
+const PROG=[[0,4,7],[-3,0,4],[-7,-3,0],[-5,-1,2]],PENTA=[0,2,4,7,9,12,14,16,19,21];
+function musicStart(){if(!AC||musTimer)return;musT=AC.currentTime+.15;musStep=0;musTimer=setInterval(musSched,150)}
+function musicStop(){clearInterval(musTimer);musTimer=null}
+function musSched(){if(!AC||AC.state!=="running")return;const B=.45;
+  while(musT<AC.currentTime+.7){const at=Math.max(0,musT-AC.currentTime),bar=Math.floor(musStep/8)%4,st=musStep%8;
+    if(st===0)PROG[bar].forEach(s=>tone(N(s),B*8.5,{type:"sine",v:.045,dest:MuG,at,att:.6}));
+    if(st===0||st===4)tone(N(PROG[bar][0]-12),B*3.5,{type:"sine",v:.05,dest:MuG,at,att:.1});
+    if(Math.random()<(st%2?.35:.8)){musDeg=clamp(musDeg+pick(Math.random,[-2,-1,-1,0,1,1,2]),0,PENTA.length-1);
+      tone(N(PENTA[musDeg]+12),B*1.8,{type:"triangle",v:.05,dest:MuG,at,att:.04});
+      if(Math.random()<.15)tone(N(PENTA[musDeg]+36),.4,{type:"sine",v:.015,dest:MuG,at:at+B/2})}
+    musT+=B;musStep++}}
+document.addEventListener("pointerdown",e=>{audioInit();if(e.target.closest&&e.target.closest("button,.pickc,.it,.shopi button"))sfx("tap")},true);
+document.addEventListener("visibilitychange",()=>{if(!AC)return;if(document.hidden)AC.suspend();else AC.resume()});
+function setAudio(k,v){S.audio[k]=v;save();audioInit();setVol();if(k==="music"){v?musicStart():musicStop()}render()}
+// ---------- TRAITS ----------
+const TRAITS={
+  Glutton:{e:"🍔",d:"Gets hungry 30% faster, but loves every snack (+happiness when fed)",dec:{hunger:1.3},lines:["Is it snack o'clock?","I could eat a whole moon!","*tummy rumbles*"],idle:["i-sit"]},
+  Playful:{e:"🎈",d:"Gets bored 25% faster, extra joy from minigames",dec:{happy:1.25},lines:["Play with me!!","Tag, you're it!","Wheee!"],idle:["i-bounce","i-spin","i-bounce"]},
+  Sleepy:{e:"😴",d:"Tires 30% faster, naps and sits a lot",dec:{energy:1.3},lines:["*yaaawn*","Five more minutes...","Is it naptime?"],idle:["i-sit","i-sit","i-stretch"]},
+  Neat:{e:"🧼",d:"Stays clean 35% longer",dec:{clean:.65},lines:["Is my fur shiny?","Everything in its place!","Spotless!"],idle:["i-spin"]},
+  Shy:{e:"🙈",d:"Lonely 20% slower; quiet and peeks around",dec:{happy:.8},lines:["...hi.","*hides behind a star*","you're nice..."],idle:["i-lookL","i-lookR","i-sit"]},
+  Brave:{e:"🦸",d:"Loses health 40% slower when neglected",dec:{health:.6},lines:["Black holes don't scare me!","Adventure time!","I'll protect you!"],idle:["i-bounce","i-stretch"]},
+  Curious:{e:"🔭",d:"Always exploring; finds favorites twice as easily",dec:{energy:1.1},lines:["What's that over there?","Ooh, a new star!","Why is space so big?"],idle:["i-lookL","i-lookR","i-lookL","i-lookR"]},
+  Sunny:{e:"🌞",d:"Cheerful: happiness and health drain 10% slower",dec:{happy:.9,health:.9},lines:["Today is the best day!","You make me glow!"],idle:["i-bounce"]}};
+const TRAIT_KEYS=Object.keys(TRAITS),IDLE_BASE=IDLES.slice();
+function giveTraits(p){if(p.traits&&p.traits.length)return;const r=rng(p.id*7919+p.sp*13+5);const a=pick(r,TRAIT_KEYS);p.traits=[a];
+  if(r()<.55){const b=pick(r,TRAIT_KEYS);if(b!==a)p.traits.push(b)}p.favFood=Math.floor(r()*FOODS.length);p.favGame=pick(r,GAMES).id;p.knowFood=false;p.knowGame=false}
+const _newPet=newPet;newPet=function(s){const p=_newPet(s);giveTraits(p);return p};
+function traitLines(p){let l=[];(p.traits||[]).forEach(t=>l=l.concat(TRAITS[t].lines));return l}
+function mults(p){const m={hunger:1,happy:1,energy:1,clean:1,health:1};(p.traits||[]).forEach(t=>{const d=TRAITS[t].dec;for(const k in d)m[k]*=d[k]});const dm=decorMults();for(const k in m)m[k]*=dm[k];return m}
+const _step=step;step=function(p,dtH){if(p.stage===0)return _step(p,dtH);const b={};STATS.forEach(k=>b[k]=p[k]);_step(p,dtH);const m=mults(p);
+  STATS.forEach(k=>{if(p[k]<b[k]&&m[k]!==1)p[k]=clamp(b[k]-(b[k]-p[k])*m[k],k==="health"?5:0,100)})};
+function traitHTML(p){if(p.stage===0)return`<div class="traits muted">✨ Personality revealed on hatch</div>`;
+  const f=p.knowFood?FOODS[p.favFood].e:"❓",g=p.knowGame?GAMES.find(x=>x.id===p.favGame).e:"❓";
+  return`<div class="traits">${p.traits.map(t=>`<span class="chip" onclick="toast('${TRAITS[t].e} ${t}: ${TRAITS[t].d}')">${TRAITS[t].e} ${t}</span>`).join("")}<span class="chip" onclick="toast('${p.knowFood?"Favorite food: "+FOODS[p.favFood].n:"Feed different snacks to discover!"}')">Fav food ${f}</span><span class="chip" onclick="toast('${p.knowGame?"Favorite game: "+GAMES.find(x=>x.id===p.favGame).n:"Try different minigames to discover!"}')">Fav game ${g}</span></div>`}
+// ---------- DECOR ----------
+const DECOR=[
+ {id:"couch",e:"🛋️",n:"Cosmo Couch",cat:"Furniture",c:25,sz:46,b:{energy:.92}},{id:"bed",e:"🛏️",n:"Nebula Bed",cat:"Furniture",c:35,sz:48,b:{energy:.88}},
+ {id:"chair",e:"🪑",n:"Orbit Chair",cat:"Furniture",c:12,sz:38},{id:"plush",e:"🧸",n:"Space Teddy",cat:"Furniture",c:20,sz:34,b:{happy:.93}},
+ {id:"tub",e:"🛁",n:"Bubble Tub",cat:"Furniture",c:40,sz:46,b:{clean:.85}},{id:"bowl",e:"🥣",n:"Snack Bowl",cat:"Furniture",c:30,sz:30,b:{hunger:.9}},
+ {id:"fern",e:"🪴",n:"Star Fern",cat:"Plants",c:15,sz:40},{id:"cactus",e:"🌵",n:"Moon Cactus",cat:"Plants",c:12,sz:38},
+ {id:"blossom",e:"🌸",n:"Glow Blossom",cat:"Plants",c:22,sz:32,b:{happy:.95}},{id:"shroom",e:"🍄",n:"Space Shroom",cat:"Plants",c:18,sz:32,b:{health:.9}},
+ {id:"saturn",e:"🪐",n:"Mini Saturn",cat:"Planets",c:35,sz:44,b:{happy:.93},fly:1},{id:"moon",e:"🌙",n:"Pocket Moon",cat:"Planets",c:28,sz:40,b:{energy:.94},fly:1},
+ {id:"earth",e:"🌏",n:"Tiny Earth",cat:"Planets",c:40,sz:40,fly:1},{id:"comet",e:"☄️",n:"Pet Comet",cat:"Planets",c:30,sz:38,fly:1},
+ {id:"lamp",e:"💡",n:"Glow Bulb",cat:"Lights",c:15,sz:32,fly:1},{id:"lantern",e:"🏮",n:"Star Lantern",cat:"Lights",c:22,sz:36,fly:1},
+ {id:"sparkle",e:"✨",n:"Fairy Sparkles",cat:"Lights",c:25,sz:34,b:{happy:.95},fly:1},{id:"candle",e:"🕯️",n:"Calm Candle",cat:"Lights",c:18,sz:30,b:{health:.93}},
+ {id:"rug1",rug:"#ff7ad9,#c56bff",n:"Comet Rug",cat:"Rugs",c:20},{id:"rug2",rug:"#7af0ff,#4a2fa8",n:"Galaxy Rug",cat:"Rugs",c:25,b:{clean:.93}},
+ {id:"rug3",rug:"#ffd86b,#ff5a8a",n:"Sunburst Mat",cat:"Rugs",c:30,b:{happy:.96}}];
+const DI={};DECOR.forEach(d=>DI[d.id]=d);
+const WALLS=[{id:"default",n:"Classic Night",bg:"linear-gradient(#24185a,#3b2477)",c:0},{id:"sunset",n:"Sunset Nebula",bg:"linear-gradient(#3b1450,#c0487a 70%,#ff9a5a)",c:30},
+ {id:"aurora",n:"Aurora Sky",bg:"linear-gradient(#0f2a5e,#1f6f78 60%,#2fb3a5)",c:40},{id:"ocean",n:"Deep Space Ocean",bg:"linear-gradient(#020b2a,#0a3a7a)",c:35},
+ {id:"candy",n:"Candy Cosmos",bg:"linear-gradient(#ff9ad5,#9a7aff 60%,#5ac8ff)",c:50},{id:"void",n:"Starlit Void",bg:"radial-gradient(circle at 50% 30%,#2a1a5e,#000 75%)",c:45}];
+const STATN={hunger:"🍖 hunger",happy:"💖 happiness",energy:"⚡ energy",clean:"🫧 dirt",health:"❤️‍🩹 health loss"};
+const bonusTxt=b=>b?Object.keys(b).map(k=>`${STATN[k]} −${Math.round((1-b[k])*100)}%`).join(", "):"";
+function decorMults(){const m={hunger:1,happy:1,energy:1,clean:1,health:1};if(!S.decor)return m;const seen={};
+  S.decor.placed.forEach(d=>{const it=DI[d.id];if(!it||!it.b||seen[d.id])return;seen[d.id]=1;for(const k in it.b)m[k]*=it.b[k]});for(const k in m)m[k]=Math.max(.72,m[k]);return m}
+function stored(id){return(S.decor.owned[id]||0)-S.decor.placed.filter(d=>d.id===id).length}
+function decorHTML(){return S.decor.placed.map(d=>{const it=DI[d.id];if(!it)return"";
+  return it.rug?`<div class="deco rug" data-u="${d.u}" style="left:${d.x}%;bottom:${d.y}%;background:radial-gradient(ellipse,${it.rug.split(",")[0]} 0 35%,${it.rug.split(",")[1]} 36% 60%,transparent 62%)"></div>`
+   :`<div class="deco ${it.fly?"fly":""}" data-u="${d.u}" style="left:${d.x}%;bottom:${d.y}%;font-size:${it.sz}px">${it.e}</div>`}).join("")}
+function placeDeco(id){if(stored(id)<1)return;if(S.decor.placed.length>=14){toast("Nest is full of decor (14 max)");return}const it=DI[id];
+  S.decor.placed.push({u:S.decor.nu++,id,x:Math.round(12+Math.random()*76),y:it.rug?1:it.fly?Math.round(50+Math.random()*25):Math.round(3+Math.random()*6)});save();sfx("place");qProg("decor");render()}
+function storeAll(){S.decor.placed=[];save();render()}
+function toggleDeco(){decoEdit=!decoEdit;if(decoEdit&&!S.pets.length){decoEdit=false}render()}
+function buyDeco(id){const it=DI[id];if(S.stars<it.c){toast("Not enough stars ⭐");sfx("miss");return}S.stars-=it.c;S.decor.owned[id]=(S.decor.owned[id]||0)+1;sfx("coin");save();
+  if(S.decor.placed.length<14){placeDeco(id);toast(`${it.e||"🧶"} ${it.n} placed in your nest! (Nest → Decorate to move it)`)}else{toast("Bought! It's in storage");render()}}
+function buyWall(id){const w=WALLS.find(x=>x.id===id);if(!S.decor.walls[id]){if(S.stars<w.c){toast("Not enough stars ⭐");sfx("miss");return}S.stars-=w.c;S.decor.walls[id]=1;sfx("coin")}else sfx("place");S.decor.bg=id;save();render();toast("🖼️ Wallpaper: "+w.n)}
+function bgStyle(){const w=WALLS.find(x=>x.id===S.decor.bg)||WALLS[0];return w.id==="default"?"":"background:"+w.bg}
+let DD=null;
+document.addEventListener("pointerdown",e=>{if(!decoEdit)return;const el=e.target.closest&&e.target.closest(".deco");if(!el)return;e.preventDefault();DD={el,u:+el.dataset.u,st:el.parentElement.getBoundingClientRect()};el.style.zIndex=6});
+document.addEventListener("pointermove",e=>{if(!DD)return;const r=DD.st;DD.x=clamp((e.clientX-r.left)/r.width*100,3,97);DD.y=clamp((r.bottom-e.clientY)/r.height*100-8,-30,82);DD.off=e.clientY>r.bottom+12;
+  DD.el.style.left=DD.x+"%";DD.el.style.bottom=DD.y+"%";DD.el.style.opacity=DD.off?.35:1});
+document.addEventListener("pointerup",()=>{if(!DD)return;const D=DD;DD=null;const i=S.decor.placed.findIndex(q=>q.u===D.u);if(i<0)return;
+  if(D.off){S.decor.placed.splice(i,1);toast("📦 Put back in storage")}else if(D.x!=null){S.decor.placed[i].x=Math.round(D.x);S.decor.placed[i].y=Math.round(clamp(D.y,0,82))}sfx("place");save();render()});
+function decoPanel(){const st=DECOR.filter(d=>stored(d.id)>0);const dm=decorMults(),act=Object.keys(dm).filter(k=>dm[k]<1);
+  return`<div class="card"><div class="row" style="justify-content:space-between"><b>🛋️ Decorating</b><button class="btn gold" style="padding:7px 14px" onclick="toggleDeco()">Done</button></div>
+  <div class="muted">Drag items to move them. Drag one below the nest to put it in storage.</div>
+  <div style="margin-top:8px"><b style="font-size:13px">📦 Storage</b> <span class="muted">tap to place</span></div>
+  <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:4px">${st.length?st.map(d=>`<button class="chip big2" onclick="placeDeco('${d.id}')">${d.e||"🧶"} ${d.n} ×${stored(d.id)}</button>`).join(""):'<span class="muted">Empty — buy decor in the 🛍️ Shop</span>'}</div>
+  <div class="muted" style="margin-top:8px">Active bonuses: ${act.length?act.map(k=>`${STATN[k]} −${Math.round((1-dm[k])*100)}%`).join(", "):"none yet"}</div>
+  ${S.decor.placed.length?`<button class="btn ghost" style="margin-top:8px" onclick="storeAll()">Store everything</button>`:""}</div>`}
+function viewShop(){const cats=["Furniture","Plants","Planets","Lights","Rugs"];
+  return`<div class="card"><h3>🛍️ Nebula Mall</h3><div class="muted">Decor is placed in your nest right away. Items with a bonus slow down stat decay while placed (same item doesn't stack; max −28% per stat).</div></div>
+  <div class="card"><b>🖼️ Wallpapers</b><div class="walls">${WALLS.map(w=>`<button class="wall ${S.decor.bg===w.id?"on":""}" style="background:${w.bg}" onclick="buyWall('${w.id}')"><span>${w.n}<br>${S.decor.walls[w.id]?(S.decor.bg===w.id?"✓ In use":"Use"):w.c+"⭐"}</span></button>`).join("")}</div></div>`+
+  cats.map(c=>`<div class="card"><b>${c}</b>${DECOR.filter(d=>d.cat===c).map(d=>`<div class="shopi"><span class="e">${d.rug?`<i class="swatch" style="background:linear-gradient(90deg,${d.rug})"></i>`:d.e}</span><div style="flex:1"><b>${d.n}</b><div class="muted">${d.b?"✨ "+bonusTxt(d.b):"Cosmetic"}${S.decor.owned[d.id]?` · owned ${S.decor.owned[d.id]}`:""}</div></div><button class="btn gold" style="padding:8px 10px" onclick="buyDeco('${d.id}')">${d.c}⭐</button></div>`).join("")}</div>`).join("")}
+// ---------- QUESTS & LOGIN ----------
+const QPOOL=[{t:"feed",g:3,d:"Feed your pets 3 times",e:"🍩"},{t:"clean",g:1,d:"Give a pet a bubble bath",e:"🫧"},{t:"pet",g:5,d:"Pet your pets 5 times",e:"🤚"},
+ {t:"play",g:2,d:"Play 2 minigames",e:"🎮"},{t:"score",g:1,d:"Win a minigame (score 60%+ of max)",e:"🏆"},{t:"sleep",g:1,d:"Tuck a pet in for a nap",e:"💤"},
+ {t:"summon",g:1,d:"Summon an egg from the Gacha",e:"🥚"},{t:"hug",g:1,d:"Send a hug to an alumnus",e:"🤗"},{t:"decor",g:1,d:"Place a decoration in your nest",e:"🛋️"},{t:"feed",g:5,d:"Feed your pets 5 times",e:"🍜"}];
+function ensureQuests(){const d=today();if(S.quests.day===d)return;const r=rng(hash(d));const pool=QPOOL.slice(),list=[];
+  const first=pick(r,pool.filter(q=>q.t==="feed"||q.t==="clean"));list.push(first);pool.splice(pool.indexOf(first),1);
+  while(list.length<3){const q=pick(r,pool);pool.splice(pool.indexOf(q),1);if(!list.some(x=>x.t===q.t))list.push(q)}
+  S.quests={day:d,list:list.map(q=>{const dec=r()<.3?pick(r,DECOR.filter(x=>x.c<=25)).id:null;return{t:q.t,g:q.g,d:q.d,e:q.e,p:0,claimed:false,rs:dec?3:6+Math.floor(r()*7),rd:dec}})};save()}
+function qProg(t,n){ensureQuests();let ch=false;S.quests.list.forEach(q=>{if(q.t===t&&q.p<q.g){q.p=Math.min(q.g,q.p+(n||1));ch=true;if(q.p>=q.g){toast("📜 Quest complete: "+q.d+"!");sfx("win")}}});if(ch){save();navBadge()}}
+function claimQ(i){const q=S.quests.list[i];if(!q||q.claimed||q.p<q.g)return;q.claimed=true;S.stars+=q.rs;if(q.rd)S.decor.owned[q.rd]=(S.decor.owned[q.rd]||0)+1;sfx("coin");save();
+  toast(`+${q.rs}⭐${q.rd?" + "+(DI[q.rd].e||"🧶")+" "+DI[q.rd].n+" (in storage)":""}`);render()}
+const STREAK=[{s:5},{s:8},{s:10},{s:12},{s:15},{s:20},{s:25,deco:1}];
+function checkLogin(){const d=today(),L=S.login;if(L.last===d)return;L.streak=(L.last&&dayDiff(L.last,d)===1)?L.streak+1:1;L.last=d;L.claimed=false;save()}
+function claimLogin(){const L=S.login;if(L.claimed)return;const rw=STREAK[(L.streak-1)%7];L.claimed=true;S.stars+=rw.s;let x="";
+  if(rw.deco){const it=pick(Math.random,DECOR);S.decor.owned[it.id]=(S.decor.owned[it.id]||0)+1;x=` + ${it.e||"🧶"} ${it.n}`}save();sfx("reveal","rare");toast(`🎁 Day ${L.streak} reward: +${rw.s}⭐${x}`);closeM()}
+function calHTML(){const L=S.login,ci=(L.streak-1)%7;return`<div class="cal">${STREAK.map((r,i)=>`<div class="cd ${i<ci||(i===ci&&L.claimed)?"got":""} ${i===ci?"now":""}"><small>Day ${i+1}</small><b>${r.deco?"🎁":"⭐"}</b>${r.s}${r.deco?"+decor":""}</div>`).join("")}</div>`}
+function loginModal(){const L=S.login;modal(`<h2>🌞 Daily Login</h2><p>Streak: <b>${L.streak} day${L.streak>1?"s":""}</b> 🔥</p>${calHTML()}<p class="muted">Come back every day to keep your streak. Missing a day restarts it at Day 1.</p><button class="btn gold" onclick="claimLogin()">Claim Day ${(L.streak-1)%7+1} reward</button>`)}
+function viewQuests(){ensureQuests();const ms=new Date(new Date().setHours(24,0,0,0))-Date.now();
+  return`<div class="card"><div class="row" style="justify-content:space-between"><h3>📜 Daily Quests</h3><span class="muted">resets in ${fmtDur(ms)}</span></div>
+  ${S.quests.list.map((q,i)=>`<div class="quest"><span class="e">${q.e}</span><div style="flex:1"><b>${q.d}</b><div class="bar"><i style="width:${q.p/q.g*100}%;background:${q.p>=q.g?"#8dff8a":"#ffd86b"}"></i></div><div class="muted">${q.p}/${q.g} · Reward ${q.rs}⭐${q.rd?" + "+(DI[q.rd].e||"🧶")+" "+DI[q.rd].n:""}</div></div>
+   ${q.claimed?'<span class="muted">✓ Claimed</span>':`<button class="btn ${q.p>=q.g?"gold":"ghost"}" style="padding:8px 10px" ${q.p>=q.g?"":"disabled"} onclick="claimQ(${i})">Claim</button>`}</div>`).join("")}</div>
+  <div class="card"><h3>🔥 Login streak: ${S.login.streak} day${S.login.streak>1?"s":""}</h3>${calHTML()}${S.login.claimed?'<p class="muted">Today\'s reward claimed. See you tomorrow!</p>':'<button class="btn gold" onclick="claimLogin();render()">Claim today\'s reward</button>'}</div>`}
+function qClaimable(){return(S.quests.list||[]).filter(q=>q.p>=q.g&&!q.claimed).length+(S.login.claimed?0:1)}
+function navBadge(){const b=document.querySelector('#nav button[data-t="quests"]');if(b)b.classList.toggle("dot",qClaimable()>0)}
+// ---------- NOTIFICATIONS ----------
+const NEEDTXT={hunger:"gets hungry",happy:"gets lonely",energy:"gets sleepy",clean:"needs a bath",hatch:"hatches"};
+function needs(p){if(p.stage===0)return[{k:"hatch",ms:Math.max(0,(p.hatchAt||0)-Date.now())}];const m=mults(p),o=[];
+  ["hunger","happy","energy","clean"].forEach(k=>{if(p.sleeping&&k==="energy")return;const rate=DECAY[k]*m[k]*(p.sleeping&&k!=="clean"?.35:1);o.push({k,ms:Math.max(0,(p[k]-25)/rate*HOUR/S.speed)})});return o.sort((a,b)=>a.ms-b.ms)}
+function soonest(){let best=null;S.pets.forEach(p=>{if(p.ready)return;const n=needs(p)[0];if(n&&(!best||n.ms<best.ms))best=Object.assign({p},n)});return best}
+function needTxt(p){if(p.ready)return"";const n=needs(p)[0];if(!n)return"";if(p.stage===0)return"";return n.ms<=0?`⚠️ Needs care now: ${NEEDTXT[n.k]}`:`⏰ Next need: ${NEEDTXT[n.k]} in ${fmtDur(n.ms)}`}
+function notifOK(){return S.notif.on&&"Notification" in window&&Notification.permission==="granted"}
+let SWR=null;
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("sw.js").then(r=>SWR=r).catch(()=>{});
+async function notify(title,body,tag){if(!notifOK())return;try{if(SWR)await SWR.showNotification(title,{body,tag,icon:"icon-192.png",badge:"icon-192.png",renotify:true});else new Notification(title,{body,tag,icon:"icon-192.png"})}catch(e){}}
+async function toggleNotif(){if(S.notif.on){S.notif.on=false;save();render();return}
+  if(!("Notification" in window)){toast("This browser doesn't support notifications");return}
+  let perm=Notification.permission;if(perm==="default")perm=await Notification.requestPermission();
+  if(perm!=="granted"){toast("Notifications blocked — allow them in browser site settings");render();return}
+  S.notif.on=true;save();render();notify("GachiGacha 🔔","Notifications are on! I'll ping you when a pet needs care.","test")}
+let ntSent={},bgTimer=null;
+function bgCheck(){if(!document.hidden||!notifOK())return;S.pets.forEach(p=>{if(p.stage===0)return;const low=["hunger","happy","energy","clean","health"].filter(k=>p[k]<25&&!(k==="energy"&&p.sleeping));
+  if(p.ready&&!ntSent["r"+p.id]){ntSent["r"+p.id]=1;notify("🚀 "+p.nick+" is all grown up!","Come help them move out.","ready"+p.id)}
+  if(low.length&&Date.now()-(ntSent[p.id]||0)>3600e3){ntSent[p.id]=Date.now();notify(`${p.nick} needs you! 🥺`,low.map(k=>NEEDTXT[k]||"is feeling unwell").map(x=>x.replace("gets ","is ")).join(", "),"pet"+p.id)}})}
+function scheduleBg(){const n=soonest();if(!n||!notifOK())return;const body=`${n.p.nick} ${NEEDTXT[n.k]}${n.k==="hatch"?"!":" — time for some care."}`;
+  clearTimeout(bgTimer);if(n.ms<6*3600e3)bgTimer=setTimeout(()=>notify("GachiGacha 🐾",body,"need"),n.ms+1000);
+  try{SWR&&SWR.active&&SWR.active.postMessage({type:"schedule",ms:n.ms+1000,title:"GachiGacha 🐾",body,tag:"need"})}catch(e){}
+  try{if(SWR&&"showTrigger" in Notification.prototype&&window.TimestampTrigger)SWR.showNotification("GachiGacha 🐾",{body,tag:"need-t",showTrigger:new TimestampTrigger(Date.now()+n.ms+1000)})}catch(e){}}
+let hiddenAt=0;
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();save();scheduleBg()}else{clearTimeout(bgTimer);try{SWR&&SWR.active&&SWR.active.postMessage({type:"cancel"})}catch(e){}
+  checkLogin();ensureQuests();const away=hiddenAt?Date.now()-hiddenAt:0;if(away>3*60000)setTimeout(()=>summary(away),400)}});
+function summary(away){const ns=notes.splice(0);if($("modal").style.display==="flex")return;
+  const rows=S.pets.map(p=>{if(p.stage===0)return`<div class="quest"><span class="e">🥚</span><div>${p.nick}: still an egg</div></div>`;
+    const low=STATS.filter(k=>p[k]<35&&!(k==="energy"&&p.sleeping));return`<div class="quest" style="text-align:left">${petSVG(SPECIES[p.sp],p.stage,p.variant,mood(p)).replace("<svg",'<svg style="width:44px;height:44px"')}<div><b>${p.nick}</b><div class="muted">${p.ready?"🚀 Ready to move out!":low.length?"Needs: "+low.map(k=>STAT_UI[k][0]+" "+STAT_UI[k][1]).join(", "):"😊 Doing great"}${p.sleeping?" · 💤 sleeping":""}</div></div></div>`}).join("");
+  modal(`<h2>👋 Welcome back!</h2><p class="muted">You were away ${fmtDur(away*S.speed)} (game time).</p>${ns.length?`<div class="card" style="text-align:left">${ns.slice(-6).map(n=>"<div>"+n+"</div>").join("")}</div>`:""}${rows}<button class="btn gold" onclick="closeM()">Let's care for them!</button>`)}
+let deferredInstall=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
+function installApp(){if(deferredInstall){deferredInstall.prompt();deferredInstall=null}else toast("Use Chrome menu ⋮ → Add to Home screen / Install app")}
+// ---------- NEW MINIGAMES ----------
+GAMES.push({id:"runner",e:"🏃",n:"Comet Dash",d:"Your pet runs across a moon! Tap to jump over space rocks and grab floating stars. (25s)",max:28},
+  {id:"beat",e:"🎵",n:"Star Beat",d:"Notes fall down 3 lanes — tap the lane when a note hits the glowing line. Perfect timing = double points! (25s)",max:45});
+const GFN={catch:gCatch,echo:gEcho,meteor:gMeteor,runner:gRunner,beat:gBeat};
+function gRunner(ga){const gy=G.h-170;ga.innerHTML=gpetHTML()+`<div class="rground" style="top:${gy+88}px"></div><div class="muted" style="position:absolute;top:8px;width:100%;text-align:center">Tap anywhere to jump ⬆</div>`;
+  const gp=$("gpet");let y=0,vy=0,last=now(),next=now()+900,jumps=0;
+  ga.addEventListener("pointerdown",()=>{if(G.over)return;if(y>=-1||jumps<2){vy=jumps?-560:-720;jumps++;sfx("jump");gAnim("i-stretch")}});
+  G.frame=()=>{const t=now(),dt=Math.min(.05,(t-last)/1000);last=t;const el=t-G.t0;vy+=2000*dt;y+=vy*dt;if(y>0){y=0;vy=0;jumps=0}
+    gp.style.transform=`translate(30px,${gy+y}px)`;
+    if(t>next){next=t+Math.max(650,1300-el/30)*(.7+Math.random()*.6);const k=Math.random()<.65?"🪨":"⭐",d=document.createElement("div");d.className="fall";d.textContent=k;ga.appendChild(d);
+      G.items.push({d,k,x:G.w+20,y:k==="⭐"?gy-30-Math.random()*90:gy+72,pass:false})}
+    const sp=230+el/90,px=75,py=gy+y+45;
+    G.items=G.items.filter(it=>{it.x-=sp*dt;it.d.style.transform=`translate(${it.x}px,${it.y}px)`;
+      if(Math.abs(it.x-px)<36&&Math.abs(it.y-py)<40){it.d.remove();if(it.k==="🪨"){addScore(-2,it.x,it.y);gAnim("flinch")}else{addScore(2,it.x,it.y);gAnim("chomp")}return false}
+      if(!it.pass&&it.k==="🪨"&&it.x<px-40){it.pass=true;addScore(1,it.x,it.y-40);sfx("good")}
+      if(it.x<-40){it.d.remove();return false}return true})}}
+function gBeat(ga){const L=3,lw=G.w/L,hy=G.h-170,C=["#ff7ad9","#ffd86b","#7af0ff"];
+  ga.innerHTML=Array.from({length:L},(_,i)=>`<div class="lane" style="left:${i*lw}px;width:${lw}px"><div class="lpad" data-l="${i}" style="top:${hy-20}px;border-color:${C[i]}"></div></div>`).join("")+`<div class="hline" style="top:${hy}px"></div>`+gpetHTML()+`<div id="bmsg" class="bmsg" style="top:${hy+60}px"></div>`;
+  const gp=$("gpet");gp.style.transform=`translate(${G.w-95}px,8px) scale(.7)`;let last=now(),next=now()+800,combo=0;const pads=[...ga.querySelectorAll(".lpad")];
+  const msg=t=>{const m=$("bmsg");if(m){m.textContent=t;m.classList.remove("pop");void m.offsetWidth;m.classList.add("pop")}};
+  ga.addEventListener("pointerdown",e=>{if(G.over)return;const l=clamp(Math.floor((e.clientX-ga.getBoundingClientRect().left)/lw),0,L-1);pads[l].classList.add("lit");setTimeout(()=>pads[l].classList.remove("lit"),120);
+    let best=null;G.items.forEach(it=>{if(it.l===l&&(!best||Math.abs(it.y-hy)<Math.abs(best.y-hy)))best=it});
+    if(best&&Math.abs(best.y-hy)<55){const pf=Math.abs(best.y-hy)<22;best.d.remove();G.items.splice(G.items.indexOf(best),1);combo++;addScore(pf?2:1,l*lw+lw/2,hy-30);sfx("note",l+(pf?2:0));msg(pf?"✨ PERFECT":"👍 Good");if(combo%5===0)gAnim("i-bounce")}
+    else{combo=0;sfx("miss");msg("💫 Miss")}});
+  G.frame=()=>{const t=now(),dt=Math.min(.05,(t-last)/1000);last=t;const el=t-G.t0,sp=260+el/200;
+    if(t>next){next=t+(Math.random()<.25?300:600)*Math.max(.7,1-el/60000);const l=Math.floor(Math.random()*L),d=document.createElement("div");d.className="fall";d.textContent=["💗","⭐","💎"][l];ga.appendChild(d);G.items.push({d,l,y:-20})}
+    G.items=G.items.filter(it=>{it.y+=sp*dt;it.d.style.transform=`translate(${it.l*lw+lw/2}px,${it.y}px)`;if(it.y>hy+60){it.d.remove();combo=0;msg("💫 Miss");gAnim("flinch");return false}return true})}}
+// ---------- HOOKS ----------
+const _sigOf=sigOf;sigOf=function(){return _sigOf()+"|"+decoEdit+S.decor.bg+S.decor.placed.length}
+const _viewHome=viewHome;viewHome=function(){let h=_viewHome();if(!S.pets.length)return h;const p=S.pets[cur];
+  h=h.replace('<div class="stage ',`<div style="${bgStyle()}" class="stage ${decoEdit?"deco-edit ":""}`).replace('<div class="ground"></div>','<div class="ground"></div>'+decorHTML());
+  h=h.replace('<div class="muted" id="info"',traitHTML(p)+`<div class="muted" id="need" style="margin-top:3px">${needTxt(p)}</div><div class="muted" id="info"`);
+  if(decoEdit)h=h.replace(/<div class="acts">[\s\S]*$/,decoPanel());
+  else h+=`<div class="row" style="justify-content:center;margin-top:10px;gap:8px"><button class="btn ghost" style="padding:8px 14px;font-size:13px" onclick="toggleDeco()">🛋️ Decorate</button><button class="btn ghost" style="padding:8px 14px;font-size:13px" onclick="tab='quests';render()">📜 Quests ${S.quests.list.filter(q=>q.claimed).length}/3</button></div>`;
+  return h};
+const _live=live;live=function(){_live();const p=S.pets[cur],e=$("need");if(p&&e){const t=needTxt(p);if(e.textContent!==t)e.textContent=t}};
+function viewOf(t){return({home:viewHome,gacha:viewGacha,shop:viewShop,quests:viewQuests,dex:viewDex,alumni:viewAlumni,set:viewSet}[t]||viewHome)()}
+NAV.splice(2,0,["shop","🛍️","Shop"],["quests","📜","Quests"]);
+const _render3=render;render=function(){if(tab!=="home")decoEdit=false;const p=S.pets[cur];IDLES.length=0;IDLES.push(...IDLE_BASE);if(p&&p.traits)p.traits.forEach(t=>IDLES.push(...TRAITS[t].idle));
+  _render3();document.querySelectorAll("#nav button").forEach((b,i)=>b.dataset.t=NAV[i][0]);navBadge()};
+const _viewSet=viewSet;viewSet=function(){const perm="Notification" in window?Notification.permission:"unsupported";
+  return`<div class="card"><h3>🔊 Sound</h3><div class="row" style="justify-content:space-between"><span>Sound effects</span><button class="tog ${S.audio.sfx?"on":""}" onclick="setAudio('sfx',${!S.audio.sfx})">${S.audio.sfx?"ON":"OFF"}</button></div>
+  <div class="row" style="justify-content:space-between;margin-top:8px"><span>🎶 Space lullaby music</span><button class="tog ${S.audio.music?"on":""}" onclick="setAudio('music',${!S.audio.music})">${S.audio.music?"ON":"OFF"}</button></div>
+  <div class="row" style="margin-top:8px"><span>Volume</span><input type="range" min="0" max="1" step="0.05" value="${S.audio.vol}" style="flex:1" oninput="S.audio.vol=+this.value;audioInit();setVol()" onchange="save();sfx('coin')"></div></div>
+  <div class="card"><h3>🔔 Care notifications</h3><div class="row" style="justify-content:space-between"><span>Remind me when pets need care</span><button class="tog ${S.notif.on&&perm==="granted"?"on":""}" onclick="toggleNotif()">${S.notif.on&&perm==="granted"?"ON":"OFF"}</button></div>
+  <p class="muted">Permission: ${perm}. ${(()=>{const n=soonest();return n?`Next need: ${n.p.nick} ${NEEDTXT[n.k]} in ${fmtDur(n.ms)}.`:""})()}<br>Works best when GachiGacha is installed to your home screen. Reminders are best-effort: phones may pause the app in the background, and nothing can fire once it's fully closed (there's no server). You'll always get a "welcome back" summary when you return.</p>
+  <button class="btn ghost" onclick="installApp()">📲 Install to home screen</button></div>`+_viewSet()};
+const _act=act;act=function(kind,food){const r=_act(kind,food);if(r){if(kind==="feed")qProg("feed");if(kind==="clean")qProg("clean");if(kind==="sleep"){const p=S.pets[cur];if(p&&p.sleeping){qProg("sleep");sfx("sleep")}else sfx("wake")}if(kind==="med")sfx("good")}return r};
+const _petIt=petIt;petIt=function(d){const p=S.pets[cur];_petIt(d);if(p&&p.stage>0&&!p.sleeping){sfx("giggle");qProg("pet")}else if(p&&p.stage===0)sfx("tap")};
+const _consume=consume;consume=function(k,item){_consume(k,item);if(k!=="feed"){sfx("yuck");return}const p=S.pets[cur];for(let i=0;i<4;i++)setTimeout(()=>sfx("chomp"),i*220);
+  setTimeout(()=>{if(!p)return;const fi=FOODS.indexOf(item),tr=p.traits||[];let x=0,msg="";
+    if(tr.includes("Glutton")){x+=5}
+    if(fi===p.favFood){x+=12;if(!p.knowFood){p.knowFood=true;msg=`💡 Discovered ${p.nick}'s favorite food: ${item.e} ${item.n}!`}else msg=`❤️ ${item.n} is ${p.nick}'s favorite!`;hearts(6,"❤️");sfx("win")}
+    else if(!p.knowFood&&tr.includes("Curious")&&Math.random()<.5){msg=`🔭 ${p.nick} hints: favorite food is ${FOODS[p.favFood].e}!`;p.knowFood=true}
+    if(x){p.happy=Math.min(100,p.happy+x);floatTxt("+"+x+"💖")}save();if(msg){toast(msg);render()}},1050)};
+const _clean0=startClean;startClean=function(){_clean0();sfx("bubble")};
+const _particle=particle;particle=function(t,x,y,cls,vars,life){if(cls==="bubble")sfx("bubble");return _particle(t,x,y,cls,vars,life)};
+const _hatchFX=hatchFX;hatchFX=function(p){sfx("hatch");_hatchFX(p);setTimeout(()=>{if(p.traits)toast(`✨ ${p.nick} is ${p.traits.map(t=>TRAITS[t].e+" "+t).join(" & ")}!`)},1400)};
+const _checkStage=checkStage;checkStage=function(p){const o=p.stage;_checkStage(p);if(p.stage!==o&&p.stage>=2)sfx("evolve")};
+const _gAnim=gAnim;gAnim=function(c){if(c==="flinch")sfx("miss");else if(c==="chomp"||c==="i-bounce")sfx("hit");_gAnim(c)};
+document.addEventListener("pointerdown",e=>{const pd=e.target.closest&&e.target.closest("#game .pad");if(pd)sfx("note",+pd.dataset.i)});
+const _startGame=startGame;startGame=function(id){_startGame(id);sfx("tap")};
+const _endGame=endGame;endGame=function(){if(!G||G.over)return;const p=S.pets[cur],id=G.def.id,frac=Math.min(1,G.score/G.def.max);_endGame();
+  setTimeout(()=>sfx(frac>=.35?"win":"lose"),300);qProg("play");if(frac>=.6)qProg("score");if(!p)return;let extra=[];
+  if((p.traits||[]).includes("Playful")){p.happy=Math.min(100,p.happy+6);extra.push("🎈 Playful: +6💖")}
+  if(p.favGame===id){p.happy=Math.min(100,p.happy+10);S.stars+=1;extra.push(`❤️ ${p.knowGame?"":"Discovered: "}${p.nick}'s favorite game! +10💖 +1⭐`);p.knowGame=true}
+  else if(!p.knowGame&&(p.traits||[]).includes("Curious")&&Math.random()<.4){p.knowGame=true;const g=GAMES.find(x=>x.id===p.favGame);extra.push(`🔭 ${p.nick} hints: favorite game is ${g.e} ${g.n}`)}
+  save();if(extra.length)setTimeout(()=>{const c=document.querySelector("#game .card");if(c)c.insertAdjacentHTML("beforeend",extra.map(x=>`<div style="margin-top:6px;color:#ffd86b">${x}</div>`).join(""))},460)};
+const _pull3=pull;pull=function(n){const b=S.pets.length;_pull3(n);const got=S.pets.slice(b);if(!got.length)return;sfx("pull");qProg("summon",got.length);
+  const ord=["common","rare","epic","legendary"],best=got.reduce((a,p)=>Math.max(a,ord.indexOf(SPECIES[p.sp].rarity)),0);setTimeout(()=>sfx("reveal",ord[best]),1300)};
+const _hug=hug;hug=function(id){const a=S.alumni.find(x=>x.id===id),d0=a&&a.hugDay;_hug(id);if(a&&a.hugDay!==d0){qProg("hug");sfx("giggle")}};
+const _moveOut=moveOut;moveOut=function(){const p=S.pets[cur];_moveOut();if(p&&S.alumni[0]&&S.alumni[0].id===p.id){S.alumni[0].traits=p.traits;save();sfx("evolve")}};
+setInterval(()=>{if(S.quests.day!==today()){checkLogin();ensureQuests();if(tab==="quests")render();navBadge()}bgCheck()},5000);
+function boot3(){const ns=notes.slice();if(!S.login.claimed)loginModal();else if(awayMs>3*60000){summary(awayMs)}}
+setTimeout(boot3,60);
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
