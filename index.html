@@ -239,6 +239,30 @@ nav button{font-size:11.5px}nav button b{font-size:21px}
 /* touch targets */
 .chip{min-height:30px;display:inline-flex;align-items:center}.tog{min-height:40px}.speed button{min-height:40px;min-width:52px}
 .alum .f{min-width:44px;min-height:44px}.tabs button{min-height:44px}.back{min-height:40px}#game .gh .btn{min-height:40px;min-width:44px}
+/* v6 */
+.mate{position:absolute;left:50%;bottom:8px;width:84px;height:84px;margin-left:-42px;z-index:1;cursor:pointer}
+.mate .mflip{width:100%;height:100%;transform-origin:50% 90%}
+.mate svg{width:100%;height:100%}
+.mate.msleep{filter:brightness(.6)}
+.mhop{animation:mhop .55s ease}
+@keyframes mhop{0%,100%{translate:0 0}40%{translate:0 -16px}}
+.sbub{position:absolute;left:50%;top:-6px;transform:translateX(-50%);background:#fff;color:#222;border-radius:12px;padding:3px 9px;font-size:15px;white-space:nowrap;z-index:5;animation:sbub 2.2s ease forwards;pointer-events:none;box-shadow:0 2px 6px #0005}
+#walker .sbub{top:6px}
+@keyframes sbub{0%{opacity:0;margin-top:8px}12%{opacity:1;margin-top:0}85%{opacity:1}100%{opacity:0;margin-top:-10px}}
+.cam{position:absolute;right:8px;top:40px;z-index:6;width:44px;height:44px;border-radius:50%;border:0;background:#0007;color:#fff;font-size:22px}
+.evpill{position:absolute;left:8px;top:40px;z-index:6;min-height:40px;border-radius:20px;border:0;background:#0008;color:#fff;font-size:14px;padding:0 12px;font-weight:700}
+.evc{position:absolute;z-index:7;font-size:30px;width:48px;height:48px;border:0;background:none;animation:evf 7s ease-in-out forwards;cursor:pointer}
+@keyframes evf{0%{opacity:0;transform:translateY(10px)}10%{opacity:1}50%{transform:translate(14px,-12px) rotate(8deg)}90%{opacity:1}100%{opacity:0;transform:translate(-6px,-24px)}}
+.stage.ev-spooky::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,#ff8a1f33,transparent 60%),linear-gradient(#3a0f5a33,#0000);pointer-events:none}
+.stage.ev-frost::after{content:"";position:absolute;inset:0;background:linear-gradient(#bfe3ff22,#fff3);pointer-events:none}
+.stage.ev-love::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,#ff5a8a33,transparent 70%);pointer-events:none}
+.stage.ev-bloom::after,.stage.ev-summer::after{content:"";position:absolute;inset:0;background:linear-gradient(#0000,#ffd86b22);pointer-events:none}
+.evcard{background:linear-gradient(135deg,#5a2a7a,#ff8a1f88)!important;cursor:pointer}
+.evcur{font-size:22px;margin:6px 0 10px}
+.soc .emos button{font-size:22px;width:44px;height:44px;border:0;border-radius:12px;background:#ffffff14;margin-left:2px}
+.frrow{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-top:8px;font-size:14px}.frrow .bar{grid-column:1/3}
+.stk{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.stk button{font-size:22px;width:44px;height:44px;border-radius:10px;border:2px solid transparent;background:#ffffff14}.stk button.on{border-color:#ffd86b}
+.frs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}.frs .chip{min-height:40px;padding:0 12px}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -1258,7 +1282,7 @@ function finishExp(p,early){const e=p.exp,d=DURS.find(x=>x.k===e.d),pl=PLANETS.f
   p.hunger=Math.max(5,p.hunger-dr);p.energy=Math.max(5,p.energy-dr*1.2);p.clean=Math.max(5,p.clean-dr);p.happy=Math.min(100,p.happy+10);
   delete p.exp;save();sfx("win");
   modal(`<h2>${pl.e} ${p.nick} is back!</h2>${petSVG(SPECIES[p.sp],p.stage,p.variant,"happy","pop").replace("<svg",'<svg id="exps" style="width:120px"')}
-   <div class="card" style="text-align:left"><b>📓 Travel log — ${pl.n}</b>${lines.map(l=>`<div>• ${p.nick} ${l}.</div>`).join("")}${early?"<div>• …but was called home early.</div>":`<div>• ${p.nick} ${pick(r,["waved at a passing starship","drew you a little map","brought back a souvenir"])}.</div>`}</div>
+   <div class="card" style="text-align:left"><b>📓 Travel log — ${pl.n}</b>${lines.map(l=>`<div>• ${p.nick} ${l}.</div>`).join("")}${early?"<div>• …but was called home early.</div>":`<div>• ${p.nick} ${pick(r,["waved at a passing starship","named a crater after you","collected some shiny pebbles"])}.</div>`}</div>
    <div class="card"><b>🎁 Found:</b><br>${got.join("<br>")}</div><p class="muted">−${Math.round(dr)} fullness/clean, tired · +10 💖 from the adventure</p><button class="btn gold" onclick="closeM()">Welcome home!</button>`);
   dress(document.querySelector("#exps"),p.acc,SPECIES[p.sp],p.stage);checkAch()}
 function recall(){const p=S.pets[cur];if(p&&p.exp&&confirm("Call "+p.nick+" home early? Only a partial star reward."))finishExp(p,true)}
@@ -1312,6 +1336,223 @@ ACH.push({id:"exp1",e:"🚀",n:"Explorer",d:"Send a pet on an expedition",r:10,c
  {id:"acc3",e:"👒",n:"Fashionista",d:"Own 3 accessories",r:15,c:()=>Object.keys(S.accOwned).length>=3},{id:"art8",e:"🗿",n:"Museum Curator",d:"Find all 8 artifacts",r:80,c:()=>Object.keys(S.artifacts).length>=8});
 setInterval(()=>{wxTick();expTick()},3000);
 setTimeout(()=>{wxTick();expTick();if(S.tut==="todo")startTut()},900);
+
+// ================= v6: photo mode, social life, seasonal events, backup/restore =================
+// ---------- EVENTS (data) ----------
+const EVENTS=[
+ {k:"spooky",n:"Spooky Nebula",e:"🎃",cur:"🍬",cn:"Candy",from:[10,15],to:[11,1],crit:["🦇","👻","🍬"],
+  sp:{body:"ghost",name:"Pumpkling",rarity:"epic",c1:"#ff8a1f",c2:"#5a2a7a",life:30,flavor:"Born in a pumpkin patch on a haunted moon. Says 'boo' politely."},
+  decor:[{id:"ev_jack",e:"🎃",n:"Jack-o'-Lantern",c:8,sz:36},{id:"ev_web",e:"🕸️",n:"Cosmic Cobweb",c:6,sz:40,fly:1},{id:"ev_bat",e:"🦇",n:"Bat Buddy",c:5,sz:28,fly:1},{id:"ev_cauld",e:"🧪",n:"Bubbling Potion",c:10,sz:32,b:{happy:.94}}],
+  acc:[{id:"ev_witch",slot:"head",n:"Witch Hat",c:12,d:T=>`<path d="M66 ${T+6} L134 ${T+6} L118 ${T-2} L104 ${T-44} L90 ${T-2}Z" fill="#3a1f5a" stroke="#ff8a1f" stroke-width="2"/><rect x="88" y="${T-6}" width="26" height="6" fill="#ff8a1f"/>`},
+       {id:"ev_cape",slot:"back",n:"Vampire Cape",c:14,d:T=>`<path d="M58 ${T+30} Q100 ${T+18} 142 ${T+30} L160 ${T+120} Q100 ${T+100} 40 ${T+120}Z" fill="#7a0f2a" opacity=".9"/>`}]},
+ {k:"frost",n:"Frostival",e:"❄️",cur:"🧊",cn:"Frost gems",from:[12,1],to:[1,6],crit:["❄️","🧊","⛄"],
+  sp:{body:"round",name:"Snowpuff",rarity:"epic",c1:"#e8f6ff",c2:"#7ab8ff",life:30,flavor:"Made of the softest comet snow. Never melts, only cuddles."},
+  decor:[{id:"ev_tree",e:"🎄",n:"Star Tree",c:10,sz:46},{id:"ev_snowman",e:"☃️",n:"Snow-alien",c:8,sz:38},{id:"ev_gift",e:"🎁",n:"Gift Box",c:5,sz:28,b:{happy:.94}}],
+  acc:[{id:"ev_santa",slot:"head",n:"Frost Cap",c:12,d:T=>`<path d="M70 ${T+8} Q90 ${T-40} 136 ${T-22} L128 ${T+8}Z" fill="#e03a4a"/><rect x="66" y="${T+2}" width="70" height="10" rx="5" fill="#fff"/><circle cx="138" cy="${T-22}" r="7" fill="#fff"/>`},
+       {id:"ev_scarf",slot:"neck",n:"Cozy Scarf",c:10,d:T=>`<path d="M66 128 Q100 142 134 128 L134 140 Q100 154 66 140Z" fill="#4aa8ff"/><rect x="112" y="136" width="12" height="28" rx="3" fill="#4aa8ff"/>`}]},
+ {k:"love",n:"Lovestar",e:"💘",cur:"💌",cn:"Love letters",from:[2,7],to:[2,16],crit:["💌","💗","🌹"],
+  sp:{body:"blob",name:"Lovebun",rarity:"epic",c1:"#ffb3d9",c2:"#ff5a8a",life:30,flavor:"Its heartbeat sounds like a tiny love song."},
+  decor:[{id:"ev_rose",e:"🌹",n:"Star Rose",c:6,sz:30},{id:"ev_heart",e:"💝",n:"Heart Gift",c:8,sz:32,b:{happy:.93}}],
+  acc:[{id:"ev_hglass",slot:"face",n:"Heart Specs",c:12,d:T=>`<path d="M70 92 a8 8 0 0 1 14 -4 a8 8 0 0 1 14 4 l-14 14z M102 92 a8 8 0 0 1 14 -4 a8 8 0 0 1 14 4 l-14 14z" fill="#ff5a8a" opacity=".85"/>`}]},
+ {k:"bloom",n:"Cosmic Bloom",e:"🌸",cur:"🌼",cn:"Petals",from:[3,20],to:[4,15],crit:["🌼","🌸","🦋"],
+  sp:{body:"bean",name:"Petalfin",rarity:"epic",c1:"#c7ff9a",c2:"#ff9ad9",life:30,flavor:"Sprouted from a seed that fell off a comet."},
+  decor:[{id:"ev_tulip",e:"🌷",n:"Moon Tulips",c:6,sz:30},{id:"ev_chick",e:"🐣",n:"Space Chick",c:8,sz:28,b:{happy:.94}}],
+  acc:[{id:"ev_flower",slot:"head",n:"Flower Crown",c:12,d:T=>[70,85,100,115,130].map((x,i)=>`<circle cx="${x}" cy="${T+4-(i%2)*4}" r="7" fill="${["#ff9ad9","#ffd86b","#fff","#ff9ad9","#ffd86b"][i]}"/>`).join("")}]},
+ {k:"summer",n:"Solar Splash",e:"🏖️",cur:"🐚",cn:"Shells",from:[7,1],to:[8,10],crit:["🐚","🌊","🍉"],
+  sp:{body:"drop",name:"Sunfin",rarity:"epic",c1:"#ffd86b",c2:"#2fb3a5",life:30,flavor:"Surfs on solar wind. Smells faintly of sunscreen."},
+  decor:[{id:"ev_umb",e:"⛱️",n:"Beach Umbrella",c:8,sz:42},{id:"ev_melon",e:"🍉",n:"Space Melon",c:5,sz:28,b:{hunger:.94}}],
+  acc:[{id:"ev_shades",slot:"face",n:"Cool Shades",c:10,d:T=>`<rect x="66" y="84" width="30" height="16" rx="6" fill="#111"/><rect x="104" y="84" width="30" height="16" rx="6" fill="#111"/><rect x="94" y="88" width="12" height="4" fill="#111"/>`}]}];
+EVENTS.forEach(ev=>{ev.decor.forEach(d=>{Object.assign(d,{cat:"Event",ev:ev.k});DECOR.push(d);DI[d.id]=d});ev.acc.forEach(a=>{a.ev=ev.k;ACC.push(a);AI[a.id]=a})});
+let EVDATE=null; // test hook: override "today"
+function evDate(){return EVDATE?new Date(EVDATE):new Date()}
+function evInRange(ev,d){const md=(d.getMonth()+1)*100+d.getDate(),f=ev.from[0]*100+ev.from[1],t=ev.to[0]*100+ev.to[1];return f<=t?md>=f&&md<=t:md>=f||md<=t}
+function evNow(){const d=evDate();return EVENTS.find(ev=>evInRange(ev,d))||null}
+function evEnd(ev){const d=evDate();let y=d.getFullYear();if(ev.from[0]>ev.to[0]&&d.getMonth()+1>=ev.from[0])y++;return new Date(y,ev.to[0]-1,ev.to[1]+1)-d}
+function evNext(){const d=evDate();let best=null,bm=1e15;EVENTS.forEach(ev=>{let s=new Date(d.getFullYear(),ev.from[0]-1,ev.from[1]);if(s<d)s=new Date(d.getFullYear()+1,ev.from[0]-1,ev.from[1]);if(s-d<bm){bm=s-d;best=ev}});return{ev:best,ms:bm}}
+function ensure6(){S.fr=S.fr||{};S.frLv=S.frLv||{};S.ev=S.ev||{k:null,c:0,day:null,q:[],tap:0};S.evOwned=S.evOwned||{};S.photos=S.photos||0}
+const _load6=load;load=function(){_load6();ensure6()};
+function evSpecies(k){const ev=EVENTS.find(e=>e.k===k);let s=SPECIES.find(x=>x&&x.ev===k);if(s)return s;
+  const base=SPECIES.slice(0,BASE_N).find(x=>x.body===ev.sp.body)||SPECIES[0];
+  s=Object.assign({},base,ev.sp,{id:SPECIES.length,ev:k,hybrid:false});delete s.body;s.body=ev.sp.body&&SPECIES.some(x=>x.body===ev.sp.body)?ev.sp.body:base.body;delete s._new;
+  SPECIES.push(s);S.hybrids.push(s);return s}
+function evSync(){const ev=evNow();const E=S.ev;if(!ev)return null;if(E.k!==ev.k){E.k=ev.k;E.c=0;E.day=null}
+  const d=today();if(E.day!==d){E.day=d;E.tap=0;const r=rng(hash(d+ev.k));const pool=[{t:"feed",g:4,d:"Feed your pets 4 times"},{t:"pet",g:6,d:"Pet your pets 6 times"},{t:"play",g:2,d:"Play 2 minigames"},{t:"clean",g:2,d:"Give 2 baths"},{t:"evtap",g:5,d:"Catch 5 floating "+ev.crit[0]+" in the nest"},{t:"social",g:3,d:"Watch your pets hang out 3 times"},{t:"photo",g:1,d:"Take a photo in Photo mode"}];
+    const l=[pool[4]];while(l.length<3){const q=pick(r,pool);if(!l.includes(q))l.push(q)}E.q=l.map(q=>({t:q.t,g:q.g,d:q.d,p:0,cl:false,rw:6+Math.floor(r()*5)}));save()}
+  return ev}
+const _qProg6=qProg;qProg=function(t,n){_qProg6(t,n);if(!evSync())return;let ch=false;S.ev.q.forEach(q=>{if(q.t===t&&q.p<q.g){q.p=Math.min(q.g,q.p+(n||1));ch=true;if(q.p>=q.g)toast("🎉 Event quest done: "+q.d+"!")}});if(ch)save()};
+function evClaim(i){const ev=evSync(),q=S.ev.q[i];if(!ev||!q||q.cl||q.p<q.g)return;q.cl=true;S.ev.c+=q.rw;sfx("coin");save();toast(`+${q.rw} ${ev.cur} ${ev.cn}`);evModal()}
+function evBuy(kind,id){const ev=evSync();if(!ev)return;const it=kind==="acc"?AI[id]:kind==="egg"?{c:40}:DI[id];if(S.ev.c<it.c){toast("Not enough "+ev.cn+" "+ev.cur);sfx("miss");return}
+  if(kind==="acc"){if(S.accOwned[id])return;S.ev.c-=it.c;S.accOwned[id]=1;toast("👒 "+it.n+" unlocked — equip it from 👒 Outfit")}
+  else if(kind==="egg"){const sp=evSpecies(ev.k);if(S.pets.length<S.maxPets)S.pets.push(newPet(sp.id));else if(S.eggBank.length<30)S.eggBank.push(sp.id);else{toast("Nest and egg storage are full");return}
+    S.ev.c-=it.c;sp._new=!S.dex[sp.id];S.dex[sp.id]=(S.dex[sp.id]||0)+1;toast(ev.e+" "+sp.name+" egg! "+(S.pets.some(p=>p.sp===sp.id&&p.stage===0)?"It's in your nest.":"Sent to egg storage."))}
+  else{S.ev.c-=it.c;S.decor.owned[id]=(S.decor.owned[id]||0)+1;toast(it.e+" "+it.n+" added — place it with 🛋️ Decorate")}
+  S.evOwned[id]=1;sfx("reveal","epic");save();evModal()}
+function evModal(){const ev=evSync();if(!ev){const n=evNext();modal(`<h2>🗓️ Events</h2><p>No event right now.</p><p>Next: <b>${n.ev.e} ${n.ev.n}</b> in ${fmtDur(n.ms)}</p><button class="btn" onclick="closeM()">OK</button>`);return}
+  const sp=SPECIES.find(x=>x&&x.ev===ev.k);
+  modal(`<h2>${ev.e} ${ev.n}</h2><p class="muted">Limited event · ends in ${fmtDur(evEnd(ev))}</p><div class="evcur">${ev.cur} <b id="evc">${S.ev.c}</b> ${ev.cn}</div>
+  <div class="card" style="text-align:left"><b>📜 Event quests (daily)</b>${S.ev.q.map((q,i)=>`<div class="quest"><div style="flex:1"><b>${q.d}</b><div class="bar"><i style="width:${q.p/q.g*100}%;background:${q.p>=q.g?"#8dff8a":"#ff9f5a"}"></i></div><div class="muted">${q.p}/${q.g} · ${q.rw} ${ev.cur}</div></div>${q.cl?'<span class="muted">✓</span>':`<button class="btn ${q.p>=q.g?"gold":"ghost"}" style="padding:8px 10px" ${q.p>=q.g?"":"disabled"} onclick="evClaim(${i})">Claim</button>`}</div>`).join("")}
+   <div class="muted" style="margin-top:6px">Tip: tap floating ${ev.crit.join(" ")} in the nest for +1 ${ev.cur} (${S.ev.tap}/15 today).</div></div>
+  <div class="card" style="text-align:left"><b>🛍️ Event shop</b>
+   <div class="shopi"><span class="e">🥚</span><div style="flex:1"><b>${ev.sp.name} egg</b><div class="muted">Limited event species${sp&&S.dex[sp.id]?" · ✓ discovered":""} · also 6% in Gacha</div></div><button class="btn gold" style="padding:8px 10px" onclick="evBuy('egg')">40${ev.cur}</button></div>
+   ${ev.decor.map(d=>`<div class="shopi"><span class="e">${d.e}</span><div style="flex:1"><b>${d.n}</b><div class="muted">${d.b?"✨ "+bonusTxt(d.b):"Decor"}${S.decor.owned[d.id]?" · owned "+S.decor.owned[d.id]:""}</div></div><button class="btn gold" style="padding:8px 10px" onclick="evBuy('decor','${d.id}')">${d.c}${ev.cur}</button></div>`).join("")}
+   ${ev.acc.map(a=>`<div class="shopi"><span class="e">${accThumb(a)}</span><div style="flex:1"><b>${a.n}</b><div class="muted">${SLOTN[a.slot]} accessory</div></div>${S.accOwned[a.id]?'<span class="muted">✓ Owned</span>':`<button class="btn gold" style="padding:8px 10px" onclick="evBuy('acc','${a.id}')">${a.c}${ev.cur}</button>`}</div>`).join("")}</div>
+  <p class="muted">Event items stay forever. Leftover ${ev.cn} reset when the event ends.</p><button class="btn" onclick="closeM();render()">Close</button>`)}
+// hide event accessories from normal shop & expedition loot
+function noEvAcc(fn){const ev=ACC.filter(a=>a.ev);ev.forEach(a=>ACC.splice(ACC.indexOf(a),1));try{return fn()}finally{ACC.push(...ev)}}
+const _viewShop6=viewShop;viewShop=function(){return noEvAcc(_viewShop6)};
+const _finishExp6=finishExp;finishExp=function(p,e){return noEvAcc(()=>_finishExp6(p,e))};
+const _roll6=roll;roll=function(){const sp=_roll6();const ev=evSync();if(ev&&Math.random()<.06)return evSpecies(ev.k);return sp};
+const _viewGacha6=viewGacha;viewGacha=function(){const ev=evSync();return(ev?`<div class="card evcard" onclick="evModal()"><b>${ev.e} ${ev.n}</b> — limited <b>${ev.sp.name}</b> egg at 6%! <span class="muted">Tap for event shop · ends in ${fmtDur(evEnd(ev))}</span></div>`:"")+_viewGacha6()};
+const _viewQuests6=viewQuests;viewQuests=function(){const ev=evSync();return(ev?`<div class="card evcard" onclick="evModal()"><b>${ev.e} ${ev.n} quests</b> · ${S.ev.q.filter(q=>q.cl).length}/3 claimed · ${ev.cur} ${S.ev.c}<br><span class="muted">Tap to open event</span></div>`:"")+_viewQuests6()};
+function spawnCrit(){const ev=evNow(),st=document.querySelector("#main .stage");if(!ev||!st||tab!=="home"||busy||mode||S.ev.tap>=15||st.querySelector(".evc"))return;evSync();
+  const e=document.createElement("button");e.className="evc";e.textContent=pick(Math.random,ev.crit);e.style.left=(8+Math.random()*78)+"%";e.style.top=(15+Math.random()*40)+"%";
+  e.onclick=ev2=>{ev2.stopPropagation();e.remove();if(S.ev.tap>=15)return;S.ev.tap++;S.ev.c++;sfx("coin");buzz&&buzz("tap");particle("+1 "+ev.cur,ev2.clientX,ev2.clientY,"heart",{"--dx":"0px"});qProg("evtap");save()};st.appendChild(e);setTimeout(()=>e.remove(),7000)}
+setInterval(spawnCrit,6000);
+
+// ---------- SOCIAL ----------
+const MT={};let SOC=null;
+function mates(){return S.pets.filter((q,i)=>i!==cur&&q.stage>=1&&!q.exp)}
+function frKey(a,b){return a.id<b.id?a.id+"-"+b.id:b.id+"-"+a.id}
+function frOf(a,b){return S.fr[frKey(a,b)]||0}
+function frLabel(v){return v>=70?"💞 Best friends":v>=30?"😊 Pals":v>=10?"🙂 Friendly":"👋 Strangers"}
+function frAdd(a,b,n){const k=frKey(a,b),v=Math.max(0,Math.min(100,(S.fr[k]||0)+n));S.fr[k]=v;const lv=v>=70?2:v>=30?1:0;
+  if(lv>(S.frLv[k]||0)){S.frLv[k]=lv;S.stars+=lv===2?5:2;toast(lv===2?`💞 ${a.nick} & ${b.nick} are now Best Friends! +5⭐`:`😊 ${a.nick} & ${b.nick} are now Pals! +2⭐`);sfx("reveal","rare")}else if(lv<(S.frLv[k]||0))S.frLv[k]=lv}
+function frBest(p){let m=0;S.pets.forEach(q=>{if(q!==p&&q.stage>=1&&!q.exp&&!p.exp)m=Math.max(m,frOf(p,q))});return m}
+const _mults6=mults;mults=function(p){const m=_mults6(p),f=frBest(p);if(f>=70){m.happy*=.85;m.energy*=.95}else if(f>=30)m.happy*=.92;return m};
+function mateHTML(){return mates().map(q=>{const sp=SPECIES[q.sp];if(!MT[q.id])MT[q.id]={x:(Math.random()*2-1)*90,tx:0,face:1,until:0,walk:false};
+  return`<div class="mate ${q.sleeping?"msleep":""}" id="mate${q.id}" onclick="tapMate(${q.id})"><div class="mflip">${petSVG(sp,q.stage,q.variant,mood(q),"mpet")}</div></div>`}).join("")}
+function actor(p){return S.pets[cur]===p?{p,el:$("walker"),main:true}:{p,el:$("mate"+p.id),main:false}}
+function posX(p){return S.pets[cur]===p?W.x:(MT[p.id]||{x:0}).x}
+function limX(main){const st=document.querySelector("#main .stage");return st?Math.max(0,(st.clientWidth-(main?170:84))/2-6):100}
+function goTo(p,x){if(S.pets[cur]===p){W.state="walk";W.tx=Math.max(-limX(1),Math.min(limX(1),x));W.walkD=0;W.hold=0;if(W.idle){const pb=$("petbox");pb&&pb.classList.remove(W.idle);W.idle=null}}
+  else{const m=MT[p.id];if(m){m.tx=Math.max(-limX(),Math.min(limX(),x));m.walk=true}}}
+function sbub(p,t,ms){const a=actor(p);if(!a.el)return;const b=document.createElement("div");b.className="sbub";b.textContent=t;a.el.appendChild(b);setTimeout(()=>b.remove(),ms||2200)}
+function hop(p){const a=actor(p);const el=a.main?$("petbox"):a.el&&a.el.querySelector(".mflip");if(!el)return;el.classList.remove("mhop");void el.offsetWidth;el.classList.add("mhop");setTimeout(()=>el.classList.remove("mhop"),600)}
+function midPt(a,b){const ea=actor(a).el,eb=actor(b).el;if(!ea||!eb)return null;const r1=ea.getBoundingClientRect(),r2=eb.getBoundingClientRect();return{x:(r1.left+r1.right+r2.left+r2.right)/4,y:Math.min(r1.top,r2.top)+40}}
+function mateLoop(){requestAnimationFrame(mateLoop);if(tab!=="home")return;const t=performance.now();
+  mates().forEach(q=>{const el=$("mate"+q.id),m=MT[q.id];if(!el||!m)return;const dt=Math.min(.05,(t-(m._t||t))/1000);m._t=t;let y=0;
+    if(!q.sleeping){if(m.walk){const d=m.tx-m.x,mv=Math.sign(d)*Math.min(Math.abs(d),(m.fast?110:42)*dt);m.x+=mv;m.wd=(m.wd||0)+Math.abs(mv);m.face=d<0?-1:1;y=-Math.abs(Math.sin(m.wd/12))*8;if(Math.abs(d)<1){m.walk=false;m.fast=false;m.until=t+1200+Math.random()*3000}}
+      else if(t>m.until&&!SOC){m.tx=(Math.random()*2-1)*limX();m.walk=true}}
+    m.x=Math.max(-limX(),Math.min(limX(),m.x));el.style.transform=`translate(${m.x.toFixed(1)}px,${y.toFixed(1)}px)`;const f=el.firstElementChild;if(f)f.style.transform=`scaleX(${m.face})`})}
+requestAnimationFrame(mateLoop);
+const CHAT=["💬✨","🌟?","👽💬","🎶","🍩?","🪐!","😄"],REPLY=["😂","💖","!!","🤭","👍","✨","🎵"];
+function socialTick(force){if(tab!=="home"||busy||mode||$("modal").style.display==="flex"||!document.querySelector("#main .stage"))return null;
+  const main=S.pets[cur];const act=[];if(main&&main.stage>=1&&!main.sleeping&&!main.exp)act.push(main);mates().forEach(q=>{if(!q.sleeping)act.push(q)});if(act.length<2)return null;
+  const a=pick(Math.random,act),b=pick(Math.random,act.filter(x=>x!==a)),f=frOf(a,b);
+  const kinds=[["chat",.32],["hug",.2],["tag",.2],["snack",.16],["squab",.12*(1-f/120)]];let r=Math.random()*kinds.reduce((s,k)=>s+k[1],0),kind="chat";for(const[k,w]of kinds){if((r-=w)<0){kind=k;break}}
+  if(force)kind=force;SOC={kind,a,b};const bx=posX(b),ax=posX(a),side=ax<bx?-1:1;
+  if(kind==="chat"){goTo(a,bx+side*60);setTimeout(()=>{sbub(a,pick(Math.random,CHAT));setTimeout(()=>{sbub(b,pick(Math.random,REPLY));hop(b)},900)},900);frAdd(a,b,2);if(f>=70&&Math.random()<.25){S.stars++;setTimeout(()=>toast("💞 Best-friend chat! +1⭐"),1800)}}
+  else if(kind==="hug"){goTo(a,bx+side*50);setTimeout(()=>{sbub(a,"🤗");sbub(b,"🤗");const m=midPt(a,b);if(m)for(let i=0;i<4;i++)setTimeout(()=>particle("💕",m.x+(Math.random()-.5)*40,m.y,"heart",{"--dx":(Math.random()-.5)*40+"px"}),i*150);a.happy=Math.min(100,a.happy+2);b.happy=Math.min(100,b.happy+2)},1300);frAdd(a,b,3)}
+  else if(kind==="tag"){sbub(a,"Tag! 🏃");const far=bx>0?-limX():limX();goTo(b,far);if(MT[b.id])MT[b.id].fast=true;setTimeout(()=>{goTo(a,far+(far>0?-55:55));sbub(b,"😆");setTimeout(()=>{sbub(a,"Got you! ✋");hop(b)},1500)},500);a.energy=Math.max(0,a.energy-1);b.energy=Math.max(0,b.energy-1);a.happy=Math.min(100,a.happy+3);b.happy=Math.min(100,b.happy+3);frAdd(a,b,2)}
+  else if(kind==="snack"){goTo(a,bx+side*55);setTimeout(()=>{sbub(a,"🍪?");setTimeout(()=>{const m=midPt(a,b);if(m)particle("🍪",m.x,m.y+20,"burst",{"--dx":"0px","--dy":"-30px"},900);sbub(b,"😋");hop(b)},800);a.hunger=Math.min(100,a.hunger+2);b.hunger=Math.min(100,b.hunger+2)},1100);frAdd(a,b,3)}
+  else if(kind==="squab"){sbub(a,"💢");setTimeout(()=>{sbub(b,"😤 hmph!");goTo(b,bx+(bx>ax?60:-60))},700);a.happy=Math.max(0,a.happy-2);b.happy=Math.max(0,b.happy-2);frAdd(a,b,-4)}
+  S.stats3.social=(S.stats3.social||0)+1;qProg("social");save();setTimeout(()=>{SOC=null},3500);return kind}
+setInterval(()=>{if(Math.random()<.75)socialTick()},7000);
+function tapMate(id){const q=S.pets.find(x=>x.id===id);if(!q)return;if(q.sleeping){sbub(q,"Zzz… 💤");return}sbub(q,pick(Math.random,["😊","💖","😆","👋","✨","🥰"]));hop(q);q.happy=Math.min(100,q.happy+1);buzz&&buzz("tap");sfx("giggle")}
+const EMO=[["👋","👋"],["❤️","💖"],["😂","🤣"],["🎵","💃"],["😮","😲"]];let emoCd=0;
+function emote(i){if(Date.now()<emoCd)return;emoCd=Date.now()+1500;const[e,r]=EMO[i];const st=document.querySelector("#main .stage");if(st){const b=st.getBoundingClientRect();particle(e,b.left+b.width/2,b.top+30,"heart",{"--dx":"0px"})}
+  const all=[S.pets[cur],...mates()].filter(q=>q&&q.stage>=1&&!q.sleeping&&!q.exp);all.forEach((q,k)=>setTimeout(()=>{sbub(q,r);hop(q);q.happy=Math.min(100,q.happy+1)},300+k*250));sfx("giggle");save()}
+function socialHTML(){const all=S.pets.filter(q=>q.stage>=1&&!q.exp);let pairs=[];for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++)pairs.push([all[i],all[j]]);
+  return`<div class="card soc"><div class="row" style="justify-content:space-between"><b>🫂 Nest friends</b><span class="emos">${EMO.map(([e],i)=>`<button onclick="emote(${i})" aria-label="emote ${e}">${e}</button>`).join("")}</span></div>
+  ${pairs.length?pairs.map(([a,b])=>{const v=frOf(a,b);return`<div class="frrow"><span>${a.nick} & ${b.nick}</span><span class="muted">${frLabel(v)}</span><div class="bar"><i style="width:${v}%;background:${v>=70?"#ff7ad9":v>=30?"#ffd86b":"#7af0ff"}"></i></div></div>`}).join("")+'<div class="muted">Pals (30+): happiness drains 8% slower · Best friends (70+): 15% slower + bonus ⭐</div>':'<div class="muted">Hatch a second pet so they can become friends! Send emotes to your pet anytime.</div>'}</div>`}
+
+// ---------- PHOTO MODE ----------
+const FRAMES=[{k:"none",n:"None"},{k:"polar",n:"Polaroid"},{k:"stars",n:"Starry"},{k:"neon",n:"Neon"},{k:"event",n:"Event"}];
+const STICK=["⭐","💖","✨","🌙","🪐","👽","🚀","🌈","🎀","😺","🍩","👑"];
+let PH=null;
+function bgStops(css){const m=css.match(/linear-gradient\((.*)\)/);if(!m)return null;let s=m[1],parts=[],dep=0,cur2="";for(const ch of s){if(ch==="("){dep++}else if(ch===")")dep--;if(ch===","&&dep===0){parts.push(cur2.trim());cur2=""}else cur2+=ch}parts.push(cur2.trim());
+  let ang=180;if(/deg$/.test(parts[0])){ang=parseFloat(parts[0]);parts.shift()}else if(/^to /.test(parts[0])){ang={"to right":90,"to left":270,"to top":0,"to bottom":180}[parts[0]]??180;parts.shift()}
+  const cut=parts.indexOf(parts.find(p=>/linear-gradient|radial-gradient/.test(p)));if(cut>0)parts=parts.slice(0,cut);
+  return{ang,stops:parts.map((p,i)=>{const mm=p.match(/^(rgba?\([^)]*\)|#[0-9a-f]+|[a-z]+)\s*([\d.]+%)?/i);return mm?{c:mm[1],o:mm[2]?parseFloat(mm[2])/100:null}:null}).filter(Boolean)}}
+function loadImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src})}
+async function captureStage(){const st=document.querySelector("#main .stage");if(!st)return null;const R=st.getBoundingClientRect(),K=2,c=document.createElement("canvas");c.width=Math.round(R.width*K);c.height=Math.round(R.height*K);const g=c.getContext("2d");g.scale(K,K);
+  const css=getComputedStyle(st).backgroundImage;const bg=bgStops(css);
+  if(bg&&bg.stops.length){const a=(bg.ang-90)*Math.PI/180,cx=R.width/2,cy=R.height/2,L=Math.abs(R.width*Math.cos(a))/2+Math.abs(R.height*Math.sin(a))/2;
+    const gr=g.createLinearGradient(cx-Math.cos(a)*L,cy-Math.sin(a)*L,cx+Math.cos(a)*L,cy+Math.sin(a)*L);bg.stops.forEach((s,i)=>{try{gr.addColorStop(s.o??i/Math.max(1,bg.stops.length-1),s.c)}catch(e){}});g.fillStyle=gr}else g.fillStyle=getComputedStyle(st).backgroundColor||"#24185a";
+  g.fillRect(0,0,R.width,R.height);
+  const rel=el=>{const r=el.getBoundingClientRect();return{x:r.left-R.left,y:r.top-R.top,w:r.width,h:r.height}};
+  st.querySelectorAll(".star").forEach(s=>{const r=rel(s);g.globalAlpha=+getComputedStyle(s).opacity||.7;g.fillStyle="#fff";g.beginPath();g.arc(r.x+r.w/2,r.y+r.h/2,Math.max(1,r.w/2),0,7);g.fill()});g.globalAlpha=1;
+  st.querySelectorAll(".sun,.moon1,.moon2").forEach(s=>{const r=rel(s);const col=s.className==="sun"?"#ffd86b":s.className==="moon1"?"#efeaff":"#ffc0e0";g.shadowColor=col;g.shadowBlur=18;g.fillStyle=col;g.beginPath();g.arc(r.x+r.w/2,r.y+r.h/2,r.w/2,0,7);g.fill();g.shadowBlur=0});
+  const gr2=st.querySelector(".ground");if(gr2){const r=rel(gr2);g.fillStyle="rgba(255,255,255,.09)";g.beginPath();g.ellipse(r.x+r.w/2,r.y+r.h,r.w/2,r.h,0,Math.PI,0);g.fill()}
+  st.querySelectorAll(".deco").forEach(d=>{const r=rel(d);if(d.classList.contains("rug")){const m=(d.style.background||"").match(/(#[0-9a-f]{3,8}|rgba?\([^)]*\))/i);g.fillStyle=m?m[1]:"#ff7ad9";g.globalAlpha=.8;g.beginPath();g.ellipse(r.x+r.w/2,r.y+r.h/2,r.w*.35,r.h*.3,0,0,7);g.fill();g.globalAlpha=1;return}
+    const fs=parseFloat(getComputedStyle(d).fontSize)||30;g.font=fs+"px sans-serif";g.textBaseline="top";g.fillText(d.textContent,r.x,r.y)});
+  const svgs=[...st.querySelectorAll("svg")].filter(s=>!s.closest(".deco")&&s.getBoundingClientRect().width>10).sort((a,b)=>(a.closest("#walker")?1:0)-(b.closest("#walker")?1:0));
+  for(const s of svgs){const r=rel(s);const cl=s.cloneNode(true);cl.setAttribute("width",r.w);cl.setAttribute("height",r.h);cl.removeAttribute("class");cl.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    try{const im=await loadImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(cl)));const fl=s.closest("#flip,.mflip"),neg=fl&&/matrix\(-1/.test(getComputedStyle(fl).transform);
+      g.save();if(neg){g.translate(r.x+r.w,r.y);g.scale(-1,1);g.drawImage(im,0,0,r.w,r.h)}else g.drawImage(im,r.x,r.y,r.w,r.h);g.restore()}catch(e){}}
+  st.querySelectorAll(".sbub").forEach(b=>{const r=rel(b);g.fillStyle="#fff";g.beginPath();g.roundRect?g.roundRect(r.x,r.y,r.w,r.h,10):g.rect(r.x,r.y,r.w,r.h);g.fill();g.fillStyle="#222";g.font="14px sans-serif";g.textBaseline="middle";g.fillText(b.textContent,r.x+8,r.y+r.h/2)});
+  return c}
+async function photoMode(){if(!S.pets.length)return;sfx("place");const base=await captureStage();if(!base){toast("Open the Nest first");return}
+  PH={base,frame:"polar",stick:[],sel:STICK[0],cap:(S.pets[cur]?S.pets[cur].nick:"My nest")+" ✨"};
+  modal(`<h2>📸 Photo mode</h2><canvas id="phc" style="width:100%;border-radius:10px;touch-action:none"></canvas>
+   <div class="muted" style="margin:4px 0">Pick a sticker, then tap the photo to place it.</div>
+   <div class="stk">${STICK.map(s=>`<button class="${s===PH.sel?"on":""}" onclick="PH.sel='${s}';document.querySelectorAll('.stk button').forEach(b=>b.classList.toggle('on',b.textContent==='${s}'))">${s}</button>`).join("")}<button onclick="PH.stick.pop();drawPhoto()" aria-label="undo">↩️</button></div>
+   <div class="frs">${FRAMES.filter(f=>f.k!=="event"||evNow()).map(f=>`<button class="chip ${f.k===PH.frame?"on":""}" onclick="PH.frame='${f.k}';document.querySelectorAll('.frs button').forEach(b=>b.classList.remove('on'));this.classList.add('on');drawPhoto()">${f.n}</button>`).join("")}</div>
+   <input id="phcap" maxlength="40" value="${PH.cap.replace(/"/g,"&quot;")}" placeholder="Caption" oninput="PH.cap=this.value;drawPhoto()" style="width:100%;margin:6px 0;padding:10px;border-radius:10px;border:0;font-size:15px">
+   <div class="row" style="justify-content:center;gap:8px;flex-wrap:wrap"><button class="btn gold" onclick="savePhoto()">💾 Save</button>${navigator.share?'<button class="btn" onclick="sharePhoto()">📤 Share</button>':""}<button class="btn ghost" onclick="closeM()">Close</button></div>`);
+  const cv=$("phc");cv.addEventListener("pointerdown",e=>{const r=cv.getBoundingClientRect(),k=cv.width/r.width;PH.stick.push({e:PH.sel,x:(e.clientX-r.left)*k,y:(e.clientY-r.top)*k});sfx("place");drawPhoto()});
+  drawPhoto();S.photos++;qProg("photo");save()}
+function drawPhoto(){const cv=$("phc");if(!cv||!PH)return;const b=PH.base,f=PH.frame,pad=f==="none"?0:f==="polar"?28:22,capH=PH.cap?(f==="polar"?110:80):(f==="polar"?60:0);
+  cv.width=b.width+pad*2;cv.height=b.height+pad*2+capH-(f==="polar"?pad:0);const g=cv.getContext("2d"),ev=evNow();
+  const bgc={none:"#120a2e",polar:"#fffaf0",stars:"#1a1040",neon:"#0a0420",event:"#2a1030"}[f];g.fillStyle=bgc;g.fillRect(0,0,cv.width,cv.height);
+  g.drawImage(b,pad,pad);
+  if(f==="stars"){g.font="26px sans-serif";g.textBaseline="middle";for(let i=0;i<40;i++){const r=rng(i*13+7);const x=r()*cv.width,y=r()<.5?r()*pad:cv.height-r()*(pad+capH);g.fillStyle="#ffd86b";g.fillText(r()<.5?"✦":"·",x,y)}}
+  if(f==="neon"){g.strokeStyle="#ff7ad9";g.lineWidth=6;g.shadowColor="#ff7ad9";g.shadowBlur=24;g.strokeRect(pad-4,pad-4,b.width+8,b.height+8);g.strokeStyle="#7af0ff";g.shadowColor="#7af0ff";g.strokeRect(8,8,cv.width-16,cv.height-16);g.shadowBlur=0}
+  if(f==="event"&&ev){g.font="34px sans-serif";g.textBaseline="middle";for(let x=10;x<cv.width;x+=60){g.fillText(ev.crit[(x/60|0)%3],x,pad/2+2);g.fillText(ev.crit[(x/60+1|0)%3],x,cv.height-18)}}
+  PH.stick.forEach(s=>{g.font="56px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(s.e,s.x,s.y)});g.textAlign="left";
+  if(PH.cap){g.fillStyle=f==="polar"?"#3a2a5a":"#fff";g.font=`bold ${f==="polar"?40:34}px 'Comic Sans MS','Marker Felt',sans-serif`;g.textAlign="center";g.textBaseline="middle";g.fillText(PH.cap,cv.width/2,b.height+pad+(capH-(f==="polar"?pad:0))/2+(f==="polar"?0:pad/2))}
+  g.font="20px sans-serif";g.textAlign="right";g.fillStyle=f==="polar"?"#9a8ab8":"#ffffff99";g.fillText("GachiGacha · "+new Date().toLocaleDateString(),cv.width-pad-6,cv.height-12);g.textAlign="left"}
+function photoBlob(){return new Promise(ok=>$("phc").toBlob(ok,"image/png"))}
+function photoName(){return"gachigacha-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+".png"}
+async function savePhoto(){const b=await photoBlob();const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=photoName();document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);toast("📸 Photo saved to Downloads");sfx("coin")}
+async function sharePhoto(){const b=await photoBlob();const file=new File([b],photoName(),{type:"image/png"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:"My GachiGacha nest",text:PH.cap||"My GachiGacha pets ✨"});else{toast("Sharing images isn't supported here — saving instead");savePhoto()}}catch(e){if(e.name!=="AbortError")savePhoto()}}
+
+// ---------- BACKUP / RESTORE ----------
+const BKEY="gachigacha_bak";let NOSAVE=false;
+const _save6=save;save=function(){if(NOSAVE)return;_save6()};
+function baks(){try{return JSON.parse(localStorage.getItem(BKEY))||[]}catch(e){return[]}}
+function snapshot(why){try{const d=localStorage.getItem(KEY);if(!d)return;const l=baks();if(l[0]&&l[0].d===d)return;l.unshift({t:Date.now(),why:why||"auto",d});localStorage.setItem(BKEY,JSON.stringify(l.slice(0,3)))}catch(e){}}
+function autoSnap(){const l=baks();if(!l.length||Date.now()-l[0].t>30*60000)snapshot("auto")}
+setTimeout(autoSnap,4000);setInterval(autoSnap,5*60000);
+function saveCode(){const j=JSON.stringify(S);return"GG1:"+btoa(unescape(encodeURIComponent(j)))}
+function parseSave(txt){txt=(txt||"").trim();let j=txt;if(txt.startsWith("GG1:"))j=decodeURIComponent(escape(atob(txt.slice(4).replace(/\s/g,""))));const o=JSON.parse(j);
+  if(!o||!Array.isArray(o.pets)||typeof o.stars!=="number"||!Array.isArray(o.alumni))throw new Error("Not a GachiGacha save");return o}
+function exportSave(){save();const code=saveCode();modal(`<h2>📦 Back up your save</h2><p class="muted">Keep this file or code somewhere safe. Import it on any device to restore your pets.</p>
+  <textarea id="bcode" readonly style="width:100%;height:90px;font-size:11px;border-radius:10px">${code}</textarea>
+  <div class="row" style="justify-content:center;gap:8px;flex-wrap:wrap"><button class="btn gold" onclick="dlSave()">💾 Download file</button><button class="btn" onclick="copyCode()">📋 Copy code</button><button class="btn ghost" onclick="closeM()">Close</button></div>`)}
+function dlSave(){const b=new Blob([JSON.stringify(S)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="gachigacha-save-"+today()+".json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);S.lastExport=Date.now();save();toast("💾 Save file downloaded")}
+function copyCode(){const t=$("bcode");t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>toast("📋 Code copied"),()=>{document.execCommand("copy");toast("📋 Code copied")})}
+function importSave(){modal(`<h2>📥 Restore a save</h2><p class="muted">Paste a backup code, or choose a save file. Your current game is snapshotted first so you can undo.</p>
+  <textarea id="icode" placeholder="GG1:… or { … }" style="width:100%;height:90px;font-size:12px;border-radius:10px"></textarea>
+  <input type="file" id="ifile" accept=".json,application/json,text/plain" style="margin:6px 0" onchange="const f=this.files[0];if(f)f.text().then(t=>$('icode').value=t)">
+  <div class="row" style="justify-content:center;gap:8px"><button class="btn gold" onclick="doImport($('icode').value)">Restore</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+function doImport(txt,silent){let o;try{o=parseSave(txt)}catch(e){toast("❌ That doesn't look like a valid save");sfx("miss");return false}
+  if(!silent&&!confirm(`Replace your current game with this save?\n${o.pets.length} pets · ${o.alumni.length} alumni · ${o.stars}⭐`))return false;
+  save();snapshot("before import");NOSAVE=true;localStorage.setItem(KEY,JSON.stringify(o));toast("✅ Save restored — reloading…");setTimeout(()=>location.reload(),400);return true}
+function restoreBak(i){const b=baks()[i];if(!b)return;if(!confirm("Restore the snapshot from "+new Date(b.t).toLocaleString()+"? Your current game will be snapshotted first."))return;doImport(b.d,true)}
+function resetGame(){modal(`<h2>⚠️ Reset game?</h2><p>This erases <b>all</b> pets (${S.pets.length}), alumni (${S.alumni.length}), stars (${S.stars}⭐), decor and badges on this device.</p>
+  <p class="muted">A snapshot is kept in Settings → Backups, but please download a backup first.</p>
+  <div class="row" style="justify-content:center;gap:8px;flex-wrap:wrap"><button class="btn gold" onclick="dlSave()">💾 Download backup</button><button class="btn ghost" style="color:#ff6b8b" onclick="reallyReset()">Erase everything</button><button class="btn" onclick="closeM()">Keep my game</button></div>`)}
+function reallyReset(){const t=prompt('Type RESET to erase all progress');if((t||"").trim().toUpperCase()!=="RESET"){toast("Reset cancelled");return}save();snapshot("before reset");localStorage.removeItem(KEY);closeM();load();render();toast("Game reset. A snapshot was kept in Backups.")}
+const _viewSet6=viewSet;viewSet=function(){const l=baks();let h=_viewSet6();h=h.replace(/onclick="if\(confirm\('Erase all progress\?'\)\)\{localStorage\.removeItem\(KEY\);load\(\);render\(\)\}"/,'onclick="resetGame()"');
+  return`<div class="card"><h3>📦 Backup & restore</h3><p class="muted">${S.lastExport?"Last exported "+fmtDur(Date.now()-S.lastExport)+" ago.":"You haven't exported a backup yet."}</p>
+  <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn gold" onclick="exportSave()">📤 Export save</button><button class="btn" onclick="importSave()">📥 Import save</button></div>
+  <div style="margin-top:8px"><b>Auto snapshots</b> <span class="muted">(on this device, every 30 min)</span>${l.length?l.map((b,i)=>`<div class="shopi"><span class="e">🗂️</span><div style="flex:1"><b>${new Date(b.t).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</b><div class="muted">${b.why}</div></div><button class="btn ghost" style="padding:8px 10px" onclick="restoreBak(${i})">Restore</button></div>`).join(""):'<div class="muted">None yet.</div>'}</div></div>`+h};
+
+// ---------- HOME HOOKS ----------
+const _viewHome6=viewHome;viewHome=function(){let h=_viewHome6();const p=S.pets[cur];if(!p||p.exp)return h;const ev=evNow();
+  if(ev)h=h.replace('class="stage ',`class="stage ev-${ev.k} `);
+  h=h.replace('<div id="walker">',mateHTML()+'<div id="walker">');
+  h=h.replace(/(<div [^>]*class="stage [^>]*>)/,`$1<button class="cam" onclick="event.stopPropagation();photoMode()" aria-label="Photo mode">📷</button>${ev?`<button class="evpill" onclick="event.stopPropagation();evModal()">${ev.e} ${ev.cur} ${S.ev.c}</button>`:""}`);
+  const ch=h.lastIndexOf('<div class="row" style="justify-content:center;margin-top:10px');if(ch>0)h=h.slice(0,ch)+socialHTML()+h.slice(ch);else h+=socialHTML();
+  return h};
+const _sigOf6=sigOf;sigOf=function(){return _sigOf6()+"|"+(evNow()||{}).k+mates().map(q=>q.id+(q.sleeping?"z":"")).join(",")};
+const _live6=live;live=function(){_live6();const p=$("main").querySelector(".evpill");if(p&&S.ev)p.textContent=p.textContent.replace(/\d+$/,S.ev.c)};
+const _dressAll6=dressAll;dressAll=function(){_dressAll6();if(tab==="home")mates().forEach(q=>dress(document.querySelector("#mate"+q.id+" svg"),q.acc,SPECIES[q.sp],q.stage))};
+const _render6=render;render=function(){_render6();if(tab==="home")mates().forEach(q=>dress(document.querySelector("#mate"+q.id+" svg"),q.acc,SPECIES[q.sp],q.stage))};
+ACH.push({id:"photo1",n:"Say Cheese!",d:"Take a photo in Photo mode",e:"📸",r:5,c:()=>S.photos>=1},{id:"bff",n:"Best Friends",d:"Two pets become best friends",e:"💞",r:10,c:()=>Object.values(S.fr||{}).some(v=>v>=70)},
+ {id:"evegg",n:"Limited Edition",d:"Get an event-species egg",e:"🎟️",r:10,c:()=>SPECIES.some(s=>s&&s.ev&&S.dex[s.id])});
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
