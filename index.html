@@ -209,6 +209,36 @@ nav button{font-size:11.5px}nav button b{font-size:21px}
 .badge{background:#ffffff0a;border:1px solid #ffffff1a;border-radius:14px;color:#fff;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.55}
 .badge.on{opacity:1;border-color:#ffd86b88;background:#ffd86b14}
 .badge b{font-size:28px}.badge span{font-size:11px;font-weight:700}.badge small{font-size:10px;color:#b9b3dd}
+/* ---- v5 ---- */
+.celest{position:absolute;transform:translate(-50%,-50%);z-index:0;pointer-events:none}
+.sun{width:44px;height:44px;border-radius:50%;background:radial-gradient(#fff6c0,#ffd86b 60%,#ffb30000 72%);box-shadow:0 0 30px #ffd86b}
+.moon1{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#cfd3ff);box-shadow:0 0 18px #cfd3ff99}
+.moon2{position:absolute;left:38px;top:-12px;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe0f5,#ff7ad9)}
+.ph-day .star{opacity:.12!important}.ph-dawn .star,.ph-dusk .star{opacity:.35!important}
+.wxbar{position:absolute;left:8px;right:8px;top:34px;font-size:11px;background:#0007;border-radius:10px;padding:3px 8px;text-align:center;z-index:3}
+.wxfx{position:absolute;inset:0;pointer-events:none;z-index:0}
+.wx-meteor .wxfx{background:linear-gradient(200deg,transparent 45%,#fff8 49%,transparent 51%) 0 0/120px 120px;animation:met 1.2s linear infinite;opacity:.5}
+@keyframes met{to{background-position:-120px 120px}}
+.wx-aurora .wxfx{background:linear-gradient(170deg,transparent 10%,#5affc855 30%,#b28bff44 45%,transparent 60%);animation:aur 6s ease-in-out infinite alternate}
+@keyframes aur{to{transform:translateX(30px) skewX(-8deg);opacity:.6}}
+.wx-fog .wxfx{background:radial-gradient(ellipse at 30% 60%,#ff9ad544,transparent 60%),radial-gradient(ellipse at 75% 40%,#b28bff44,transparent 55%);animation:aur 8s ease-in-out infinite alternate}
+.wx-flare .wxfx{background:radial-gradient(circle at 85% 10%,#ffd86baa,transparent 55%);animation:flr 2s ease-in-out infinite}
+@keyframes flr{50%{opacity:.4}}
+.dust{position:absolute;font-size:28px;z-index:4;padding:8px;animation:dust 5s linear forwards;filter:drop-shadow(0 0 6px #fff)}
+@keyframes dust{to{transform:translate(-30px,300px) rotate(180deg)}}
+.planet{position:absolute;right:14%;top:22%;width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 30px #fff4}
+.rocket{position:absolute;font-size:34px;transform:rotate(45deg);animation:hb 1s ease-in-out infinite}
+.plg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.plb{background:#ffffff10;border:2px solid #ffffff22;border-radius:14px;color:#fff;padding:8px 2px;font-size:11px;min-height:64px}.plb b{display:block;font-size:26px}.plb.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 30%,transparent)}
+.chip.onc{border-color:#ffd86b;background:#ffd86b33}
+.prop{animation:prop .3s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes prop{50%{transform:scaleX(.2)}}
+#tut{position:fixed;left:0;right:0;bottom:70px;z-index:20;padding:10px;max-width:480px;margin:0 auto;pointer-events:none}#tut.top{bottom:auto;top:60px}
+.tutbox{pointer-events:auto;background:#2a1f6e;border:2px solid #ffd86b;border-radius:18px;padding:12px 14px;box-shadow:0 8px 30px #000a;animation:slup .3s ease-out}
+.tutbox h3{margin:2px 0}.tutbox p{margin:4px 0 10px;font-size:14px}
+.tut-hl{outline:3px solid #ffd86b!important;outline-offset:3px;box-shadow:0 0 0 9999px #0007,0 0 20px #ffd86b!important;position:relative;z-index:15;border-radius:14px}
+/* touch targets */
+.chip{min-height:30px;display:inline-flex;align-items:center}.tog{min-height:40px}.speed button{min-height:40px;min-width:52px}
+.alum .f{min-width:44px;min-height:44px}.tabs button{min-height:44px}.back{min-height:40px}#game .gh .btn{min-height:40px;min-width:44px}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -1132,6 +1162,156 @@ function viewBadges(){const n=ACH.filter(a=>S.ach[a.id]).length;return`<div clas
 const _checkStage4=checkStage;checkStage=function(p){const o=p.stage;_checkStage4(p);if(o===0&&p.stage>=1)S.stats3.hatch++};
 const _claimQ4=claimQ;claimQ=function(i){const q=S.quests.list[i],was=q&&q.claimed;_claimQ4(i);if(q&&!was&&q.claimed){S.stats3.qc++;save();checkAch()}};
 setInterval(()=>{mailTick();checkAch()},5000);setTimeout(()=>{mailTick();checkAch()},1500);
+
+// ================= v5: day/night, weather, expeditions, accessories, tutorial, haptics =================
+let wasFresh=false;
+function ensure5(){S.wx=S.wx||{type:null,until:0,next:Date.now()+3*60000,got:0};S.accOwned=S.accOwned||{};S.artifacts=S.artifacts||{};
+  if(S.haptic==null)S.haptic=true;if(S.tut==null)S.tut=wasFresh?"todo":"done";S.stats3.exp=S.stats3.exp||0}
+const _load5=load;load=function(){wasFresh=!localStorage.getItem(KEY);_load5();ensure5()};
+// ---------- HAPTICS ----------
+const VIB={tap:6,chomp:12,hit:15,good:10,miss:[25,30,25],hatch:[40,50,90],evolve:[30,40,30,40,80],reveal:50,coin:18,jump:8,place:12,win:[20,40,60]};
+function buzz(p){if(S.haptic&&navigator.vibrate&&(!navigator.userActivation||navigator.userActivation.hasBeenActive))try{navigator.vibrate(p)}catch(e){}}
+const _sfx5=sfx;sfx=function(n,a){if(VIB[n]!=null)buzz(VIB[n]);_sfx5(n,a)};
+// ---------- DAY / NIGHT ----------
+function phase(){const h=new Date().getHours()+new Date().getMinutes()/60;return h<5||h>=21?"night":h<7?"dawn":h<17?"day":"dusk"}
+const SKY={night:"linear-gradient(#0b0626,#24185a 70%,#3b2477)",dawn:"linear-gradient(#3a2a7a,#c0487a 60%,#ffb36b)",day:"linear-gradient(#3a6bd6,#7ab8ff 60%,#bfe3ff)",dusk:"linear-gradient(#2b1a5e,#8a3a8a 55%,#ff8a5a)"};
+const PH_E={night:"🌙",dawn:"🌅",day:"☀️",dusk:"🌇"};
+function skyHTML(){const d=new Date(),h=d.getHours()+d.getMinutes()/60,ph=phase();let f,ob;
+  if(h>=6&&h<19){f=(h-6)/13;ob=`<div class="sun"></div>`}else{f=((h+24-19)%24)/11;ob=`<div class="moon1"></div><div class="moon2"></div>`}
+  const x=8+f*84,y=52-Math.sin(f*Math.PI)*38;return`<div class="celest" style="left:${x}%;top:${y}%">${ob}</div>`}
+// ---------- WEATHER ----------
+const WX={meteor:{e:"🌠",n:"Meteor shower",d:"Tap falling stardust for ⭐!",dust:"⭐",cls:"wx-meteor",m:{}},
+  aurora:{e:"🌌",n:"Aurora",d:"Pets feel calm: happiness drains 30% slower",dust:"💚",cls:"wx-aurora",m:{happy:.7}},
+  fog:{e:"🌫️",n:"Nebula fog",d:"Cozy & sleepy: energy drains slower, but it's messy",dust:"🫧",cls:"wx-fog",m:{energy:.75,clean:1.2}},
+  flare:{e:"🔆",n:"Solar flare",d:"Charged up: energy drains 30% slower, appetite up",dust:"🔥",cls:"wx-flare",m:{energy:.7,hunger:1.2}}};
+function wxOn(){return S.wx&&S.wx.type&&Date.now()<S.wx.until?WX[S.wx.type]:null}
+function startWx(t){t=t||pick(Math.random,Object.keys(WX));S.wx={type:t,until:Date.now()+(3+Math.random()*2)*60000,next:0,got:0};save();toast(`${WX[t].e} ${WX[t].n}! ${WX[t].d}`);sfx("evolve");if(tab==="home")render()}
+function wxTick(){const w=S.wx;if(!w)return;const t=Date.now();if(w.type&&t>=w.until){w.type=null;w.next=t+(10+Math.random()*15)*60000;save();if(tab==="home")render()}
+  else if(!w.type&&t>=w.next&&!document.hidden)startWx()}
+const _decorMults5=decorMults;decorMults=function(){const m=_decorMults5(),w=wxOn();if(w)for(const k in w.m)m[k]*=w.m[k];return m};
+function spawnDust(){const w=wxOn(),st=document.querySelector(".stage");if(!w||!st||tab!=="home"||busy||S.wx.got>=10)return;
+  const d=document.createElement("div");d.className="dust";d.textContent=w.dust;d.style.left=(8+Math.random()*80)+"%";d.style.top="-10%";st.appendChild(d);
+  d.addEventListener("pointerdown",e=>{e.stopPropagation();if(d.dataset.g)return;d.dataset.g=1;S.wx.got++;S.stars+=1;save();$("stars").textContent=S.stars;particle("+1⭐",e.clientX,e.clientY,"float");sfx("coin");d.remove()});setTimeout(()=>d.remove(),5200)}
+setInterval(spawnDust,1600);
+// ---------- ACCESSORIES ----------
+const TOPY={blob:40,round:45,tall:30,bean:36,star:38,ghost:52,square:46,drop:44};
+const ACC=[
+ {id:"party",slot:"head",n:"Party Hat",c:15,d:T=>`<path d="M82 ${T+6} L100 ${T-38} L118 ${T+6}Z" fill="#ff7ad9" stroke="#fff" stroke-width="2"/><path d="M88 ${T-10} L112 ${T-10} M92 ${T-22} L108 ${T-22}" stroke="#ffd86b" stroke-width="4"/><circle cx="100" cy="${T-40}" r="6" fill="#ffd86b"/>`},
+ {id:"tophat",slot:"head",n:"Top Hat",c:25,d:T=>`<rect x="72" y="${T}" width="56" height="7" rx="3" fill="#222"/><rect x="82" y="${T-32}" width="36" height="34" rx="3" fill="#2a2a3a"/><rect x="82" y="${T-8}" width="36" height="6" fill="#ff5a8a"/>`},
+ {id:"beanie",slot:"head",n:"Cozy Beanie",c:18,d:T=>`<path d="M68 ${T+10} Q68 ${T-26} 100 ${T-26} Q132 ${T-26} 132 ${T+10}Z" fill="#7af0ff"/><rect x="66" y="${T+2}" width="68" height="10" rx="5" fill="#4aa8ff"/><circle cx="100" cy="${T-28}" r="8" fill="#fff"/>`},
+ {id:"flowers",slot:"head",n:"Flower Crown",c:20,d:T=>[70,85,100,115,130].map((x,i)=>`<circle cx="${x}" cy="${T+4-(i%2)*3}" r="7" fill="${["#ff7ad9","#ffd86b","#fff","#8dff8a","#ff9f5a"][i]}"/><circle cx="${x}" cy="${T+4-(i%2)*3}" r="2.5" fill="#ffb300"/>`).join("")},
+ {id:"bow",slot:"head",n:"Big Bow",c:12,d:T=>`<path d="M118 ${T+8} L102 ${T-6} L102 ${T+22}Z M118 ${T+8} L134 ${T-6} L134 ${T+22}Z" fill="#ff5a8a" transform="translate(0 0)"/><circle cx="118" cy="${T+8}" r="5" fill="#ff9ab8"/>`},
+ {id:"propeller",slot:"head",n:"Propeller Cap",c:22,d:T=>`<path d="M74 ${T+8} Q74 ${T-18} 100 ${T-18} Q126 ${T-18} 126 ${T+8}Z" fill="#ffd86b"/><path d="M74 ${T+8} Q100 ${T-18} 100 ${T-18}" fill="#ff5a8a" opacity=".6"/><rect x="98" y="${T-28}" width="4" height="10" fill="#666"/><ellipse class="prop" cx="100" cy="${T-29}" rx="20" ry="3" fill="#7af0ff"/>`},
+ {id:"crown",slot:"head",n:"Royal Crown",c:0,ex:1,d:T=>`<path d="M74 ${T+6} L74 ${T-18} L87 ${T-6} L100 ${T-24} L113 ${T-6} L126 ${T-18} L126 ${T+6}Z" fill="#ffc94a" stroke="#a66b00" stroke-width="2"/><circle cx="100" cy="${T-2}" r="4" fill="#ff5a8a"/><circle cx="84" cy="${T}" r="3" fill="#7af0ff"/><circle cx="116" cy="${T}" r="3" fill="#8dff8a"/>`},
+ {id:"halo",slot:"head",n:"Star Halo",c:0,ex:1,d:T=>`<ellipse cx="100" cy="${T-16}" rx="28" ry="7" fill="none" stroke="#ffe27a" stroke-width="5" opacity=".9"/>`},
+ {id:"wizard",slot:"head",n:"Cosmic Wizard Hat",c:0,ex:1,d:T=>`<path d="M68 ${T+6} Q100 ${T-6} 132 ${T+6} L112 ${T-6} Q108 ${T-40} 126 ${T-52} Q96 ${T-44} 90 ${T-6}Z" fill="#6b4bd6" stroke="#c56bff" stroke-width="2"/><text x="96" y="${T-14}" font-size="12">⭐</text>`},
+ {id:"roundg",slot:"face",n:"Round Specs",c:12,d:()=>`<g fill="#ffffff22" stroke="#333" stroke-width="3.5"><circle cx="80" cy="95" r="15"/><circle cx="120" cy="95" r="15"/></g><path d="M95 95 Q100 90 105 95" stroke="#333" stroke-width="3" fill="none"/>`},
+ {id:"starg",slot:"face",n:"Star Shades",c:18,d:()=>{const st=(x)=>`<path transform="translate(${x} 95)" d="M0 -17 L5 -6 L17 -5 L8 3 L11 15 L0 9 L-11 15 L-8 3 L-17 -5 L-5 -6Z" fill="#ff7ad9cc" stroke="#ffd86b" stroke-width="2"/>`;return st(80)+st(120)+`<path d="M92 92 L108 92" stroke="#ffd86b" stroke-width="3"/>`}},
+ {id:"hearts",slot:"face",n:"Heart Shades",c:18,d:()=>{const h=x=>`<path transform="translate(${x} 90)" d="M0 16 C-22 0 -14 -12 0 -4 C14 -12 22 0 0 16Z" fill="#2a0a1acc" stroke="#ff5a8a" stroke-width="2.5"/>`;return h(80)+h(120)+`<path d="M92 92 L108 92" stroke="#ff5a8a" stroke-width="3"/>`}},
+ {id:"monocle",slot:"face",n:"Fancy Monocle",c:15,d:()=>`<circle cx="120" cy="95" r="15" fill="#ffffff22" stroke="#d4a017" stroke-width="3.5"/><path d="M134 100 Q140 130 128 150" stroke="#d4a017" stroke-width="2" fill="none"/>`},
+ {id:"visor",slot:"face",n:"Space Visor",c:0,ex:1,d:()=>`<rect x="62" y="83" width="76" height="24" rx="12" fill="#7af0ff88" stroke="#fff" stroke-width="3"/><path d="M70 90 L84 90" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`},
+ {id:"bowtie",slot:"neck",n:"Bow Tie",c:10,d:()=>`<path d="M100 146 L82 136 L82 156Z M100 146 L118 136 L118 156Z" fill="#ff5a8a" stroke="#a02050" stroke-width="2"/><circle cx="100" cy="146" r="5" fill="#a02050"/>`},
+ {id:"scarf",slot:"neck",n:"Comet Scarf",c:16,d:()=>`<path d="M62 136 Q100 152 138 136 L138 148 Q100 164 62 148Z" fill="#ffd86b"/><path d="M118 148 L126 176 L112 176 L108 152Z" fill="#ff9f5a"/>`},
+ {id:"medal",slot:"neck",n:"Star Medal",c:20,d:()=>`<path d="M90 128 L100 150 L110 128" stroke="#4aa8ff" stroke-width="6" fill="none"/><circle cx="100" cy="154" r="9" fill="#ffc94a" stroke="#a66b00" stroke-width="2"/>`},
+ {id:"cape",slot:"back",n:"Hero Cape",c:28,d:()=>`<path d="M60 118 Q40 160 38 178 L162 178 Q160 160 140 118Z" fill="#c0283f"/><path d="M60 118 Q100 128 140 118" stroke="#ffd86b" stroke-width="4" fill="none"/>`},
+ {id:"wings",slot:"back",n:"Nebula Wings",c:0,ex:1,d:()=>`<path d="M60 110 Q10 70 18 130 Q30 150 62 135Z M140 110 Q190 70 182 130 Q170 150 138 135Z" fill="#b28bffaa" stroke="#fff" stroke-width="2"/>`}];
+const AI={};ACC.forEach(a=>AI[a.id]=a);const SLOTN={head:"🎩 Head",face:"👓 Face",neck:"🎀 Neck",back:"🦸 Back"};
+function accMarkup(acc,sp,stage){if(!acc||stage<1)return{f:"",b:""};const sc=[0,.62,.78,.9,1][stage]||1,T=TOPY[sp.body]||42,g=s=>s?`<g class="accg" transform="translate(100 168) scale(${sc}) translate(-100 -168)">${s}</g>`:"";
+  let f="",b="";for(const sl in acc){const a=AI[acc[sl]];if(!a)continue;if(sl==="back")b+=a.d(T);else f+=a.d(T)}return{f:g(f),b:g(b)}}
+function dress(svg,acc,sp,stage){if(!svg||!acc)return;const m=accMarkup(acc,sp,stage);svg.querySelectorAll(".accg").forEach(e=>e.remove());if(m.b)svg.insertAdjacentHTML("afterbegin",m.b);if(m.f)svg.insertAdjacentHTML("beforeend",m.f)}
+function dressAll(){if(tab==="home"){const p=S.pets[cur];if(p&&!p.exp)dress(document.querySelector("#petbox svg"),p.acc,SPECIES[p.sp],p.stage);
+    document.querySelectorAll(".tabs button").forEach((b,i)=>{const q=S.pets[i];if(q)dress(b.querySelector("svg"),q.acc,SPECIES[q.sp],q.stage)})}
+  if(tab==="alumni")document.querySelectorAll("#main .alum").forEach(el=>{const m=(el.getAttribute("onclick")||"").match(/visit\((\d+)\)/);const a=m&&S.alumni.find(x=>x.id==m[1]);if(a)dress(el.querySelector("svg"),a.acc,SPECIES[a.sp],4)})}
+const _visit5=visit;visit=function(id){_visit5(id);const a=S.alumni.find(x=>x.id===id);if(a)dress(document.querySelector("#mbox svg.pet"),a.acc,SPECIES[a.sp],4)};
+function outfit(){const p=S.pets[cur];if(!p)return;p.acc=p.acc||{};const own=ACC.filter(a=>S.accOwned[a.id]);
+  modal(`<h2>👒 ${p.nick}'s outfit</h2><div id="ofp" style="width:150px;margin:0 auto">${petSVG(SPECIES[p.sp],p.stage,p.variant,"happy")}</div>
+  ${Object.keys(SLOTN).map(sl=>`<div style="text-align:left;margin-top:8px"><b style="font-size:13px">${SLOTN[sl]}</b><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:4px"><button class="chip big2 ${!p.acc[sl]?"onc":""}" onclick="equip('${sl}',null)">None</button>${own.filter(a=>a.slot===sl).map(a=>`<button class="chip big2 ${p.acc[sl]===a.id?"onc":""}" onclick="equip('${sl}','${a.id}')">${a.n}</button>`).join("")||'<span class="muted">none owned</span>'}</div></div>`).join("")}
+  <p class="muted">Buy accessories in More → Shop, or find rare ones on expeditions. Pets keep their outfit when they move out.</p><button class="btn gold" onclick="closeM()">Done</button>`);dress(document.querySelector("#ofp svg"),p.acc,SPECIES[p.sp],p.stage)}
+function equip(sl,id){const p=S.pets[cur];p.acc=p.acc||{};if(id)p.acc[sl]=id;else delete p.acc[sl];sfx("place");save();outfit()}
+function buyAcc(id){const a=AI[id];if(S.accOwned[id]){toast("Already owned — equip it from the pet card 👒");return}if(S.stars<a.c){toast("Not enough stars ⭐");sfx("miss");return}S.stars-=a.c;S.accOwned[id]=1;sfx("coin");save();render();toast(`👒 ${a.n} bought! Tap 👒 Outfit on a pet to wear it`)}
+function accThumb(a){return`<svg viewBox="40 0 120 200" style="width:44px;height:60px">${accMarkup({[a.slot]:a.id},{body:"round"},4).b}<path d="M100 45 A62 62 0 1 1 99.9 45Z" fill="#ffffff22" transform="translate(100 168) scale(1) translate(-100 -168)"/>${accMarkup({[a.slot]:a.id},{body:"round"},4).f}</svg>`}
+const _viewShop5=viewShop;viewShop=function(){return _viewShop5()+`<div class="card"><b>👒 Accessories</b><div class="muted">Wear them on any pet. ✨ = expedition-only finds.</div>${ACC.map(a=>`<div class="shopi"><span class="e">${accThumb(a)}</span><div style="flex:1"><b>${a.n}</b><div class="muted">${SLOTN[a.slot]}${a.ex?" · ✨ expedition find":""}</div></div>${S.accOwned[a.id]?'<span class="muted">✓ Owned</span>':a.ex?'<span class="muted">🔒 Explore</span>':`<button class="btn gold" style="padding:8px 10px" onclick="buyAcc('${a.id}')">${a.c}⭐</button>`}</div>`).join("")}</div>`};
+// ---------- EXPEDITIONS ----------
+const PLANETS=[{id:"zorb",e:"🪐",n:"Zorb Rings",c:"#c56bff",lines:["skated along the glittering rings","found a ring-shard shaped like a heart","raced a moonlet and almost won"]},
+ {id:"glim",e:"🌕",n:"Glimmer Moon",c:"#ffd86b",lines:["bounced across silver craters","napped in a warm moon-crater","collected glowing moon-dust"]},
+ {id:"aqua",e:"🌊",n:"Aquaria Prime",c:"#4aa8ff",lines:["swam with friendly jelly-comets","found a pearl in a tide pool","learned to blow bubble-rings"]},
+ {id:"ember",e:"🌋",n:"Ember Reach",c:"#ff7a4a",lines:["toasted space-marshmallows on a volcano","ran from a lava hiccup","made friends with a fire-sprite"]},
+ {id:"void",e:"🕳️",n:"Whispering Void",c:"#5a3fbf",lines:["listened to the stars whisper","floated past a sleepy black hole","followed a trail of lost starlight"]}];
+const DURS=[{k:"s",n:"15 min",ms:15*60000,st:[3,6],dec:.2,acc:.12,art:.03,drain:12},{k:"m",n:"1 hour",ms:3600e3,st:[8,14],dec:.4,acc:.25,art:.08,drain:22},{k:"l",n:"4 hours",ms:4*3600e3,st:[20,35],dec:.7,acc:.5,art:.2,drain:35}];
+const ARTS=[{id:"map",e:"🗺️",n:"Ancient Star Map"},{id:"marble",e:"🔮",n:"Singularity Marble"},{id:"fossil",e:"🦴",n:"Comet Fossil"},{id:"crystal",e:"💎",n:"Time Crystal"},{id:"musicbox",e:"🎼",n:"Alien Music Box"},{id:"pearl",e:"🫧",n:"Nebula Pearl"},{id:"compass",e:"🧭",n:"Void Compass"},{id:"goldrock",e:"🌟",n:"Golden Asteroid"}];
+function canExp(p){return p&&p.stage>=3&&!p.exp&&!p.sleeping&&!p.ready}
+let EXPSEL={pl:"zorb",d:"s"};
+function expPicker(){const p=S.pets[cur];if(!canExp(p)){toast(p&&p.stage<3?"Only Teens and Adults can explore 🚀":p&&p.sleeping?"Wake them up first ☀️":"Can't go right now");return}
+  modal(`<h2>🚀 Send ${p.nick} exploring</h2><div class="muted">Real-time trip. ${p.nick} can't be cared for while away (stats pause), and comes back a bit hungry, tired and dusty.</div>
+  <div class="plg">${PLANETS.map(pl=>`<button class="plb ${EXPSEL.pl===pl.id?"on":""}" style="--c:${pl.c}" onclick="EXPSEL.pl='${pl.id}';expPicker()"><b>${pl.e}</b>${pl.n}</button>`).join("")}</div>
+  <div class="row" style="justify-content:center;gap:6px;margin:8px 0">${DURS.map(d=>`<button class="tog ${EXPSEL.d===d.k?"on":""}" onclick="EXPSEL.d='${d.k}';expPicker()">${d.n}</button>`).join("")}</div>
+  ${(()=>{const d=DURS.find(x=>x.k===EXPSEL.d);return`<div class="muted">Rewards: ${d.st[0]}–${d.st[1]}⭐ · decor ${d.dec*100}% · accessory ${d.acc*100}% · artifact ${d.art*100}%</div>`})()}
+  <div class="row" style="justify-content:center;margin-top:10px"><button class="btn gold" onclick="sendExp()">🚀 Launch!</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+function sendExp(){const p=S.pets[cur];if(!canExp(p))return;const d=DURS.find(x=>x.k===EXPSEL.d);p.exp={pl:EXPSEL.pl,d:d.k,start:Date.now(),end:Date.now()+d.ms};S.stats3.exp++;save();sfx("jump");buzz([30,30,60]);closeM();toast(`🚀 ${p.nick} blasted off to ${PLANETS.find(x=>x.id===p.exp.pl).n}!`)}
+function finishExp(p,early){const e=p.exp,d=DURS.find(x=>x.k===e.d),pl=PLANETS.find(x=>x.id===e.pl);const r=Math.random,got=[];
+  const frac=early?Math.min(1,(Date.now()-e.start)/(e.end-e.start))*.5:1;
+  const st=Math.round((d.st[0]+r()*(d.st[1]-d.st[0]))*frac);S.stars+=st;got.push(st+"⭐");
+  if(!early){if(r()<d.dec){const it=pick(r,DECOR);S.decor.owned[it.id]=(S.decor.owned[it.id]||0)+1;got.push((it.e||"🧶")+" "+it.n)}
+    if(r()<d.acc){const pool=ACC.filter(a=>!S.accOwned[a.id]&&(a.ex||r()<.5));const a=pool.length?pick(r,pool):null;if(a){S.accOwned[a.id]=1;got.push("👒 "+a.n+(a.ex?" ✨":""))}}
+    if(r()<d.art){const a=pick(r,ARTS);S.artifacts[a.id]=(S.artifacts[a.id]||0)+1;got.push(a.e+" "+a.n+" (artifact!)");sfx("reveal","legendary")}}
+  const lines=pl.lines.slice().sort(()=>r()-.5).slice(0,early?1:2);const dr=d.drain*(early?.5:1);
+  p.hunger=Math.max(5,p.hunger-dr);p.energy=Math.max(5,p.energy-dr*1.2);p.clean=Math.max(5,p.clean-dr);p.happy=Math.min(100,p.happy+10);
+  delete p.exp;save();sfx("win");
+  modal(`<h2>${pl.e} ${p.nick} is back!</h2>${petSVG(SPECIES[p.sp],p.stage,p.variant,"happy","pop").replace("<svg",'<svg id="exps" style="width:120px"')}
+   <div class="card" style="text-align:left"><b>📓 Travel log — ${pl.n}</b>${lines.map(l=>`<div>• ${p.nick} ${l}.</div>`).join("")}${early?"<div>• …but was called home early.</div>":`<div>• ${p.nick} ${pick(r,["waved at a passing starship","drew you a little map","brought back a souvenir"])}.</div>`}</div>
+   <div class="card"><b>🎁 Found:</b><br>${got.join("<br>")}</div><p class="muted">−${Math.round(dr)} fullness/clean, tired · +10 💖 from the adventure</p><button class="btn gold" onclick="closeM()">Welcome home!</button>`);
+  dress(document.querySelector("#exps"),p.acc,SPECIES[p.sp],p.stage);checkAch()}
+function recall(){const p=S.pets[cur];if(p&&p.exp&&confirm("Call "+p.nick+" home early? Only a partial star reward."))finishExp(p,true)}
+function openReport(){const p=S.pets[cur];if(p&&p.exp&&Date.now()>=p.exp.end)finishExp(p,false)}
+let expNotified={};function expTick(){S.pets.forEach(p=>{if(p.exp&&Date.now()>=p.exp.end&&!expNotified[p.id]){expNotified[p.id]=1;notify("🚀 "+p.nick+" is back!","Open GachiGacha to see what they found.","exp"+p.id);toast("🚀 "+p.nick+" is back from exploring!");if(tab==="home")render()}})}
+const _step5=step;step=function(p,dt){if(p.exp)return;_step5(p,dt)};
+const _care5=care;care=function(k){const p=S.pets[cur];if(p&&p.exp){toast(p.nick+" is away exploring 🚀");return}_care5(k)};
+const _moveOut5=moveOut;moveOut=function(){const p=S.pets[cur];if(p&&p.exp){toast("Wait for "+p.nick+" to come home first");return}const acc=p&&p.acc;_moveOut5();if(acc&&S.alumni[0]&&p&&S.alumni[0].id===p.id){S.alumni[0].acc=acc;save()}};
+const _parentsList5=parentsList;parentsList=function(){return _parentsList5().filter(x=>!x.o.exp)};
+function awayHTML(p){const e=p.exp,pl=PLANETS.find(x=>x.id===e.pl),left=e.end-Date.now(),f=clamp(1-left/(e.end-e.start),0,1);
+  return`<div class="stage" style="background:${SKY[phase()]}">${starsHTML(30)}${skyHTML()}<div class="bub">${left>0?`${p.nick} is exploring ${pl.n}…`:`${p.nick} is home! 🎉`}</div><div class="ground"></div>${decorHTML()}
+  <div class="planet" style="background:radial-gradient(circle at 35% 30%,#fff8,${pl.c} 55%)">${pl.e}</div><div class="rocket" style="left:${10+f*62}%;bottom:${30+Math.sin(f*Math.PI)*45}%">🚀</div></div>
+  <div class="card" style="text-align:center"><b style="font-size:17px">${p.nick}</b> <span class="muted">on an expedition</span><div class="prog"><i style="width:${f*100}%"></i></div>
+  <div class="muted" id="expl">${left>0?"Returns in "+fmtDur(left):"Back now!"}</div>
+  <div class="row" style="justify-content:center;margin-top:8px">${left>0?`<button class="btn ghost" onclick="recall()">📡 Call home early</button>`:`<button class="btn gold" onclick="openReport()">📓 Open travel report</button>`}</div></div>`}
+// ---------- NEST HOOKS ----------
+const _viewHome5=viewHome;viewHome=function(){let h=_viewHome5();const p=S.pets[cur];if(!p)return h;
+  if(p.exp){const te=h.indexOf("</div>")+6;return h.slice(0,te)+awayHTML(p)}
+  const w=wxOn(),def=!S.decor||S.decor.bg==="default";
+  h=h.replace('class="stage ',`class="stage ph-${phase()} ${w?w.cls:""} `);if(def)h=h.replace('<div style="" class="stage','<div style="background:'+SKY[phase()]+'" class="stage');
+  h=h.replace('<div class="ground"></div>',skyHTML()+(w?`<div class="wxfx"></div><div class="wxbar">${w.e} ${w.n} · ${w.d} · <span id="wxl">${fmtDur(S.wx.until-Date.now())}</span></div>`:"")+'<div class="ground"></div>');
+  h=h.replace('onclick="toggleDeco()">🛋️ Decorate</button>',`onclick="toggleDeco()">🛋️ Decorate</button><button class="btn ghost" style="padding:8px 14px;font-size:13px" onclick="outfit()">👒 Outfit</button>${p.stage>=3&&!p.ready?`<button class="btn ghost" style="padding:8px 14px;font-size:13px" onclick="expPicker()">🚀 Explore</button>`:""}`);
+  return h};
+const _sigOf5=sigOf;sigOf=function(){const p=S.pets[cur];return _sigOf5()+"|"+phase()+(wxOn()?S.wx.type:"")+(p&&p.exp?"x"+(Date.now()>=p.exp.end):"")+JSON.stringify(p&&p.acc||"")+S.pets.map(q=>q.exp?1:0).join("")};
+const _live5=live;live=function(){const p=S.pets[cur];if(p&&p.exp){const e=$("expl");if(e)e.textContent=Date.now()<p.exp.end?"Returns in "+fmtDur(p.exp.end-Date.now()):"Back now!";return}_live5();const l=$("wxl");if(l&&wxOn())l.textContent=fmtDur(S.wx.until-Date.now())};
+const _render5=render;render=function(){_render5();dressAll();const c=$("clock");if(c)c.textContent=PH_E[phase()]+" "+c.textContent;
+  document.querySelectorAll(".tabs button").forEach((b,i)=>{if(S.pets[i]&&S.pets[i].exp)b.insertAdjacentHTML("beforeend"," 🛰️")})};
+// ---------- TUTORIAL ----------
+const TUT=[{t:"👋 Welcome to GachiGacha!",d:"You raise little intergalactic creatures until they're ready to live on their own. Let's take a quick tour!"},
+ {t:"🥚 Your first egg",d:"This egg hatches in about 1 minute. Tap it to give it a wiggle!",sel:"#petbox",tab:"home"},
+ {t:"🍩 Feeding",d:"When your pet hatches, tap Feed and drag a snack onto it. Each pet has a secret favorite food!",sel:".acts button:nth-child(1)",tab:"home"},
+ {t:"🎮 Playing",d:"Play opens 5 minigames. High scores earn happiness and ⭐ stars.",sel:".acts button:nth-child(2)",tab:"home"},
+ {t:"📊 Care stats",d:"Keep these bars up. Caring when your pet really needs it earns stars, and good care decides how it evolves!",sel:".stats",tab:"home"},
+ {t:"🎰 Gacha",d:"Spend stars on cosmic eggs here. Pity guarantees an Epic within 20 pulls!",sel:'#nav button[data-t="gacha"]'},
+ {t:"📜 Daily quests",d:"Three new quests every day, plus a login streak calendar.",sel:'#nav button[data-t="quests"]'},
+ {t:"🏡 Alumni",d:"After ~30 days your pet grows up and moves out. Visit them here and read their postcards!",sel:'#nav button[data-t="alumni"]'},
+ {t:"✨ That's it!",d:"Shop, badges and settings live under ☰ More. You can replay this tour from Settings. Have fun!"}];
+let TI=-1;
+function startTut(){if($("modal").style.display==="flex"){setTimeout(startTut,800);return}TI=0;tab="home";render();showTut()}
+function showTut(){document.querySelectorAll(".tut-hl").forEach(e=>e.classList.remove("tut-hl"));let o=$("tut");if(TI<0||TI>=TUT.length){o&&o.remove();TI=-1;S.tut="done";save();return}
+  const s=TUT[TI];if(s.tab&&tab!==s.tab){tab=s.tab;render()}if(!o){o=document.createElement("div");o.id="tut";document.body.appendChild(o)}
+  const el=s.sel&&document.querySelector(s.sel);if(el){el.classList.add("tut-hl");el.scrollIntoView({block:"center",behavior:"smooth"})}
+  const r=el?el.getBoundingClientRect():null,top=r&&r.top>innerHeight/2;
+  o.className=top?"top":"";o.innerHTML=`<div class="tutbox"><div class="muted">${TI+1} / ${TUT.length}</div><h3>${s.t}</h3><p>${s.d}</p><div class="row" style="justify-content:space-between"><button class="btn ghost" onclick="TI=-1;showTut()">Skip tour</button><button class="btn gold" onclick="TI++;showTut()">${TI===TUT.length-1?"Let's go!":"Next ›"}</button></div></div>`}
+const _render5b=render;render=function(){_render5b();if(TI>=0){const s=TUT[TI],el=s&&s.sel&&document.querySelector(s.sel);if(el)el.classList.add("tut-hl")}};
+// ---------- SETTINGS / BADGES additions ----------
+const _viewSet5=viewSet;viewSet=function(){return`<div class="card"><h3>📳 Haptics & tour</h3><div class="row" style="justify-content:space-between"><span>Vibration on key actions</span><button class="tog ${S.haptic?"on":""}" onclick="S.haptic=!S.haptic;save();buzz(30);render()">${S.haptic?"ON":"OFF"}</button></div>
+  <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px"><button class="btn" onclick="startTut()">🎓 Replay tutorial</button><button class="btn ghost" onclick="startWx();tab='home';render()">🌠 Trigger space weather</button></div></div>`+_viewSet5()};
+const _viewBadges5=viewBadges;viewBadges=function(){return _viewBadges5()+`<div class="card"><h3>🏺 Artifacts</h3><div class="muted">Rare finds from expeditions.</div><div class="bgrid" style="margin-top:6px">${ARTS.map(a=>`<div class="badge ${S.artifacts[a.id]?"on":""}"><b>${S.artifacts[a.id]?a.e:"❔"}</b><span>${S.artifacts[a.id]?a.n:"???"}</span><small>${S.artifacts[a.id]?"×"+S.artifacts[a.id]:""}</small></div>`).join("")}</div></div>`};
+ACH.push({id:"exp1",e:"🚀",n:"Explorer",d:"Send a pet on an expedition",r:10,c:()=>S.stats3.exp>=1},{id:"art1",e:"🏺",n:"Archaeologist",d:"Find an artifact",r:20,c:()=>Object.keys(S.artifacts).length>=1},
+ {id:"acc3",e:"👒",n:"Fashionista",d:"Own 3 accessories",r:15,c:()=>Object.keys(S.accOwned).length>=3},{id:"art8",e:"🗿",n:"Museum Curator",d:"Find all 8 artifacts",r:80,c:()=>Object.keys(S.artifacts).length>=8});
+setInterval(()=>{wxTick();expTick()},3000);
+setTimeout(()=>{wxTick();expTick();if(S.tut==="todo")startTut()},900);
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
