@@ -185,6 +185,30 @@ nav button.dot::after{content:"";position:absolute;top:6px;right:22%;width:9px;h
 .hline{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff7ad9,#ffd86b,#7af0ff);box-shadow:0 0 12px #fff}
 .bmsg{position:absolute;width:100%;text-align:center;font-weight:800;font-size:20px}
 .bmsg.pop{animation:pop .4s cubic-bezier(.3,1.8,.5,1)}
+/* ---- v4 ---- */
+nav button{font-size:11.5px}nav button b{font-size:21px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mcard{background:#ffffff10;border:1px solid #ffffff1f;border-radius:18px;color:#fff;padding:18px 8px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.mcard b{font-size:36px}.mcard span{font-weight:700;font-size:15px}.mcard small{color:#b9b3dd;font-size:11px}
+.back{background:none;border:0;color:#ffd86b;font-weight:700;font-size:14px;padding:8px 2px 0}
+.banner{background:linear-gradient(135deg,#ff7ad933,#ffd86b22 60%,#7af0ff22)}
+.pity{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;text-align:left;margin-top:10px}
+.eggb{background:#ffffff10;border:1px solid #ffffff22;border-radius:12px;padding:2px;width:52px;height:52px}.eggb svg{width:100%;height:100%}
+.pchip{display:flex;align-items:center;gap:4px;background:#ffffff10;border:2px solid #ffffff22;border-radius:14px;color:#fff;padding:3px 8px 3px 3px;font-size:12px;text-align:left}
+.pchip svg{width:40px;height:40px}.pchip small{display:block;color:#b9b3dd;font-size:10px}.pchip.on{border-color:#ff7ad9;background:#ff7ad933}
+.chip.hyb{background:linear-gradient(90deg,#ff7ad966,#7af0ff66)}
+.nl{animation:nl 1.5s ease-in-out}.nr{animation:nr 1.5s ease-in-out}
+@keyframes nl{50%{transform:translateX(25px) rotate(8deg)}}@keyframes nr{50%{transform:translateX(-25px) rotate(-8deg)}}
+.mailbtn{display:flex;align-items:center;gap:8px;width:100%;color:#fff;font-size:15px;text-align:left}
+.postcard{position:relative;border-radius:16px;min-height:220px;padding:16px;text-align:left;overflow:hidden;border:6px solid #fff;box-shadow:0 6px 20px #0008}
+.postcard .stamp{position:absolute;right:10px;top:10px;width:76px;height:76px;background:#fff3;border:3px dashed #fff;border-radius:8px}
+.postcard .stamp svg{width:100%;height:100%}
+.pctext{position:relative;margin-top:84px;font-size:14px;line-height:1.4;font-style:italic;text-shadow:0 1px 3px #0009}
+.hs{margin-left:auto;text-align:center;font-size:12px;color:#ffd86b;font-weight:700;min-width:34px}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.badge{background:#ffffff0a;border:1px solid #ffffff1a;border-radius:14px;color:#fff;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.55}
+.badge.on{opacity:1;border-color:#ffd86b88;background:#ffd86b14}
+.badge b{font-size:28px}.badge span{font-size:11px;font-weight:700}.badge small{font-size:10px;color:#b9b3dd}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -975,6 +999,139 @@ const _moveOut=moveOut;moveOut=function(){const p=S.pets[cur];_moveOut();if(p&&S
 setInterval(()=>{if(S.quests.day!==today()){checkLogin();ensureQuests();if(tab==="quests")render();navBadge()}bgCheck()},5000);
 function boot3(){const ns=notes.slice();if(!S.login.claimed)loginModal();else if(awayMs>3*60000){summary(awayMs)}}
 setTimeout(boot3,60);
+
+// ================= v4: nav, nursery/breeding, pity+banners, achievements, postcards, high scores =================
+const BASE_N=45;
+function ensure4(){SPECIES.length=BASE_N;S.hybrids=S.hybrids||[];S.hybrids.forEach(h=>{h.id=SPECIES.length;SPECIES.push(h)});
+  S.pity=Object.assign({e:0,l:0},S.pity||{});S.eggBank=S.eggBank||[];S.ach=S.ach||{};S.hs=S.hs||{};S.mail=S.mail||[];S.mailN=S.mailN||1;
+  const st=S.stats3;if(st.hatch==null)st.hatch=S.pets.filter(p=>p.stage>0).length+S.alumni.length;["qc","breed","hybrid","cards","gifts"].forEach(k=>st[k]=st[k]||0);st.gp=st.gp||{};
+  S.alumni.forEach(a=>{if(!a.nextCard)a.nextCard=Date.now()+Math.random()*2*3600e3})}
+const _load4=load;load=function(){_load4();ensure4()};
+// ---------- NAV ----------
+NAV.splice(0,NAV.length,["home","🏠","Nest"],["gacha","🎰","Gacha"],["quests","📜","Quests"],["alumni","🏡","Alumni"],["more","☰","More"]);
+const SUBS={shop:["🛍️","Shop","Decor & wallpapers"],dex:["📖","Star-Dex","Species you've found"],badges:["🏅","Badges","Achievements & rewards"],set:["⚙️","Settings","Sound, reminders, demo speed"]};
+function viewMore(){const na=ACH.filter(a=>S.ach[a.id]).length;const sub={shop:`${Object.values(S.decor.owned).reduce((a,b)=>a+b,0)} items owned`,dex:`${Object.keys(S.dex).length}/${BASE_N} found`,badges:`${na}/${ACH.length} unlocked`,set:""};
+  return`<div class="mgrid">${Object.entries(SUBS).map(([k,[e,n,d]])=>`<button class="mcard" onclick="tab='${k}';render()"><b>${e}</b><span>${n}</span><small>${sub[k]||d}</small></button>`).join("")}</div>`}
+const _viewOf=viewOf;viewOf=function(t){if(t==="more")return viewMore();if(t==="badges")return back()+viewBadges();return(SUBS[t]?back():"")+_viewOf(t)};
+function back(){return`<button class="back" onclick="tab='more';render()">‹ More</button>`}
+const _render4=render;render=function(){_render4();if(SUBS[tab]||tab==="more")document.querySelector('#nav button[data-t="more"]')?.classList.add("on");checkAch()};
+const _navBadge=navBadge;navBadge=function(){_navBadge();const a=document.querySelector('#nav button[data-t="alumni"]');if(a)a.classList.toggle("dot",S.mail&&S.mail.some(m=>!m.read))};
+// ---------- GACHA: pity, banner, 10-pull, egg bank ----------
+const EPITY=20,LPITY=80,C10=90;
+function weekNo(){const d=new Date();return Math.floor((d-d.getTimezoneOffset()*60000-4*864e5)/(7*864e5))}
+function banner(){const r=rng(weekNo()*977+3),by=k=>SPECIES.filter(s=>s.id<BASE_N&&s.rarity===k);return[pick(r,by("legendary")),pick(r,by("epic")),pick(r,by("rare"))]}
+function bannerEnds(){const d=new Date(),ms=7*864e5-((d-d.getTimezoneOffset()*60000-4*864e5)%(7*864e5));return ms}
+roll=function(){S.pity.e++;S.pity.l++;let rar="common";
+  if(S.pity.l>=LPITY)rar="legendary";else if(S.pity.e>=EPITY)rar=Math.random()<.15?"legendary":"epic";
+  else{let t=Math.random()*100,acc=0;for(const k of["legendary","epic","rare","common"]){acc+=RAR[k].w;if(t<acc){rar=k;break}}}
+  if(rar==="legendary"){S.pity.l=0;S.pity.e=0}else if(rar==="epic")S.pity.e=0;
+  const f=banner().find(s=>s.rarity===rar);if(f&&Math.random()<.5)return f;return pick(Math.random,SPECIES.filter(s=>s.id<BASE_N&&s.rarity===rar))};
+function eggCard(sp,where){return`<div class="card pop"><div class="row">${petSVG(sp,0).replace('<svg','<svg style="width:60px"')}<div style="text-align:left"><span class="tag t-${sp.rarity}">${sp.rarity.toUpperCase()}</span> ${sp._new?'<span class="tag" style="background:#8dff8a;color:#032">NEW!</span>':''}${banner().includes(sp)?' <span class="tag" style="background:#ff7ad9">FEATURED</span>':''}<br><b>${sp.name} egg</b><div class="muted">${where}</div></div></div></div>`}
+pull=function(n){const cost=n===10?C10:COST*n;if(S.stars<cost){toast("Not enough stars! ⭐");sfx("miss");return}
+  const slots=S.maxPets-S.pets.length;if(n-Math.max(0,slots)>30-S.eggBank.length){toast("Egg storage is full (30) — move eggs into the nest first");return}
+  S.stars-=cost;const got=[];for(let i=0;i<n;i++){const sp=roll();sp._new=!S.dex[sp.id];S.dex[sp.id]=(S.dex[sp.id]||0)+1;
+    let where;if(S.pets.length<S.maxPets){S.pets.push(newPet(sp.id));where="→ sent to your nest"}else{S.eggBank.push(sp.id);where="→ kept in egg storage"}got.push([sp,where])}
+  S.pulls+=n;save();sfx("pull");qProg("summon",n);
+  modal(`<h2>Summoning${n>1?" ×"+n:""}...</h2><svg class="machine shake" viewBox="0 0 200 200">${machine()}</svg>`);
+  const ord=["common","rare","epic","legendary"],best=got.reduce((a,[s])=>Math.max(a,ord.indexOf(s.rarity)),0);
+  setTimeout(()=>{sfx("reveal",ord[best]);modal(`<h2>You got${n>1?"…":"!"}</h2><div style="max-height:60vh;overflow:auto">${got.map(([s,w])=>eggCard(s,w)).join("")}</div><button class="btn gold" onclick="closeM();tab='home';cur=Math.max(0,S.pets.length-1);render()">To the nest!</button>`);checkAch()},1300)};
+function takeEgg(i){if(S.pets.length>=S.maxPets){toast("Nest is full — raise a pet first");return}const id=S.eggBank.splice(i,1)[0];S.pets.push(newPet(id));save();sfx("place");tab="home";cur=S.pets.length-1;render();toast("🥚 Egg moved into the nest — hatching in 1 minute!")}
+viewGacha=function(){const B=banner();
+  return`<div class="card banner"><div class="row" style="justify-content:space-between"><b>🌟 Featured this week</b><span class="muted">ends in ${fmtDur(bannerEnds())}</span></div>
+  <div class="row" style="justify-content:space-around">${B.map(s=>`<div style="text-align:center;width:30%">${petSVG(s,4,"radiant","happy").replace("<svg",'<svg style="width:80px"')}<div style="font-size:12px"><b>${s.name}</b></div><span class="tag t-${s.rarity}">${s.rarity}</span></div>`).join("")}</div>
+  <div class="muted" style="text-align:center">When you roll a featured species' rarity, there's a 50% chance it's the featured one.</div></div>
+  <div class="card" style="text-align:center"><svg class="machine" viewBox="0 0 200 200" style="width:130px">${machine()}</svg>
+  <div class="row" style="justify-content:center"><button class="btn gold" onclick="pull(1)">Summon ×1<br><small>${COST}⭐</small></button><button class="btn" onclick="pull(10)">Summon ×10<br><small>${C10}⭐ <s style="opacity:.6">100</s> −10%</small></button></div>
+  <div class="pity"><div>💜 Epic+ guaranteed in <b>${EPITY-S.pity.e}</b><div class="bar"><i style="width:${S.pity.e/EPITY*100}%;background:#c56bff"></i></div></div><div>💛 Legendary guaranteed in <b>${LPITY-S.pity.l}</b><div class="bar"><i style="width:${S.pity.l/LPITY*100}%;background:#ffc94a"></i></div></div></div>
+  <p class="muted">Nest: ${S.pets.length}/${S.maxPets} · Extra eggs go to storage</p></div>
+  ${S.eggBank.length?`<div class="card"><b>🧺 Egg storage</b> <span class="muted">${S.eggBank.length}/30 · tap to move into the nest</span><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px">${S.eggBank.map((id,i)=>`<button class="eggb" onclick="takeEgg(${i})">${petSVG(SPECIES[id],0)}</button>`).join("")}</div></div>`:""}
+  ${nurseryHTML()}
+  <div class="card"><b>Drop rates</b><div class="muted" style="margin-top:6px">${Object.keys(RAR).map(k=>`<span class="tag t-${k}">${k}</span> ${RAR[k].w}% `).join(" ")}</div></div>`};
+// ---------- STAR NURSERY ----------
+const BREED_COST=30,BREED_CD=12*3600e3;let NS=[];
+function mixHex(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const x=p(a),y=p(b);return"#"+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,"0")).join("")}
+function bondOK(a){return a.q>=70||(a.hugs||0)>=3}
+function parentsList(){const o=[];S.pets.forEach(p=>{if(p.stage===4)o.push({ref:"p"+p.id,o:p,n:p.nick,sp:p.sp,v:p.variant,where:"Nest"})});
+  S.alumni.forEach(a=>{if(bondOK(a))o.push({ref:"a"+a.id,o:a,n:a.nick,sp:a.sp,v:a.variant,where:"Alumni"})});return o}
+function nurseryHTML(){const L=parentsList();const sel=NS.map(r=>L.find(x=>x.ref===r)).filter(Boolean);NS=sel.map(x=>x.ref);
+  return`<div class="card nursery"><h3>💞 Star Nursery</h3><div class="muted">Pair two adults (nest pets at Adult stage, or alumni with a strong bond: care score 70+ or 3+ hugs). The egg blends both parents' colors & personalities — sometimes a rare <b>hybrid</b>! ${BREED_COST}⭐ · each parent rests 12h after.</div>
+  <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:8px">${L.length?L.map(x=>{const cd=(x.o.pairCd||0)-Date.now();return`<button class="pchip ${NS.includes(x.ref)?"on":""}" ${cd>0?"disabled":""} onclick="selP('${x.ref}')">${petSVG(SPECIES[x.sp],4,x.v,"happy")}<span>${x.n}<small>${cd>0?"rests "+fmtDur(cd):x.where}</small></span></button>`}).join(""):'<span class="muted">No adults yet — raise a pet to Adult, or bond with alumni (hugs!).</span>'}</div>
+  ${sel.length===2?`<div class="row" style="justify-content:center;margin-top:8px">${petSVG(SPECIES[sel[0].sp],4,sel[0].v,"happy").replace("<svg",'<svg style="width:60px"')}<b style="font-size:26px">💞</b>${petSVG(SPECIES[sel[1].sp],4,sel[1].v,"happy").replace("<svg",'<svg style="width:60px"')}</div><div class="muted" style="text-align:center">Hybrid chance: ${hyChance(sel[0],sel[1])}%</div>`:""}
+  <button class="btn gold" style="width:100%;margin-top:8px" ${sel.length===2?"":"disabled"} onclick="breed()">💫 Pair ${sel.length===2?sel[0].n+" + "+sel[1].n:"(pick 2)"} · ${BREED_COST}⭐</button></div>`}
+function hyChance(a,b){return(a.sp!==b.sp?25:10)+(a.v==="radiant"?10:0)+(b.v==="radiant"?10:0)}
+function selP(r){const i=NS.indexOf(r);if(i>=0)NS.splice(i,1);else{if(NS.length>=2)NS.shift();NS.push(r)}render()}
+function breed(){const L=parentsList(),[A,B]=NS.map(r=>L.find(x=>x.ref===r));if(!A||!B)return;
+  if(S.stars<BREED_COST){toast("Not enough stars ⭐");sfx("miss");return}if(S.pets.length>=S.maxPets&&S.eggBank.length>=30){toast("No room for an egg!");return}
+  const sA=SPECIES[A.sp],sB=SPECIES[B.sp],hy=Math.random()*100<hyChance(A,B),base=Math.random()<.5?sA:sB,oth=base===sA?sB:sA,ord=["common","rare","epic","legendary"];
+  let rar=ord[Math.max(ord.indexOf(sA.rarity),ord.indexOf(sB.rarity))];if(hy&&rar!=="legendary"&&Math.random()<.5)rar=ord[ord.indexOf(rar)+1];
+  const half=s=>s.name.slice(0,Math.ceil(s.name.length/2)),tail=s=>s.name.slice(Math.floor(s.name.length/2)).toLowerCase();
+  const sp=Object.assign({},base,{id:SPECIES.length,rarity:rar,c1:mixHex(sA.c1,sB.c1,.5),c2:Math.random()<.5?sA.c2:sB.c2,life:Math.round((sA.life+sB.life)/2),hybrid:hy,parents:[A.n,B.n],
+    name:hy?half(base)+tail(oth):base.name,flavor:hy?`A rare cosmic hybrid of ${sA.name} and ${sB.name}!`:`Child of ${A.n} & ${B.n}. Takes after its ${base.name} side.`});
+  if(hy)Object.assign(sp,{ant:oth.ant,tail:oth.tail,ears:oth.ears,marks:oth.marks,eyeStyle:"sparkle"});delete sp._new;
+  SPECIES.push(sp);S.hybrids.push(sp);S.stars-=BREED_COST;A.o.pairCd=B.o.pairCd=Date.now()+BREED_CD;
+  const p=newPet(sp.id);const ta=(A.o.traits||[])[0],tb=(B.o.traits||[])[0];p.traits=[...new Set([ta,tb].filter(Boolean))];if(!p.traits.length)p.traits=[pick(Math.random,TRAIT_KEYS)];p.parents=[A.n,B.n];
+  let where;if(S.pets.length<S.maxPets){S.pets.push(p);where="nest"}else{S.eggBank.push(sp.id);where="egg storage"}
+  S.stats3.breed++;if(hy)S.stats3.hybrid++;NS=[];save();sfx("giggle");
+  modal(`<h2>💞 Star Nursery</h2><div class="row" style="justify-content:center">${petSVG(sA,4,A.v,"happy","").replace("<svg",'<svg class="nl" style="width:90px"')}${petSVG(sB,4,B.v,"happy").replace("<svg",'<svg class="nr" style="width:90px"')}</div><div id="nh" style="font-size:30px">💖 ✨ 💖</div>`);
+  setTimeout(()=>{sfx(hy?"evolve":"hatch");modal(`<h2>${hy?"🧬 A rare hybrid egg!":"🥚 A new egg!"}</h2>${petSVG(sp,0,null,"happy","pop").replace("<svg",'<svg style="width:120px"')}<p><span class="tag t-${sp.rarity}">${sp.rarity}</span> <b>${sp.name}</b><br><span class="muted">${sp.flavor}</span></p><p class="muted">Inherits: ${p.traits.map(t=>TRAITS[t].e+" "+t).join(", ")} · sent to ${where}${where==="nest"?" · hatches in 1 minute":""}</p><button class="btn gold" onclick="closeM();tab='home';cur=S.pets.length-1;render()">See egg</button>`);checkAch()},1600)}
+const _viewDex4=viewDex;viewDex=function(){const h=SPECIES.splice(BASE_N);try{return _viewDex4()}finally{SPECIES.push(...h)}};
+const _roll0=null;
+const _traitHTML=traitHTML;traitHTML=function(p){const sp=SPECIES[p.sp];let x="";if(sp.hybrid)x+=`<span class="chip hyb">🧬 Hybrid</span>`;if(p.parents)x+=`<span class="chip">👪 ${p.parents.join(" & ")}</span>`;return(x?`<div class="traits">${x}</div>`:"")+_traitHTML(p)};
+// ---------- POSTCARDS ----------
+const CARDTXT=["Wish you were here! The rings of Zorb are sparkly this time of year.","I made a sandcastle on a comet. It melted. Worth it!","Started a little garden. The glow-berries remind me of you.","Got a new job sorting stardust by color. I'm the best at pink.","Saw a meteor shower last night and made a wish about you 💫","I finally learned to cook nebula noodles without burning them!","My neighbor is a very polite black hole. He hums at night.","Went zero-G swimming in a gas giant. 10/10 would float again.","I still sleep with the blanket from the nest. Don't tell anyone.","Found a shiny moon-pebble and thought: they'd love this!"];
+const SKIES=["#3b1450,#c0487a","#0f2a5e,#2fb3a5","#2b1a5e,#ff9a5a","#123,#5a3fbf","#401a3a,#ffb36b"];
+function mailTick(){const t=Date.now();let n=0;S.alumni.forEach(a=>{if(!a.nextCard){a.nextCard=t+(2+Math.random()*8)*60000;return}if(t<a.nextCard)return;
+  a.nextCard=t+(18+Math.random()*12)*3600e3;const r=Math.random(),gift=r<.25?{s:2+Math.floor(Math.random()*5)}:r<.4?{d:pick(Math.random,DECOR.filter(x=>x.c<=25)).id}:null;
+  S.mail.unshift({id:S.mailN++,aid:a.id,nick:a.nick,sp:a.sp,v:a.variant,t,txt:pick(Math.random,CARDTXT),sky:pick(Math.random,SKIES),gift,read:false,claimed:false});n++});
+  if(S.mail.length>40)S.mail.length=40;if(n){save();toast(`📬 ${n>1?n+" postcards":"A postcard"} from your alumni!`);sfx("coin");navBadge();if(tab==="alumni")render()}}
+function mailbox(){modal(`<h2>📬 Mailbox</h2>${S.mail.length?S.mail.map(m=>`<div class="alum" onclick="readCard(${m.id})" style="${m.read?"opacity:.6":""}">${petSVG(SPECIES[m.sp],4,m.v,"happy")}<div style="text-align:left"><b>${m.read?"":"🔵 "}From ${m.nick}</b><div class="muted">${new Date(m.t).toLocaleDateString()} ${m.gift&&!m.claimed?"· 🎁 gift inside!":""}</div></div></div>`).join(""):'<p class="muted">No postcards yet. Pets that move out write home about once a day.</p>'}<button class="btn ghost" onclick="closeM()">Close</button>`)}
+function readCard(id){const m=S.mail.find(x=>x.id===id);if(!m)return;if(!m.read){m.read=true;S.stats3.cards++}let g="";
+  if(m.gift&&!m.claimed){m.claimed=true;S.stats3.gifts++;if(m.gift.s){S.stars+=m.gift.s;g=`🎁 +${m.gift.s}⭐`}else{S.decor.owned[m.gift.d]=(S.decor.owned[m.gift.d]||0)+1;g=`🎁 ${DI[m.gift.d].e||"🧶"} ${DI[m.gift.d].n} (in decor storage)`}sfx("coin")}else sfx("tap");save();navBadge();
+  modal(`<div class="postcard" style="background:linear-gradient(135deg,${m.sky})">${starsHTML(15)}<div class="stamp">${petSVG(SPECIES[m.sp],4,m.v,"happy")}</div><div class="pctext">Dear friend,<br>${m.txt}<br><br>Love, ${m.nick} 💌</div></div>${g?`<div class="card" style="color:#ffd86b"><b>${g}</b></div>`:""}<div class="row" style="justify-content:center"><button class="btn" onclick="mailbox()">‹ Mailbox</button><button class="btn ghost" onclick="closeM()">Close</button></div>`)}
+const _viewAlumni4=viewAlumni;viewAlumni=function(){const u=S.mail.filter(m=>!m.read).length;return`<button class="card mailbtn" onclick="mailbox()">📬 <b>Mailbox</b> ${u?`<span class="tag" style="background:#ff4d6d">${u} new</span>`:`<span class="muted">${S.mail.length} postcards</span>`}<span class="muted" style="margin-left:auto">Alumni write home ~daily</span></button>`+_viewAlumni4()};
+const _hug4=hug;hug=function(id){const a=S.alumni.find(x=>x.id===id),d0=a&&a.hugDay;_hug4(id);if(a&&a.hugDay!==d0){a.hugs=(a.hugs||0)+1;save()}};
+const _moveOut4=moveOut;moveOut=function(){_moveOut4();const a=S.alumni[0];if(a&&!a.nextCard){a.nextCard=Date.now()+(2+Math.random()*8)*60000;save()}checkAch()};
+// ---------- HIGH SCORES ----------
+const _endGame4=endGame;endGame=function(){if(!G||G.over)return;const id=G.def.id,sc=G.score,prev=S.hs[id]||0;S.stats3.gp[id]=1;if(sc>=G.def.max)S.stats3.superstar=1;
+  _endGame4();if(sc>prev){S.hs[id]=sc;save();if(prev>0||sc>0)setTimeout(()=>{const b=document.querySelector("#game .big");if(b)b.insertAdjacentHTML("afterend",`<div style="color:#ffd86b;font-weight:800">🏆 NEW HIGH SCORE!</div>`)},470)}
+  else setTimeout(()=>{const b=document.querySelector("#game .big");if(b)b.insertAdjacentHTML("afterend",`<div class="muted">Best: ${prev}</div>`)},470);checkAch()};
+const _openPicker4=openPicker;openPicker=function(){_openPicker4();document.querySelectorAll("#game .pickc").forEach((b,i)=>{const g=GAMES[i],h=S.hs[g.id];b.insertAdjacentHTML("beforeend",`<span class="hs">🏆<br>${h!=null?h:"–"}</span>`)})};
+// ---------- ACHIEVEMENTS ----------
+const allP=()=>S.pets.concat(S.alumni),varN=v=>allP().filter(p=>p.variant===v).length,dexN=()=>Object.keys(S.dex).length,decN=()=>S.decor.placed.length;
+const ACH=[
+ {id:"hatch1",e:"🐣",n:"Hello, World",d:"Hatch your first pet",r:5,c:()=>S.stats3.hatch>=1},
+ {id:"hatch10",e:"🥚",n:"Egg Whisperer",d:"Hatch 10 pets",r:20,c:()=>S.stats3.hatch>=10},
+ {id:"rad1",e:"🌟",n:"Radiant Raiser",d:"Raise a pet to the Radiant form",r:10,c:()=>varN("radiant")>=1},
+ {id:"rad5",e:"💫",n:"Pure Starlight",d:"Raise 5 Radiant pets",r:40,c:()=>varN("radiant")>=5},
+ {id:"forms",e:"🌈",n:"Every Path",d:"Raise a Radiant, a Classic and a Wild pet",r:20,c:()=>["radiant","classic","wild"].every(v=>varN(v)>0)},
+ {id:"dex10",e:"📖",n:"Stargazer",d:"Discover 10 species",r:10,c:()=>dexN()>=10},
+ {id:"dex25",e:"🔭",n:"Astronomer",d:"Discover 25 species",r:25,c:()=>dexN()>=25},
+ {id:"dex45",e:"🌌",n:"Cosmic Cartographer",d:"Complete the Star-Dex (45)",r:100,c:()=>dexN()>=BASE_N},
+ {id:"leg",e:"👑",n:"Legend Found",d:"Summon a legendary egg",r:15,c:()=>SPECIES.some(s=>s.id<BASE_N&&s.rarity==="legendary"&&S.dex[s.id])},
+ {id:"pull50",e:"🎰",n:"Gacha Fanatic",d:"Summon 50 eggs",r:25,c:()=>S.pulls>=50},
+ {id:"grad1",e:"🚀",n:"Leaving the Nest",d:"Help a pet move out",r:10,c:()=>S.alumni.length>=1},
+ {id:"grad10",e:"🎓",n:"Proud Parent",d:"10 pets have moved out",r:40,c:()=>S.alumni.length>=10},
+ {id:"allgames",e:"🎮",n:"Game Night",d:"Play all 5 minigames",r:10,c:()=>GAMES.every(g=>S.stats3.gp[g.id])},
+ {id:"super",e:"🏆",n:"Superstar",d:"Reach the max score in any minigame",r:15,c:()=>!!S.stats3.superstar},
+ {id:"dec5",e:"🛋️",n:"Interior Designer",d:"Have 5 decorations placed",r:10,c:()=>decN()>=5},
+ {id:"dec12",e:"🏰",n:"Space Palace",d:"Have 12 decorations placed",r:30,c:()=>decN()>=12},
+ {id:"walls",e:"🖼️",n:"Wallpaper Collector",d:"Own 3 wallpapers",r:15,c:()=>Object.keys(S.decor.walls).length>=3},
+ {id:"str3",e:"🔥",n:"On a Roll",d:"3-day login streak",r:10,c:()=>S.login.streak>=3},
+ {id:"str7",e:"📅",n:"Devoted Keeper",d:"7-day login streak",r:30,c:()=>S.login.streak>=7},
+ {id:"q10",e:"📜",n:"Quest Hero",d:"Claim 10 daily quests",r:20,c:()=>S.stats3.qc>=10},
+ {id:"breed1",e:"💞",n:"Matchmaker",d:"Pair two pets at the Star Nursery",r:15,c:()=>S.stats3.breed>=1},
+ {id:"hyb1",e:"🧬",n:"Mad Scientist",d:"Create a hybrid egg",r:25,c:()=>S.stats3.hybrid>=1},
+ {id:"card5",e:"💌",n:"Pen Pal",d:"Read 5 postcards from alumni",r:15,c:()=>S.stats3.cards>=5},
+ {id:"favs",e:"❤️",n:"Best Friends",d:"Discover a pet's favorite food AND game",r:10,c:()=>allP().some(p=>p.knowFood&&p.knowGame)}];
+let achBusy=false;
+function checkAch(){if(!S||!S.ach||achBusy)return;achBusy=true;try{const nw=ACH.filter(a=>!S.ach[a.id]&&a.c());nw.forEach((a,i)=>{S.ach[a.id]=Date.now();S.stars+=a.r;
+  setTimeout(()=>{toast(`🏅 Achievement: ${a.e} ${a.n}! +${a.r}⭐`);sfx("reveal","epic");const s=$("stars");if(s)s.textContent=S.stars},400+i*2100)});if(nw.length)save()}finally{achBusy=false}}
+function viewBadges(){const n=ACH.filter(a=>S.ach[a.id]).length;return`<div class="card"><h3>🏅 Badges</h3><div class="muted">${n}/${ACH.length} unlocked · tap a badge for details</div><div class="bar"><i style="width:${n/ACH.length*100}%;background:#ffd86b"></i></div></div>
+  <div class="bgrid">${ACH.map(a=>{const u=S.ach[a.id];return`<button class="badge ${u?"on":""}" onclick="toast('${a.e} ${a.n}: ${a.d} (+${a.r}⭐)${u?" ✓":""}')"><b>${u?a.e:"🔒"}</b><span>${a.n}</span><small>${u?"✓ Unlocked":a.r+"⭐"}</small></button>`}).join("")}</div>`}
+// counters
+const _checkStage4=checkStage;checkStage=function(p){const o=p.stage;_checkStage4(p);if(o===0&&p.stage>=1)S.stats3.hatch++};
+const _claimQ4=claimQ;claimQ=function(i){const q=S.quests.list[i],was=q&&q.claimed;_claimQ4(i);if(q&&!was&&q.claimed){S.stats3.qc++;save();checkAch()}};
+setInterval(()=>{mailTick();checkAch()},5000);setTimeout(()=>{mailTick();checkAch()},1500);
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
