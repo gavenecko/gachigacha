@@ -263,6 +263,14 @@ nav button{font-size:11.5px}nav button b{font-size:21px}
 .frrow{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-top:8px;font-size:14px}.frrow .bar{grid-column:1/3}
 .stk{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.stk button{font-size:22px;width:44px;height:44px;border-radius:10px;border:2px solid transparent;background:#ffffff14}.stk button.on{border-color:#ffd86b}
 .frs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}.frs .chip{min-height:40px;padding:0 12px}
+/* v7 */
+.jl{text-align:left;max-height:46vh;overflow:auto;margin:6px 0 10px;padding-right:4px}
+.je{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #ffffff14}.je .e{font-size:22px;width:30px;text-align:center}.je b{font-weight:600;font-size:14px}
+.card.story{text-align:left;font-size:14.5px;line-height:1.45;background:#ffffff10}
+.chg{padding:7px 0;border-bottom:1px solid #ffffff14;font-size:14px}.chg b{color:#ffd86b}
+.mate,.deco,.wxfx,.sbub,.evc{contain:layout style}
+#walker,.mate{backface-visibility:hidden}
+@media (prefers-reduced-motion:reduce){.wxfx,.evc{animation:none!important}}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -1553,6 +1561,136 @@ const _dressAll6=dressAll;dressAll=function(){_dressAll6();if(tab==="home")mates
 const _render6=render;render=function(){_render6();if(tab==="home")mates().forEach(q=>dress(document.querySelector("#mate"+q.id+" svg"),q.acc,SPECIES[q.sp],q.stage))};
 ACH.push({id:"photo1",n:"Say Cheese!",d:"Take a photo in Photo mode",e:"📸",r:5,c:()=>S.photos>=1},{id:"bff",n:"Best Friends",d:"Two pets become best friends",e:"💞",r:10,c:()=>Object.values(S.fr||{}).some(v=>v>=70)},
  {id:"evegg",n:"Limited Edition",d:"Get an event-species egg",e:"🎟️",r:10,c:()=>SPECIES.some(s=>s&&s.ev&&S.dex[s.id])});
+
+// ================= v7: pet journal & keepsakes, species features, about, photo fixes, perf =================
+const VERSION="7.0";
+// ---------- SPECIES FEATURES ----------
+const FEAT={
+ arms:{n:"little arms",b:(a,b)=>"",f:(a,b)=>`<g class="ft-arms"><ellipse cx="44" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(-30 44 120)"/><ellipse cx="156" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(30 156 120)"/></g>`},
+ fins:{n:"sail fin",b:(a,b)=>`<path d="M118 52 Q168 20 176 60 Q160 70 146 92Z" fill="${b}" opacity=".9"/><path d="M128 56 L160 40 M134 66 L166 54" stroke="#fff6" stroke-width="3"/>`,f:()=>""},
+ shell:{n:"spiral shell",b:()=>"",f:(a,b)=>`<g><circle cx="146" cy="138" r="20" fill="${b}" stroke="#0003" stroke-width="3"/><path d="M146 138 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 8 a12 12 0 1 1 -12 -12" stroke="#fff8" stroke-width="3" fill="none"/></g>`},
+ crystals:{n:"back crystals",b:(a,b)=>`<path d="M40 92 L22 58 L52 80Z" fill="#bff6ff" stroke="${b}" stroke-width="2"/><path d="M160 92 L182 52 L150 80Z" fill="#bff6ff" stroke="${b}" stroke-width="2"/><path d="M48 70 L40 40 L60 64Z" fill="${b}" opacity=".85"/>`,f:()=>""},
+ tentacles:{n:"tentacles",b:(a,b)=>[62,84,116,138].map((x,i)=>`<path d="M${x} 148 q${i%2?8:-8} 14 0 26 q${i%2?-8:8} 8 ${i<2?-4:4} 14" stroke="${b}" stroke-width="9" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-5 ${x} 148;5 ${x} 148;-5 ${x} 148" dur="${1.6+i*.2}s" repeatCount="indefinite"/></path>`).join(""),f:()=>""},
+ glow:{n:"glow pattern",b:()=>"",f:(a,b)=>`<g opacity=".8">${[[70,70],[132,74],[60,128],[140,132],[100,150]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="4" fill="#fffbd0"><animate attributeName="opacity" values=".2;1;.2" dur="${1.4+i*.3}s" repeatCount="indefinite"/></circle>`).join("")}<path d="M64 108 Q100 118 136 108" stroke="#fffbd0" stroke-width="2" fill="none" stroke-dasharray="4 6" opacity=".7"/></g>`},
+ floaters:{n:"orbiting moonlets",b:(a,b)=>"",f:(a,b)=>`<g><animateTransform attributeName="transform" type="rotate" from="0 100 105" to="360 100 105" dur="7s" repeatCount="indefinite"/><circle cx="100" cy="24" r="7" fill="${b}" stroke="#fff8" stroke-width="2"/><path d="M182 112 l7 -5 l3 8 l-6 5z" fill="#cfc6ff"/><circle cx="24" cy="138" r="5" fill="#fff" opacity=".8"/></g>`},
+ wings:{n:"wings",b:(a,b)=>`<g opacity=".85"><path d="M52 96 Q8 60 14 110 Q22 132 56 120Z" fill="${b}"/><path d="M148 96 Q192 60 186 110 Q178 132 144 120Z" fill="${b}"/><animateTransform attributeName="transform" type="scale" values="1 1;1 .9;1 1" dur=".8s" repeatCount="indefinite" additive="sum"/></g>`,f:()=>""},
+ mane:{n:"fluffy mane",b:(a,b)=>`<g fill="${b}">${Array.from({length:12},(_,i)=>{const t=i/12*Math.PI*2;return`<circle cx="${(100+Math.cos(t)*62).toFixed(1)}" cy="${(108+Math.sin(t)*58).toFixed(1)}" r="16"/>`}).join("")}</g>`,f:()=>""},
+ rings:{n:"planet ring",b:(a,b)=>`<path d="M30 118 A72 18 0 0 1 170 118" stroke="${b}" stroke-width="7" fill="none" opacity=".9"/>`,f:(a,b)=>`<path d="M170 118 A72 18 0 0 1 30 118" stroke="${b}" stroke-width="7" fill="none" opacity=".9"/>`},
+ spikes:{n:"back spikes",b:(a,b)=>`<path d="M38 120 L16 112 L40 104 L22 88 L46 90 L40 70 L58 82Z M162 120 L184 112 L160 104 L178 88 L154 90 L160 70 L142 82Z" fill="${b}"/>`,f:()=>""},
+ stalks:{n:"eye-stalks",b:(a,b)=>`<path d="M78 60 Q70 30 56 24 M122 60 Q130 30 144 24" stroke="${a}" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="56" cy="22" r="9" fill="#fff"/><circle cx="57" cy="23" r="4" fill="#222"/><circle cx="144" cy="22" r="9" fill="#fff"/><circle cx="145" cy="23" r="4" fill="#222"/>`,f:()=>""}};
+const FK=Object.keys(FEAT),COMBOS=[];for(let i=0;i<FK.length;i++)for(let j=i+1;j<FK.length;j++)COMBOS.push([FK[i],FK[j]]);
+{const r=rng(4242);for(let i=COMBOS.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[COMBOS[i],COMBOS[j]]=[COMBOS[j],COMBOS[i]]}}
+function featOf(sp){if(!sp)return[];if(sp.feat)return sp.feat;if(sp.id<BASE_N)return COMBOS[sp.id%COMBOS.length];
+  return COMBOS[hash(sp.name)%COMBOS.length]}
+const _petSVG7=petSVG;const SVGC=new Map();
+petSVG=function(sp,stage,variant,mood,cls){const key=sp&&(sp.id+"|"+sp.name+"|"+stage+"|"+variant+"|"+mood+"|"+cls);const hit=key&&SVGC.get(key);if(hit)return hit;
+  let h=_petSVG7(sp,stage,variant,mood,cls);
+  if(sp&&(stage|0)>=1){const fs=featOf(sp);let bk="",fr="";fs.forEach(k=>{const F=FEAT[k];if(!F)return;bk+=F.b(sp.c1,sp.c2);fr+=F.f(sp.c1,sp.c2)});
+    const bi=h.indexOf('<defs><radialGradient id="b');if(bi>0&&bk)h=h.slice(0,bi)+`<g class="ftb">${bk}</g>`+h.slice(bi);
+    const fi=h.indexOf('<g class="eyes">');if(fi>0&&fr)h=h.slice(0,fi)+`<g class="ftf">${fr}</g>`+h.slice(fi)}
+  if(key){if(SVGC.size>400)SVGC.clear();SVGC.set(key,h)}return h};
+// ---------- JOURNAL ----------
+const JMAX=80;
+function jlog(p,e,x){if(!p)return;p.log=p.log||[];const l=p.log[p.log.length-1];if(l&&l.x===x&&Date.now()-l.t<60000)return;p.log.push({t:Date.now(),d:+(((S.gameNow-p.born)/DAY)||0).toFixed(1),e,x});if(p.log.length>JMAX)p.log.splice(1,p.log.length-JMAX)}
+function jsnap(p){return{st:p.stage,kf:!!p.knowFood,kg:!!p.knowGame,v:p.variant||null,tr:(p.traits||[]).length,day:Math.floor((S.gameNow-p.born)/DAY),q90:quality(p)>=90}}
+const AGE_M=[1,3,7,14,21,28];
+function journalTick(){if(!S||!S.pets)return;let ch=false;S.pets.forEach(p=>{const n=jsnap(p);
+  if(!p.log){p.log=[{t:Date.now(),d:+(((S.gameNow-p.born)/DAY)||0).toFixed(1),e:p.stage?"📖":"🥚",x:p.stage?"Journal started — earlier memories are a little fuzzy":"Arrived as an egg from the Gacha"}];p._j=n;ch=true;return}
+  const o=p._j||n;p._j=n;if(o===n)return;
+  if(n.st>o.st){for(let s=o.st+1;s<=n.st;s++){if(s===1)jlog(p,"🐣","Hatched! Hello, world");else jlog(p,"✨","Grew into a"+(/^[AEIOU]/.test(STAGES[s])?"n ":" ")+STAGES[s]+(s===3&&p.variant?" — "+VARIANTS[p.variant].n+" form":""))}ch=true}
+  if(n.kf&&!o.kf){jlog(p,"🍽️","Discovered a favorite food: "+(FOODS[p.favFood]||{n:"?"}).n);ch=true}
+  if(n.kg&&!o.kg){jlog(p,"🎮","Discovered a favorite game: "+((GAMES.find(g=>g.id===p.favGame)||{}).n||"?"));ch=true}
+  if(n.tr>o.tr&&p.traits){jlog(p,"🧬","Personality revealed: "+p.traits.join(", "));ch=true}
+  if(n.day>o.day)AGE_M.forEach(m=>{if(o.day<m&&n.day>=m){jlog(p,"🎂",m+" day"+(m>1?"s":"")+" old!");ch=true}});
+  if(n.q90&&!o.q90&&p.stage>=1){jlog(p,"💯","Care quality reached 90 — so loved");ch=true}});if(ch)save()}
+function ensure7(){S.pets.forEach(p=>{p._j=p.log?jsnap(p):undefined});journalTick()}
+const _load7=load;load=function(){_load7();ensure7()};
+setInterval(journalTick,3000);
+const _finishExp7=finishExp;finishExp=function(p,early){const e=p&&p.exp,arts=Object.assign({},S.artifacts),acc=Object.assign({},S.accOwned),st=S.stars;const r=_finishExp7(p,early);
+  if(e){const pl=PLANETS.find(x=>x.id===e.pl)||{n:"space",e:"🪐"};const na=Object.keys(S.artifacts).filter(k=>S.artifacts[k]!==arts[k]).map(k=>(ARTS.find(a=>a.id===k)||{}).n),nc=Object.keys(S.accOwned).filter(k=>!acc[k]).map(k=>AI[k].n);
+    jlog(p,pl.e,`${early?"Came home early from":"Explored"} ${pl.n}${S.stars>st?" · +"+(S.stars-st)+"⭐":""}${na.length?" · found "+na.join(", "):""}${nc.length?" · found a "+nc.join(", "):""}`);p.expN=(p.expN||0)+1;save()}return r};
+const _frAdd7=frAdd;frAdd=function(a,b,n){const k=frKey(a,b),lv=S.frLv[k]||0;_frAdd7(a,b,n);const nl=S.frLv[k]||0;if(nl>lv){const t=nl===2?"Became best friends with ":"Became pals with ";jlog(a,nl===2?"💞":"😊",t+b.nick);jlog(b,nl===2?"💞":"😊",t+a.nick);save()}};
+const _photo7=photoMode;photoMode=async function(){await _photo7();S.pets.forEach(p=>{if(p.stage>=1&&!p.exp&&!(p.log||[]).some(l=>l.e==="📸"&&Date.now()-l.t<3600e3))jlog(p,"📸","Posed for a photo")});save()};
+const _evBuy7=evBuy;evBuy=function(k,id){const n=S.pets.length;_evBuy7(k,id);if(k==="egg"&&S.pets.length>n){const p=S.pets[S.pets.length-1];p.log=[{t:Date.now(),d:0,e:"🎟️",x:"Arrived as a limited "+((evNow()||{}).n||"event")+" egg"}];p._j=jsnap(p);save()}};
+function lifeStory(p,a){const sp=SPECIES[p.sp],L=p.log||[],r=rng(p.id*7+3);const exp=L.filter(l=>/^(Explored|Came home)/.test(l.x)),bff=[...new Set(L.filter(l=>/^Became (best friends|pals) with /.test(l.x)).map(l=>l.x.replace(/^Became (best friends|pals) with /,"")))],ff=L.find(l=>/favorite food/.test(l.x)),ph=L.filter(l=>l.e==="📸").length;
+  const out=[pick(r,[`${p.nick} the ${sp.name} hatched into a cozy little nest and quickly made it home.`,`From a wobbly egg to a grown-up ${sp.name}, ${p.nick} filled the nest with big energy.`,`${p.nick} started life as a tiny ${sp.name} egg and grew up surrounded by love.`])];
+  if(p.variant)out.push(`Raised with ${{radiant:"tons of love, they grew up glowing and confident",classic:"steady care, they grew up balanced and happy",wild:"a free spirit, they grew up a little scruffy and very independent"}[p.variant]}.`);
+  const bits=[];if(exp.length)bits.push(`went on ${exp.length} expedition${exp.length>1?"s":""} (first stop: ${exp[0].x.replace(/^(Explored|Came home early from) /,"").split(" · ")[0]})`);
+  if(bff.length)bits.push(`became close with ${bff.join(" & ")}`);if(ff)bits.push(`never said no to ${ff.x.split(": ")[1]}`);if(ph)bits.push(`posed for ${ph} photo${ph>1?"s":""}`);
+  if(bits.length)out.push(`Along the way they ${bits.length>1?bits.slice(0,-1).join(", ")+" and "+bits[bits.length-1]:bits[0]}.`);
+  if(a&&a.tier)out.push(`Now ${a.tier.replace(/^\S+\s/,"").toLowerCase()} on their own, ${p.nick} ${a.job}.`);
+  return out.join(" ")}
+const _moveOut7=moveOut;moveOut=function(){const p=S.pets[cur];const n=S.alumni.length;_moveOut7();const a=S.alumni[0];
+  if(p&&a&&a.id===p.id&&S.alumni.length>n){jlog(p,"🚀","Moved out to start a new life");a.log=(p.log||[]).slice();a.story=lifeStory(p,a);a.expN=p.expN||0;save()}};
+function logHTML(L){return`<div class="jl">${L.slice().reverse().map(l=>`<div class="je"><span class="e">${l.e}</span><div><b>${l.x}</b><div class="muted">${new Date(l.t).toLocaleDateString([], {month:"short",day:"numeric"})} · age ${l.d}d</div></div></div>`).join("")}</div>`}
+function journal(){const p=S.pets[cur];if(!p)return;journalTick();const L=p.log||[];
+  modal(`<h2>📔 ${p.nick}'s journal</h2><p class="muted">${L.length} memories · auto-recorded</p>${logHTML(L)}<button class="btn" onclick="closeM()">Close</button>`)}
+function album(id){const a=S.alumni.find(x=>x.id===id);if(!a)return;const sp=SPECIES[a.sp];if(!a.story)a.story=lifeStory(a,a);
+  modal(`<h2>📔 ${a.nick}'s keepsake album</h2>${petSVG(sp,4,a.variant,"happy","pet").replace("<svg",'<svg id="albsvg" style="width:110px"')}<div class="card story">${a.story}</div>
+   ${a.log&&a.log.length?logHTML(a.log):'<p class="muted">'+a.nick+' moved out before journals existed — only the story remains.</p>'}
+   <div class="row" style="justify-content:center;gap:8px"><button class="btn" onclick="visit(${a.id})">‹ Back to visit</button><button class="btn ghost" onclick="closeM()">Close</button></div>`);
+  dress($("albsvg"),a.acc,sp,4)}
+const _visit7=visit;visit=function(id){_visit7(id);const row=[...document.querySelectorAll("#mbox .row")].pop();if(row)row.insertAdjacentHTML("afterbegin",`<button class="btn" onclick="album(${id})">📔 Album</button>`)};
+
+// ---------- ABOUT ----------
+SUBS.about=["ℹ️","About","Credits & changelog"];
+const CHANGES=[["7.0","Pet journals & keepsake albums, unique species features (fins, shells, crystals, tentacles…), About screen, sharper photos, smoother phones"],
+ ["6.0","Photo mode, pet friendships & social life, seasonal events (Spooky Nebula…), save backup & restore"],
+ ["5.0","Day/night sky, space weather, expeditions & artifacts, accessories, tutorial, haptics"],
+ ["4.0","5-tab nav, Star Nursery breeding & hybrids, pity & weekly banners, 10-pulls, achievements, alumni postcards, high scores"],
+ ["3.0","Sound & music, decor shop, Comet Dash & Star Beat, traits, notifications, daily quests & login streak, installable app"],
+ ["2.0","Living nest: animations, petting, interactive care, minigames, walking pets"],
+ ["1.0","Gacha eggs, 45 species, care & lifecycle, moving out, alumni visits & favorites"]];
+function viewAbout(){return`<div class="card about" style="text-align:center">${petSVG(SPECIES[44],4,"radiant","happy","").replace("<svg",'<svg style="width:110px"')}<h2 style="margin:4px 0">GachiGacha</h2><div class="muted">Version ${VERSION}</div>
+  <p style="font-size:17px;margin:12px 0 4px">Created by <b>Gavenecko</b></p><div class="muted">A cosmic virtual-pet & gacha game. Raise them, love them, wave goodbye when they move out. 💫</div></div>
+  <div class="card"><h3>📜 Changelog</h3>${CHANGES.map(([v,t])=>`<div class="chg"><b>v${v}</b><div>${t}</div></div>`).join("")}</div>
+  <div class="card muted" style="font-size:13px">Saves live on this device only — use Settings → Backup to keep them safe. ${Object.keys(S.dex).length} species discovered · ${S.pulls} eggs summoned · ${S.alumni.length} graduates.</div>`}
+const _viewOf7=viewOf;viewOf=function(t){if(t==="about")return back()+viewAbout();return _viewOf7(t)};
+
+// ---------- PHOTO FIXES ----------
+function inlineStyles(src,dst){const a=[src,...src.querySelectorAll("*")],b=[dst,...dst.querySelectorAll("*")];for(let i=0;i<a.length&&i<b.length;i++){const cs=getComputedStyle(a[i]);if(cs.display==="none"||cs.visibility==="hidden")b[i].setAttribute("display","none");else if(cs.opacity!=="1"&&a[i]!==src)b[i].setAttribute("opacity",cs.opacity)}}
+const PH_TINT={"wx-aurora":g=>{const gr=g.createLinearGradient(0,0,g.canvas.width,g.canvas.height*.6);gr.addColorStop(.1,"rgba(90,255,200,0)");gr.addColorStop(.3,"rgba(90,255,200,.30)");gr.addColorStop(.45,"rgba(178,139,255,.25)");gr.addColorStop(.6,"rgba(0,0,0,0)");return gr},
+ "wx-fog":g=>{const gr=g.createRadialGradient(g.canvas.width*.3,g.canvas.height*.6,0,g.canvas.width*.3,g.canvas.height*.6,g.canvas.width*.6);gr.addColorStop(0,"rgba(255,154,213,.3)");gr.addColorStop(1,"rgba(178,139,255,.12)");return gr},
+ "wx-flare":g=>{const gr=g.createRadialGradient(g.canvas.width*.85,g.canvas.height*.1,0,g.canvas.width*.85,g.canvas.height*.1,g.canvas.width*.6);gr.addColorStop(0,"rgba(255,216,107,.65)");gr.addColorStop(1,"rgba(255,216,107,0)");return gr},
+ "ev-spooky":g=>{const gr=g.createLinearGradient(0,0,0,g.canvas.height);gr.addColorStop(0,"rgba(58,15,90,.25)");gr.addColorStop(1,"rgba(255,138,31,.22)");return gr},
+ "ev-frost":g=>{const gr=g.createLinearGradient(0,0,0,g.canvas.height);gr.addColorStop(0,"rgba(191,227,255,.13)");gr.addColorStop(1,"rgba(255,255,255,.2)");return gr},
+ "ev-love":g=>{const gr=g.createLinearGradient(0,0,0,g.canvas.height);gr.addColorStop(0,"rgba(255,90,138,0)");gr.addColorStop(1,"rgba(255,90,138,.22)");return gr},
+ "ev-bloom":g=>{const gr=g.createLinearGradient(0,0,0,g.canvas.height);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,"rgba(255,216,107,.15)");return gr}};
+PH_TINT["ev-summer"]=PH_TINT["ev-bloom"];
+captureStage=async function(){const st=document.querySelector("#main .stage");if(!st)return null;const R=st.getBoundingClientRect(),K=2,c=document.createElement("canvas");c.width=Math.round(R.width*K);c.height=Math.round(R.height*K);const g=c.getContext("2d");
+  const css=getComputedStyle(st).backgroundImage;const bg=bgStops(css);g.scale(K,K);
+  if(bg&&bg.stops.length){const a=(bg.ang-90)*Math.PI/180,cx=R.width/2,cy=R.height/2,L=Math.abs(R.width*Math.cos(a))/2+Math.abs(R.height*Math.sin(a))/2;
+    const gr=g.createLinearGradient(cx-Math.cos(a)*L,cy-Math.sin(a)*L,cx+Math.cos(a)*L,cy+Math.sin(a)*L);bg.stops.forEach((s,i)=>{try{gr.addColorStop(s.o??i/Math.max(1,bg.stops.length-1),s.c)}catch(e){}});g.fillStyle=gr}else g.fillStyle=getComputedStyle(st).backgroundColor||"#24185a";
+  g.fillRect(0,0,R.width,R.height);const rel=el=>{const r=el.getBoundingClientRect();return{x:r.left-R.left,y:r.top-R.top,w:r.width,h:r.height}};
+  st.querySelectorAll(".star").forEach(s=>{const r=rel(s);g.globalAlpha=+getComputedStyle(s).opacity||.7;g.fillStyle="#fff";g.beginPath();g.arc(r.x+r.w/2,r.y+r.h/2,Math.max(1,r.w/2),0,7);g.fill()});g.globalAlpha=1;
+  st.querySelectorAll(".sun,.moon1,.moon2").forEach(s=>{const r=rel(s);const col=s.className==="sun"?"#ffd86b":s.className==="moon1"?"#efeaff":"#ffc0e0";const gr=g.createRadialGradient(r.x+r.w*.4,r.y+r.h*.4,1,r.x+r.w/2,r.y+r.h/2,r.w/2);gr.addColorStop(0,"#fff");gr.addColorStop(.6,col);gr.addColorStop(1,col);g.shadowColor=col;g.shadowBlur=20;g.fillStyle=gr;g.beginPath();g.arc(r.x+r.w/2,r.y+r.h/2,r.w/2,0,7);g.fill();g.shadowBlur=0});
+  // weather & event tints (behind pets, like the live view)
+  const tint=k=>{if(st.classList.contains(k)&&PH_TINT[k]){g.save();g.setTransform(1,0,0,1,0,0);g.fillStyle=PH_TINT[k](g);g.fillRect(0,0,c.width,c.height);g.restore()}};
+  ["wx-aurora","wx-fog","wx-flare"].forEach(tint);
+  if(st.classList.contains("wx-meteor")){g.strokeStyle="rgba(255,255,255,.7)";g.lineWidth=2;const r=rng(9);for(let i=0;i<6;i++){const x=r()*R.width,y=r()*R.height*.6;g.beginPath();g.moveTo(x,y);g.lineTo(x-26,y+18);g.stroke()}}
+  const gr2=st.querySelector(".ground");if(gr2){const r=rel(gr2);g.fillStyle="rgba(255,255,255,.09)";g.beginPath();g.ellipse(r.x+r.w/2,r.y+r.h,r.w/2,r.h,0,Math.PI,0);g.fill()}
+  st.querySelectorAll(".deco").forEach(d=>{const r=rel(d);if(d.classList.contains("rug")){const m=(d.style.background||"").match(/(#[0-9a-f]{3,8}|rgba?\([^)]*\))/i);g.fillStyle=m?m[1]:"#ff7ad9";g.globalAlpha=.8;g.beginPath();g.ellipse(r.x+r.w/2,r.y+r.h/2,r.w*.35,r.h*.3,0,0,7);g.fill();g.globalAlpha=1;return}
+    const fs=parseFloat(getComputedStyle(d).fontSize)||30;g.font=fs+"px sans-serif";g.textBaseline="top";g.fillText(d.textContent,r.x,r.y)});
+  // pets: draw in true stacking order (z-index, then DOM order) — background mates first, main pet last
+  const zOf=s=>{const h=s.closest("#walker,.mate");return h?(+getComputedStyle(h).zIndex||0):0};
+  const svgs=[...st.querySelectorAll("svg")].filter(s=>!s.closest(".deco")&&s.getBoundingClientRect().width>10).map((s,i)=>({s,i,z:zOf(s)})).sort((a,b)=>a.z-b.z||a.i-b.i);
+  const imgs=await Promise.all(svgs.map(({s})=>{const r=rel(s);const cl=s.cloneNode(true);inlineStyles(s,cl);cl.setAttribute("width",r.w);cl.setAttribute("height",r.h);cl.removeAttribute("class");cl.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    return loadImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(cl))).catch(()=>null)}));
+  svgs.forEach(({s},k)=>{const im=imgs[k];if(!im)return;const r=rel(s);const fl=s.closest("#flip,.mflip"),neg=fl&&/matrix\(-1/.test(getComputedStyle(fl).transform);
+    g.save();if(neg){g.translate(r.x+r.w,r.y);g.scale(-1,1);g.drawImage(im,0,0,r.w,r.h)}else g.drawImage(im,r.x,r.y,r.w,r.h);g.restore()});
+  ["ev-spooky","ev-frost","ev-love","ev-bloom","ev-summer"].forEach(tint);
+  st.querySelectorAll(".sbub").forEach(b=>{const r=rel(b);g.fillStyle="#fff";g.beginPath();g.roundRect?g.roundRect(r.x,r.y,r.w,r.h,10):g.rect(r.x,r.y,r.w,r.h);g.fill();g.fillStyle="#222";g.font="14px sans-serif";g.textBaseline="middle";g.fillText(b.textContent,r.x+8,r.y+r.h/2)});
+  return c};
+
+// ---------- HOME HOOKS ----------
+const _viewHome7=viewHome;viewHome=function(){let h=_viewHome7();const p=S.pets[cur];if(!p||p.exp)return h;
+  return h.replace('onclick="outfit()">👒 Outfit</button>','onclick="outfit()">👒 Outfit</button><button class="btn ghost" style="padding:8px 14px;font-size:13px" onclick="journal()">📔 Journal</button>')};
+
+// ---------- PERF ----------
+// pause background timers' DOM work while hidden; skip live patching when nothing visible changed
+const _live7=live;live=function(){if(document.hidden)return;_live7()};
+const _socialTick7=socialTick;socialTick=function(f){if(document.hidden)return null;return _socialTick7(f)};
+ACH.push({id:"jrnl",n:"Dear Diary",d:"A pet's journal reaches 10 memories",e:"📔",r:5,c:()=>S.pets.some(p=>(p.log||[]).length>=10)||S.alumni.some(a=>(a.log||[]).length>=10)});
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
