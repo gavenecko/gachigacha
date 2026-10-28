@@ -271,6 +271,45 @@ nav button{font-size:11.5px}nav button b{font-size:21px}
 .mate,.deco,.wxfx,.sbub,.evc{contain:layout style}
 #walker,.mate{backface-visibility:hidden}
 @media (prefers-reduced-motion:reduce){.wxfx,.evc{animation:none!important}}
+.invh{font-weight:700;font-size:13px;margin:8px 0 2px}
+.chip.buff{background:#8dff8a22;border-color:#8dff8a66}
+.btn.sm{padding:6px 10px;font-size:12px}
+.row.wrap{flex-wrap:wrap;gap:6px}
+.chip.on{background:#ffd86b;color:#2a1a5e}.chip.off{opacity:.45}
+.plots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.plot{background:linear-gradient(#ffffff08,#5a3a2a66);border:1px solid #ffffff22;border-radius:14px;padding:6px;display:flex;flex-direction:column;align-items:center;gap:3px;color:#fff;min-height:150px;font:inherit;contain:layout paint}
+.plot.wet{background:linear-gradient(#7af0ff14,#3a4a7a99);border-color:#7af0ff66}.plot.ready{border-color:#8dff8a;box-shadow:0 0 12px #8dff8a55}
+.plot.empty{justify-content:center;border-style:dashed}.plot.empty span{font-size:28px}
+.plot .bar{width:100%}.pl-svg{width:70px;height:70px}.plot.ready .pl-svg{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.seedg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.seedb{background:#ffffff12;border:1px solid #ffffff25;border-radius:14px;color:#fff;padding:10px;display:flex;flex-direction:column;align-items:center;font:inherit}.seedb b{font-size:30px}.seedb small{color:#b9b3dd}
+.kpot{display:flex;gap:8px;justify-content:center;margin:10px 0;padding:12px;border-radius:50% 50% 30% 30%/30% 30% 50% 50%;background:radial-gradient(#ff9a5a33,#ffffff08)}
+.kslot{width:74px;height:74px;border-radius:50%;border:2px dashed #ffffff44;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;color:#fff8;background:none;font-family:inherit}
+.kslot.on{border:2px solid #ffd86b;color:#fff;background:#ffd86b22;font-size:30px}.kslot small{font-size:9px}
+.pot{font-size:80px;text-align:center}.pot.shake{animation:shake .25s infinite}
+.rbook{display:flex;flex-direction:column;gap:6px;margin-top:8px}.rcp{display:flex;gap:10px;align-items:center;background:#ffffff0d;border-radius:12px;padding:8px}.rcp>b{font-size:30px}.rcp.lock{opacity:.6}
+.talg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.talb{background:#ffffff12;border:1px solid #ffffff25;border-radius:14px;color:#fff;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit}.talb b{font-size:30px}.talb .bar{width:100%}
+.npc{display:flex;gap:10px;align-items:center;margin:4px 0}.npc svg{width:42px;height:42px}
+.trbox{position:absolute;left:0;right:0;bottom:30px;padding:16px;text-align:center}
+.trbar{position:relative;height:46px;border-radius:23px;background:#ffffff15;margin:12px 0;overflow:visible}
+.trz{position:absolute;top:0;bottom:0;border-radius:23px;background:linear-gradient(90deg,#8dff8a44,#8dff8aaa,#8dff8a44);box-shadow:0 0 14px #8dff8a88}
+.trk{position:absolute;top:50%;font-size:34px;transform:translate(-50%,-50%)}
+.trtap{width:100%;font-size:22px;padding:16px}.trs{font-size:22px;min-height:30px;margin-top:8px}
+.showstage{background:radial-gradient(ellipse at 50% 0,#ffe27a55,transparent 60%),linear-gradient(#3b1450,#1a0f3a);border-radius:16px;padding:10px;min-height:170px;display:flex;align-items:center;justify-content:center}
+.perf{display:flex;flex-direction:column;align-items:center}.perf svg.dance{width:110px;height:110px;animation:dance .5s ease-in-out infinite alternate}.fxl{font-size:20px}
+@keyframes dance{from{transform:rotate(-8deg) translateY(0)}to{transform:rotate(8deg) translateY(-8px)}}
+.board{margin-top:8px}.board>div,.pod{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:#ffffff0d;margin:4px 0}.board .me,.pod.me{background:#ffd86b33;border:1px solid #ffd86b}
+.pod span{flex:1;text-align:left}
+.musstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;text-align:center}.musstats b{display:block;font-size:20px}.musstats small{color:#b9b3dd;font-size:11px}
+.mgal{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.case{background:linear-gradient(#ffffff10,#ffffff04);border:1px solid #ffffff1c;border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;font-size:12px}
+.case>b{font-size:30px}.case small{color:#b9b3dd;font-size:10px}.case.don{border-color:#ffd86b88;box-shadow:inset 0 -18px 20px -14px #ffd86b55}.case.own{border-color:#8dff8a88}.case:not(.don):not(.own)>b{opacity:.5}
+.m3{position:absolute;left:50%;top:40px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(6,1fr);gap:4px;width:min(92vw,360px)}
+.g3{aspect-ratio:1;border-radius:10px;background:#ffffff14;display:flex;align-items:center;justify-content:center;font-size:28px;transition:transform .15s,opacity .25s;touch-action:none;user-select:none}
+.g3.sel{background:#ffd86b55;transform:scale(1.1)}.g3.clr{opacity:0;transform:scale(1.5)}.g3.no{animation:shake .25s 2}
+.sl3{position:absolute;left:50%;top:50px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(80vw,300px)}
+.t3{aspect-ratio:1;border-radius:14px;background:linear-gradient(#6b4bd6,#3b2477);display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;user-select:none;border:2px solid #ffffff22}
+.t3 b{font-size:40px}.t3 small{font-weight:700}.t3.ok{border-color:#8dff8a}.t3.bl{background:#00000033;border-style:dashed}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -1563,7 +1602,7 @@ ACH.push({id:"photo1",n:"Say Cheese!",d:"Take a photo in Photo mode",e:"📸",r:
  {id:"evegg",n:"Limited Edition",d:"Get an event-species egg",e:"🎟️",r:10,c:()=>SPECIES.some(s=>s&&s.ev&&S.dex[s.id])});
 
 // ================= v7: pet journal & keepsakes, species features, about, photo fixes, perf =================
-const VERSION="7.0";
+const VERSION="8.0";
 // ---------- SPECIES FEATURES ----------
 const FEAT={
  arms:{n:"little arms",b:(a,b)=>"",f:(a,b)=>`<g class="ft-arms"><ellipse cx="44" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(-30 44 120)"/><ellipse cx="156" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(30 156 120)"/></g>`},
@@ -1691,6 +1730,223 @@ const _viewHome7=viewHome;viewHome=function(){let h=_viewHome7();const p=S.pets[
 const _live7=live;live=function(){if(document.hidden)return;_live7()};
 const _socialTick7=socialTick;socialTick=function(f){if(document.hidden)return null;return _socialTick7(f)};
 ACH.push({id:"jrnl",n:"Dear Diary",d:"A pet's journal reaches 10 memories",e:"📔",r:5,c:()=>S.pets.some(p=>(p.log||[]).length>=10)||S.alumni.some(a=>(a.log||[]).length>=10)});
+
+// ================= v8: space garden, cooking, talent show, museum, 2 new minigames =================
+const MIN=60000;
+const FRUITS={glow:{e:"🫐",n:"Glowberry",d:"makes pets glow: happiness drains slower (10m)",fd:{hunger:14,happy:10},buff:["glow",10]},
+ pear:{e:"🍐",n:"Moon Pear",d:"juicy & healthy: +12 health",fd:{hunger:20,health:12}},
+ plum:{e:"🍑",n:"Spark Plum",d:"zingy: +15 energy",fd:{hunger:15,energy:15}},
+ bean:{e:"🫘",n:"Dream Bean",d:"a nap in a bean: +25 energy",fd:{hunger:12,energy:25}},
+ chili:{e:"🌶️",n:"Comet Chili",d:"SPICY! fire breath, +10 joy",fd:{hunger:16,happy:10,energy:10}},
+ lotus:{e:"🪷",n:"Astral Lotus",d:"legendary: +15 all stats, +2⭐",fd:{hunger:15,happy:15,energy:15,clean:15,health:15},rare:1}};
+const SEEDS={glow:{ms:6*MIN,c:4,y:[2,3]},chili:{ms:8*MIN,c:5,y:[2,3]},plum:{ms:10*MIN,c:6,y:[2,3]},pear:{ms:12*MIN,c:6,y:[2,3]},bean:{ms:15*MIN,c:8,y:[2,4]},lotus:{ms:45*MIN,c:40,y:[1,1]}};
+const WET=20*MIN,DRY=.3,MAXPLOT=6,PLOTC=[0,0,0,30,50,80];
+const BUFFS={glow:{e:"✨",n:"Glowing",m:{happy:.6}},vital:{e:"💚",n:"Vital",m:{health:.5}},zippy:{e:"⚡",n:"Zippy",m:{energy:.6}},hearty:{e:"🍖",n:"Hearty",m:{hunger:.5}},
+ sparkle:{e:"🫧",n:"Sparkly",m:{clean:.55}},lucky:{e:"🍀",n:"Lucky",m:{}},dreamy:{e:"🌙",n:"Dreamy",m:{energy:.7,happy:.8}},feast:{e:"👑",n:"Feasted",m:{hunger:.7,happy:.7,energy:.7,clean:.7,health:.7}}};
+const RECIPES=[
+ {id:"pie",e:"🥧",n:"Glow Pie",ing:["glow","f0"],fd:{hunger:30,happy:15},buff:"glow",min:20},
+ {id:"soup",e:"🍲",n:"Moon Pear Soup",ing:["f1","pear"],fd:{hunger:40,health:15},buff:"vital",min:20},
+ {id:"smoothie",e:"🥤",n:"Spark Smoothie",ing:["glow","plum"],fd:{hunger:20,energy:25},buff:"zippy",min:20},
+ {id:"dumpling",e:"🥟",n:"Dream Dumplings",ing:["bean","f1"],fd:{hunger:35,energy:30},buff:"dreamy",min:20},
+ {id:"curry",e:"🍛",n:"Comet Curry",ing:["chili","f1","pear"],fd:{hunger:55,happy:10},buff:"hearty",min:30},
+ {id:"floss",e:"🍭",n:"Fizzy Floss",ing:["f3","plum"],fd:{hunger:15,happy:20,clean:10},buff:"sparkle",min:20},
+ {id:"sundae",e:"🍨",n:"Nebula Sundae",ing:["f3","glow","plum"],fd:{hunger:25,happy:25},buff:"lucky",min:30},
+ {id:"salad",e:"🥗",n:"Melon Salad",ing:["f2","pear"],fd:{hunger:30,health:20},buff:"vital",min:20},
+ {id:"puffs",e:"🔥",n:"Chili Star Puffs",ing:["chili","f0"],fd:{hunger:25,energy:20},buff:"zippy",min:20},
+ {id:"feast",e:"🍱",n:"Lotus Feast",ing:["bean","lotus","pear"],fd:{hunger:60,happy:30,energy:30,clean:20,health:30},buff:"feast",min:45}];
+RECIPES.forEach(r=>r.ing.sort());
+const MUSH={id:"mush",e:"🥣",n:"Mystery Mush",fd:{hunger:18,happy:-3}};
+function ingInfo(k){if(k[0]==="f"&&FOODS[+k.slice(1)])return FOODS[+k.slice(1)];return FRUITS[k]}
+function ensure8(){const v=S.v8=S.v8||{};v.plots=v.plots||[{},{},{}];v.seeds=v.seeds||{glow:2,plum:1};v.inv=v.inv||{};v.book=v.book||{};v.tro=v.tro||[];v.show=v.show||{};
+  v.mus=Object.assign({don:{},fruit:0,dex:{}},v.mus||{});v.st=Object.assign({harv:0,cook:0,shows:0,wins:0,train:0},v.st||{});S.pets.forEach(p=>{p.tal=p.tal||{};p.buffs=p.buffs||{}})}
+const _load8=load;load=function(){_load8();ensure8()};
+const _newPet8=newPet;newPet=function(s){const p=_newPet8(s);p.tal={};p.buffs={};return p};
+// ---------- BUFFS ----------
+function buffsOn(p){const t=Date.now(),o=[];for(const k in p.buffs||{}){if(p.buffs[k]>t)o.push(k);else delete p.buffs[k]}return o}
+function addBuff(p,k,mins){p.buffs=p.buffs||{};p.buffs[k]=Math.max(p.buffs[k]||0,Date.now())+mins*MIN}
+const _mults8=mults;mults=function(p){const m=_mults8(p);if(p&&p.buffs)buffsOn(p).forEach(k=>{const b=BUFFS[k].m;for(const s in b)m[s]*=b[s]});return m};
+function buffHTML(p){const b=buffsOn(p);return b.length?`<div class="traits buffs">${b.map(k=>`<span class="chip buff" onclick="toast('${BUFFS[k].e} ${BUFFS[k].n}: ${fmtDur(p.buffs[k]-Date.now())} left')">${BUFFS[k].e} ${BUFFS[k].n} · ${Math.ceil((p.buffs[k]-Date.now())/MIN)}m</span>`).join("")}</div>`:""}
+const _viewHome8=viewHome;viewHome=function(){let h=_viewHome8();const p=S.pets[cur];if(!p||p.stage===0)return h;return h.replace('<div class="muted" id="need"',buffHTML(p)+'<div class="muted" id="need"')};
+// ---------- FEEDING FROM INVENTORY ----------
+function invItems(){const v=S.v8,o=[];for(const k in FRUITS)if(v.inv[k]>0)o.push(Object.assign({inv:k,kind:"fruit",id:k},FRUITS[k]));
+  RECIPES.concat([MUSH]).forEach(r=>{if(v.inv["m:"+r.id]>0)o.push(Object.assign({inv:"m:"+r.id,kind:"meal"},r))});return o}
+const _care8=care;care=function(kind){_care8(kind);if(kind!=="feed"||$("sheet").style.display!=="block")return;const L=invItems();
+  const h=`<div class="invh">🧺 From your garden & kitchen</div>`+(L.length?`<div class="items inv8">${L.map(f=>`<div class="it" data-k="inv" data-v="${f.inv}"><b>${f.e}</b>${f.n} ×${S.v8.inv[f.inv]}<br><small>${f.kind==="meal"&&f.buff?BUFFS[f.buff].e+" "+BUFFS[f.buff].n:f.d||"mystery…"}</small></div>`).join("")}</div>`:`<div class="muted" style="margin:4px 0 8px">Grow fruit in the 🌱 Garden and cook meals in the 🍳 Kitchen (More tab).</div>`);
+  const c=$("sheet").querySelector("button.ghost");c&&c.insertAdjacentHTML("beforebegin",h)};
+$("sheet").addEventListener("pointerdown",e=>{const it=e.target.closest(".it[data-k=inv]");if(!it||DG)return;e.preventDefault();e.stopImmediatePropagation();
+  const item=invItems().find(x=>x.inv===it.dataset.v);if(!item)return;const g=document.createElement("div");g.className="dragg";g.textContent=item.e;document.body.appendChild(g);
+  DG={g,item,k:"feed",x0:e.clientX,y0:e.clientY,d:0};mvG(e.clientX,e.clientY)},true);
+const _consume8=consume;consume=function(k,item){if(k==="feed"&&item&&item.inv){if(!(S.v8.inv[item.inv]>0)){$("sheet").style.display="none";busy=false;return}S.v8.inv[item.inv]--;save()}
+  _consume8(k,item);if(k!=="feed"||!item||!item.inv)return;const p=S.pets[cur];
+  setTimeout(()=>{if(!p)return;let msg="";
+    if(item.kind==="fruit"){const f=FRUITS[item.id];if(f.buff)addBuff(p,f.buff[0],f.buff[1]);
+      if(item.id==="chili"){burst(14,["🔥","🌶️","💨"],.45,90);say("HOT HOT HOT! 🔥")}if(item.id==="bean"){say("*dreamy yawn* 🌙")}if(item.id==="glow"){burst(10,["✨","💜"],.4,70)}
+      if(item.id==="lotus"){S.stars+=2;burst(18,["🪷","✨","⭐"],.45,100);msg="🪷 Astral Lotus! +15 all stats, +2⭐"}
+      msg=msg||`${f.e} ${f.n}: ${f.d}`}
+    else{const r=item;if(r.buff){addBuff(p,r.buff,r.min);msg=`${r.e} ${r.n} → ${BUFFS[r.buff].e} ${BUFFS[r.buff].n} for ${r.min}m`}else msg="🥣 Mystery Mush… it's edible. Probably.";
+      if(r.ing&&r.ing.includes("f"+p.favFood)){p.happy=Math.min(100,p.happy+12);hearts(6,"❤️");msg+=` · ❤️ made with ${p.nick}'s favorite! +12💖`;if(!p.knowFood){p.knowFood=true;msg+=" (discovered!)"}}
+      typeof jlog==="function"&&jlog(p,r.e,"Ate homemade "+r.n)}
+    save();toast(msg);if(tab==="home"&&!busy)render()},1150)};
+// ---------- GARDEN ----------
+function plotState(pl){if(!pl.sd)return null;const sd=SEEDS[pl.sd],t=Date.now();const wet=Math.max(0,Math.min(t,pl.wu||0)-pl.lt),dry=(t-pl.lt)-wet;
+  const g=Math.min(sd.ms,pl.g+wet+dry*DRY);return{g,f:g/sd.ms,ready:g>=sd.ms,wet:(pl.wu||0)>t,left:sd.ms-g}}
+function gardenSync(){(S.v8.plots||[]).forEach(pl=>{if(!pl.sd)return;const s=plotState(pl);pl.g=s.g;pl.lt=Date.now();if(s.ready&&!pl.told){pl.told=1;toast(`🌱 ${FRUITS[pl.sd].e} ${FRUITS[pl.sd].n} is ready to harvest!`);sfx("win")}})}
+function plant(i,k){const pl=S.v8.plots[i];if(pl.sd||!(S.v8.seeds[k]>0))return;S.v8.seeds[k]--;Object.assign(pl,{sd:k,g:0,lt:Date.now(),wu:0,pt:Date.now(),told:0});save();sfx("place");closeM();render();toast(`🌱 Planted ${FRUITS[k].n}! Water it 💧`)}
+function water(i){gardenSync();const pl=S.v8.plots[i];if(!pl.sd)return;pl.wu=Date.now()+WET;save();sfx("bubble");render();const el=document.querySelector(`.plot[data-i="${i}"]`);if(el){const r=el.getBoundingClientRect();for(let j=0;j<6;j++)particle("💧",r.left+r.width*(.2+Math.random()*.6),r.top+10,"burst",{"--dx":(Math.random()-.5)*30+"px","--dy":"40px"},700)}}
+function waterAll(){gardenSync();let n=0;S.v8.plots.forEach((pl,i)=>{if(pl.sd&&!plotState(pl).ready){pl.wu=Date.now()+WET;n++}});save();sfx("bubble");render();toast(n?`💧 Watered ${n} plant${n>1?"s":""}`:"Nothing to water")}
+function harvest(i){gardenSync();const pl=S.v8.plots[i],s=plotState(pl);if(!s||!s.ready)return;const k=pl.sd,sd=SEEDS[k],n=sd.y[0]+Math.floor(Math.random()*(sd.y[1]-sd.y[0]+1));
+  S.v8.inv[k]=(S.v8.inv[k]||0)+n;let x="";if(Math.random()<.35&&k!=="lotus"){S.v8.seeds[k]=(S.v8.seeds[k]||0)+1;x=" + 1 seed"}if(Math.random()<.04){S.v8.seeds.lotus=(S.v8.seeds.lotus||0)+1;x+=" + 🪷 rare Lotus seed!"}
+  S.v8.plots[i]={};S.v8.st.harv++;save();sfx("coin");render();toast(`🧺 Harvested ${n}× ${FRUITS[k].e} ${FRUITS[k].n}${x}`);
+  const el=document.querySelector(`.plot[data-i="${i}"]`);if(el){const r=el.getBoundingClientRect();for(let j=0;j<8;j++){const a=Math.random()*6.28;particle(pick(Math.random,[FRUITS[k].e,"✨"]),r.left+r.width/2,r.top+r.height/2,"burst",{"--dx":Math.cos(a)*50+"px","--dy":Math.sin(a)*40+"px"},800)}}}
+function seedPick(i){const v=S.v8,ks=Object.keys(SEEDS).filter(k=>v.seeds[k]>0);
+  modal(`<h2>🌱 Plant a seed</h2>${ks.length?`<div class="seedg">${ks.map(k=>`<button class="seedb" onclick="plant(${i},'${k}')"><b>${FRUITS[k].e}</b>${FRUITS[k].n}<small>×${v.seeds[k]} · ${SEEDS[k].ms/MIN}m watered</small></button>`).join("")}</div>`:'<p class="muted">No seeds! Buy some below, or find them on expeditions 🚀</p>'}<button class="btn ghost" onclick="closeM()">Close</button>`)}
+function buySeed(k){const c=SEEDS[k].c;if(S.stars<c){toast("Not enough stars ⭐");sfx("miss");return}S.stars-=c;S.v8.seeds[k]=(S.v8.seeds[k]||0)+1;save();sfx("coin");render();toast(`${FRUITS[k].e} +1 ${FRUITS[k].n} seed`)}
+function buyPlot(){const n=S.v8.plots.length,c=PLOTC[n];if(n>=MAXPLOT)return;if(S.stars<c){toast("Not enough stars ⭐");sfx("miss");return}S.stars-=c;S.v8.plots.push({});save();sfx("place");render()}
+function plantSVG(k,f){const fr=FRUITS[k],h=10+f*50;return`<svg viewBox="0 0 100 100" class="pl-svg"><path d="M50 92 Q${48+Math.sin(f*6)*4} ${92-h/2} 50 ${92-h}" stroke="#5ad66b" stroke-width="5" fill="none"/>${f>.25?`<ellipse cx="38" cy="${92-h*.45}" rx="12" ry="5" fill="#6be07a" transform="rotate(-25 38 ${92-h*.45})"/><ellipse cx="62" cy="${92-h*.6}" rx="12" ry="5" fill="#6be07a" transform="rotate(25 62 ${92-h*.6})"/>`:""}${f>.6&&f<1?`<circle cx="50" cy="${92-h}" r="7" fill="#ff9ad5"/>`:""}${f>=1?`<text x="50" y="${100-h}" font-size="30" text-anchor="middle">${fr.e}</text>`:""}</svg>`}
+function viewGarden(){gardenSync();const v=S.v8;
+  return`<div class="card"><div class="row" style="justify-content:space-between"><h3>🌱 Space Garden</h3><button class="btn" style="padding:7px 12px" onclick="waterAll()">💧 Water all</button></div><div class="muted">Plants grow in real time — fast while watered (💧 lasts ${WET/MIN}m), slowly when dry. Harvest fruit to feed pets or cook with.</div>
+  <div class="plots">${v.plots.map((pl,i)=>{const s=plotState(pl);if(!s)return`<button class="plot empty" data-i="${i}" onclick="seedPick(${i})"><span>➕</span><small>Plant</small></button>`;
+    return`<div class="plot ${s.wet?"wet":""} ${s.ready?"ready":""}" data-i="${i}">${plantSVG(pl.sd,s.f)}<small>${FRUITS[pl.sd].n}</small><div class="bar"><i style="width:${s.f*100}%;background:${s.ready?"#8dff8a":"#ffd86b"}"></i></div>
+      ${s.ready?`<button class="btn gold sm" onclick="harvest(${i})">🧺 Harvest</button>`:`<button class="btn sm ${s.wet?"ghost":""}" onclick="water(${i})">${s.wet?"💧 "+fmtDur(pl.wu-Date.now()):"💧 Water"}</button><small class="muted">${fmtDur(s.left/(s.wet?1:DRY))}</small>`}</div>`}).join("")}
+   ${v.plots.length<MAXPLOT?`<button class="plot empty" onclick="buyPlot()"><span>🧱</span><small>New plot<br>${PLOTC[v.plots.length]}⭐</small></button>`:""}</div></div>
+  <div class="card"><b>🧺 Basket</b> <span class="muted">fruit can be fed directly (Nest → Feed)</span><div class="row wrap" style="margin-top:6px">${Object.keys(FRUITS).map(k=>`<span class="chip" onclick="toast('${FRUITS[k].e} ${FRUITS[k].n}: ${FRUITS[k].d}')">${FRUITS[k].e} ${v.inv[k]||0}</span>`).join("")}</div></div>
+  <div class="card"><b>🌰 Seed shop</b> <span class="muted">you have: ${Object.keys(SEEDS).map(k=>FRUITS[k].e+"×"+(v.seeds[k]||0)).join(" ")}</span>${Object.keys(SEEDS).map(k=>`<div class="shopi"><span class="e">${FRUITS[k].e}</span><div style="flex:1"><b>${FRUITS[k].n} seed</b>${FRUITS[k].rare?' <span class="tag t-legendary">rare</span>':""}<div class="muted">${SEEDS[k].ms/MIN}m · yields ${SEEDS[k].y.join("–")} · ${FRUITS[k].d}</div></div><button class="btn sm gold" onclick="buySeed('${k}')">${SEEDS[k].c}⭐</button></div>`).join("")}</div>`}
+setInterval(()=>{if(!S||!S.v8)return;gardenSync();if(tab==="garden"&&!busy&&$("modal").style.display!=="flex"&&!document.hidden)render()},5000);
+// seeds from expeditions
+const _finishExp8=finishExp;finishExp=function(p,early){const r=_finishExp8(p,early);if(!early&&Math.random()<.6){const k=Math.random()<.1?"lotus":pick(Math.random,["glow","plum","pear","bean","chili"]);S.v8.seeds[k]=(S.v8.seeds[k]||0)+1;save();
+  setTimeout(()=>{const b=$("mbox"),c=b&&b.querySelector(".card");if(c&&$("modal").style.display==="flex")c.insertAdjacentHTML("beforeend",`<div>🌰 ${FRUITS[k].e} ${FRUITS[k].n} seed</div>`);else toast(`🌰 Found a ${FRUITS[k].n} seed!`)},50)}return r};
+// ---------- KITCHEN ----------
+let KSEL=[];
+function kAvail(k){return k[0]==="f"?99:(S.v8.inv[k]||0)-KSEL.filter(x=>x===k).length}
+function kTog(k,rm){if(rm!=null){KSEL.splice(rm,1)}else{if(KSEL.length>=3){toast("Max 3 ingredients");return}if(kAvail(k)<1){toast("You need more of that — grow it in the Garden 🌱");return}KSEL.push(k)}sfx("tap");render()}
+function cook(){if(KSEL.length<2){toast("Pick 2–3 ingredients");return}if(!KSEL.some(k=>FRUITS[k])){toast("Every recipe needs at least one garden fruit 🌱");return}
+  const key=KSEL.slice().sort().join("+"),r=RECIPES.find(x=>x.ing.join("+")===key)||MUSH;KSEL.forEach(k=>{if(FRUITS[k])S.v8.inv[k]--});
+  const isNew=r!==MUSH&&!S.v8.book[r.id];if(r!==MUSH)S.v8.book[r.id]=(S.v8.book[r.id]||0)+1;S.v8.inv["m:"+r.id]=(S.v8.inv["m:"+r.id]||0)+1;S.v8.st.cook++;KSEL=[];save();sfx("bubble");
+  modal(`<h2>🍳 Cooking…</h2><div class="pot shake">🍲</div>`);setTimeout(()=>{sfx(r===MUSH?"lose":isNew?"reveal":"win",isNew?"epic":undefined);
+    const fans=S.pets.filter(p=>p.stage>0&&r.ing&&r.ing.includes("f"+p.favFood));
+    modal(`<h2>${isNew?"📖 New recipe!":r===MUSH?"Hmm…":"Ding! 🔔"}</h2><div class="pot pop">${r.e}</div><h3 style="margin:4px">${r.n}</h3>${r.buff?`<p>${BUFFS[r.buff].e} <b>${BUFFS[r.buff].n}</b> buff for ${r.min}m<br><span class="muted">${Object.keys(r.fd).map(k=>STAT_UI[k]?STAT_UI[k][0]+" +"+r.fd[k]:"").join(" ")}</span></p>`:'<p class="muted">Not a real recipe… but pets will still eat it. Try other combos!</p>'}
+    ${fans.length?`<div class="card">❤️ ${fans.map(p=>p.nick).join(", ")} will LOVE this (favorite food inside)!</div>`:""}<p class="muted">Added to your basket — feed it from Nest → Feed.</p><button class="btn gold" onclick="closeM()">Yum!</button>`)},1200)}
+function viewKitchen(){const v=S.v8,ings=Object.keys(FRUITS).concat(FOODS.map((_,i)=>"f"+i));const known=RECIPES.filter(r=>v.book[r.id]).length;
+  const favs=k=>S.pets.filter(p=>p.stage>0&&p.knowFood&&"f"+p.favFood===k);
+  return`<div class="card"><h3>🍳 Cosmic Kitchen</h3><div class="muted">Combine 2–3 ingredients (at least one garden fruit). Snacks from the pantry are free. Meals give buffs!</div>
+  <div class="kpot">${[0,1,2].map(i=>KSEL[i]?`<button class="kslot on" onclick="kTog('${KSEL[i]}',${i})">${ingInfo(KSEL[i]).e}<small>${ingInfo(KSEL[i]).n}</small></button>`:`<div class="kslot">${i<2?"+":"(+)"}</div>`).join("")}</div>
+  <button class="btn gold" style="width:100%" ${KSEL.length>=2?"":"disabled"} onclick="cook()">🔥 Cook!</button>
+  <div style="margin-top:10px"><b style="font-size:13px">🧺 Garden fruit</b></div><div class="row wrap">${Object.keys(FRUITS).map(k=>`<button class="chip big2 ${kAvail(k)<1?"off":""}" onclick="kTog('${k}')">${FRUITS[k].e} ${FRUITS[k].n} ×${Math.max(0,kAvail(k))}</button>`).join("")}</div>
+  <div style="margin-top:8px"><b style="font-size:13px">🥫 Pantry snacks</b> <span class="muted">free</span></div><div class="row wrap">${FOODS.map((f,i)=>`<button class="chip big2" onclick="kTog('f${i}')">${f.e} ${f.n}${favs("f"+i).length?" ❤️":""}</button>`).join("")}</div></div>
+  <div class="card"><h3>📖 Recipe book</h3><div class="muted">${known}/${RECIPES.length} discovered · ❤️ = contains a pet's favorite food</div><div class="rbook">${RECIPES.map(r=>{const k=v.book[r.id],fan=S.pets.filter(p=>p.stage>0&&r.ing.includes("f"+p.favFood)&&p.knowFood);
+    return k?`<div class="rcp"><b>${r.e}</b><div><b>${r.n}</b>${fan.length?" ❤️":""}<div class="muted">${r.ing.map(i=>ingInfo(i).e).join(" + ")} → ${BUFFS[r.buff].e} ${BUFFS[r.buff].n} ${r.min}m · cooked ${k}×</div></div></div>`
+    :`<div class="rcp lock"><b>❔</b><div><b>???</b><div class="muted">${r.ing.length} ingredients · hint: has ${ingInfo(r.ing.find(i=>FRUITS[i])).e}</div></div></div>`}).join("")}</div></div>
+  <div class="card"><b>🍱 Meals ready</b><div class="row wrap" style="margin-top:6px">${RECIPES.concat([MUSH]).filter(r=>v.inv["m:"+r.id]>0).map(r=>`<span class="chip">${r.e} ${r.n} ×${v.inv["m:"+r.id]}</span>`).join("")||'<span class="muted">None yet</span>'}</div></div>`}
+// ---------- TALENT SHOW ----------
+const TAL={dance:{e:"💃",n:"Dance",sp:2.2,zone:.24,anim:"i-spin",fx:["💃","✨","🎶"]},sing:{e:"🎤",n:"Sing",sp:1.6,zone:.28,anim:"i-bounce",fx:["🎵","🎶","💖"]},tricks:{e:"🤸",n:"Tricks",sp:2.9,zone:.2,anim:"perk",fx:["⭐","💫","🎪"]}};
+const tLv=(p,k)=>Math.min(10,Math.floor(Math.sqrt(((p.tal||{})[k]||0)/8)));
+let TR=null,TSEL={p:0,t:"dance"};
+function train(k){const p=S.pets[cur];if(!p||p.stage===0){toast("Hatch first! 🥚");return}if(p.exp){toast(p.nick+" is exploring 🚀");return}if(p.sleeping){toast(p.nick+" is sleeping 💤");return}if(p.energy<15){toast("Too tired to train! ⚡");return}
+  const T=TAL[k];gameShell(`<div class="gh"><span>${T.e} ${T.n} practice</span><span>Round <span id="trr">1</span>/6</span></div><div class="ga" id="ga">${gpetHTML()}
+   <div class="trbox"><div class="muted" id="trm">Tap when the ${T.e} is in the glowing zone!</div><div class="trbar" id="trbar"><div class="trz" id="trz"></div><div class="trk" id="trk">${T.e}</div></div><button class="btn gold trtap" id="trtap">TAP!</button><div id="trs" class="trs"></div></div></div>`);
+  const ga=$("ga"),gp=$("gpet");gp.style.transform=`translate(${ga.clientWidth/2-45}px,60px) scale(1.3)`;
+  TR={k,p,round:0,hits:0,perf:0,t0:now(),c:.5,over:false,res:[]};newZone();
+  $("trtap").addEventListener("pointerdown",e=>{e.preventDefault();trTap()});
+  const loop=()=>{if(!TR||TR.over)return;const x=(Math.sin((now()-TR.t0)/1000*T.sp*(1+TR.round*.08))+1)/2;TR.x=x;$("trk").style.left=(x*100)+"%";requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+function newZone(){TR.c=.15+Math.random()*.7;const z=$("trz"),T=TAL[TR.k];z.style.left=((TR.c-T.zone/2)*100)+"%";z.style.width=(T.zone*100)+"%"}
+function trTap(){if(!TR||TR.over||TR.lock)return;const T=TAL[TR.k],d=Math.abs(TR.x-TR.c);let r;
+  if(d<T.zone/6){r="PERFECT! 🌟";TR.hits++;TR.perf++;gAnim(T.anim);sfx("win")}else if(d<T.zone/2){r="Nice! ✨";TR.hits++;gAnim(T.anim);sfx("hit")}else{r="Miss 💫";gAnim("flinch")}
+  TR.res.push(r[0]==="M"?"·":r[0]==="P"?"🌟":"✨");$("trs").textContent=TR.res.join(" ");$("trm").textContent=r;const b=$("trbar").getBoundingClientRect();if(r[0]!=="M")particle(pick(Math.random,T.fx),b.left+TR.x*b.width,b.top-10,"float",null,900);
+  TR.round++;TR.lock=1;setTimeout(()=>{if(!TR)return;TR.lock=0;if(TR.round>=6)trEnd();else{$("trr").textContent=TR.round+1;newZone()}},450)}
+function trEnd(){TR.over=true;const p=TR.p,T=TAL[TR.k],xp=TR.hits*4+TR.perf*3+2,l0=tLv(p,TR.k);p.tal[TR.k]=(p.tal[TR.k]||0)+xp;const l1=tLv(p,TR.k);
+  p.energy=Math.max(0,p.energy-10);p.happy=Math.min(100,p.happy+6);S.v8.st.train++;if(l1>l0)typeof jlog==="function"&&jlog(p,T.e,`${T.n} talent reached level ${l1}`);save();
+  gameShell(`<div class="gh"><span>${T.e} ${T.n} practice</span><span></span></div><div style="padding:14px;text-align:center">${petSVG(SPECIES[p.sp],Math.max(1,p.stage),p.variant,"happy").replace("<svg",'<svg class="pop" style="width:140px"')}
+   <h2 style="margin:4px">${TR.hits>=5?"🌟 Showstopper!":TR.hits>=3?"🎉 Getting good!":"🙂 Keep practicing!"}</h2><div class="card">${TR.res.join(" ")}<br>${T.e} +${xp} ${T.n} XP · Level <b>${l1}</b>${l1>l0?" ⬆️ LEVEL UP!":""}<div class="bar"><i style="width:${l1>=10?100:(((p.tal[TR.k]/8)**.5-l1)*100)}%;background:#ffd86b"></i></div><span class="muted">💖 +6 · ⚡ -10</span></div>
+   <div class="row" style="justify-content:center"><button class="btn gold" onclick="train('${TR.k}')">Again</button><button class="btn ghost" onclick="TR=null;closeGame();tab='talent';render()">Done</button></div></div>`);if(l1>l0)sfx("evolve")}
+const NPCN=["Glimmer","Bopsy","Zuzu","Nova","Pip","Quasi","Mochi","Twink","Orbo","Lulu","Fizz","Kiki"];
+function npcs(){const r=rng(weekNo()*131+7);const wk=weekNo();return[0,1,2].map(i=>{const sp=SPECIES[Math.floor(r()*BASE_N)],t=pick(r,Object.keys(TAL));return{nick:pick(r,NPCN)+" "+["the Great","Jr.","Star","the Bold","Sparkle"][Math.floor(r()*5)],sp,t,base:38+i*9+r()*14,v:pick(r,["radiant","classic","wild"])}})}
+function showScore(p,k){return 30+tLv(p,k)*7+p.happy*.1+Math.random()*18+(p.traits||[]).includes("Playful")*3}
+function viewTalent(){const v=S.v8,wk=weekNo(),done=v.show.wk===wk,ok=S.pets.filter(p=>p.stage>0&&!p.exp);if(TSEL.p>=S.pets.length)TSEL.p=0;
+  const p=S.pets[cur];
+  return`<div class="card"><h3>🎭 Talent Show</h3><div class="muted">Train a pet's talents, then enter the weekly Cosmic Talent Show against NPC pets for ⭐ and trophies!</div></div>
+  ${p&&p.stage>0?`<div class="card"><b>🏋️ Train ${p.nick}</b> <span class="muted">(switch pet on the Nest tab)</span><div class="talg">${Object.keys(TAL).map(k=>`<button class="talb" onclick="train('${k}')"><b>${TAL[k].e}</b>${TAL[k].n}<small>Lv ${tLv(p,k)}${tLv(p,k)>=10?" MAX":""}</small><div class="bar"><i style="width:${tLv(p,k)*10}%;background:#ff7ad9"></i></div></button>`).join("")}</div><div class="muted">Each practice: −10⚡ +6💖</div></div>`:'<div class="card muted">Hatch a pet to start training.</div>'}
+  <div class="card"><div class="row" style="justify-content:space-between"><b>🏟️ This week's show</b><span class="muted">resets in ${fmtDur(bannerEnds())}</span></div>
+   <div class="muted" style="margin:4px 0">Rivals:</div>${npcs().map(n=>`<div class="npc">${petSVG(n.sp,4,n.v,"happy")}<div><b>${n.nick}</b><div class="muted">${n.sp.name} · ${TAL[n.t].e} ${TAL[n.t].n}</div></div></div>`).join("")}
+   ${done?`<div class="card" style="margin-top:8px">✅ Entered with <b>${v.show.pet}</b> — placed <b>${["🥇 1st","🥈 2nd","🥉 3rd","4th"][v.show.place]}</b>. Come back next week!</div>`
+   :ok.length?`<div style="margin-top:8px"><b style="font-size:13px">Your entry</b></div><div class="row wrap">${S.pets.map((q,i)=>q.stage>0&&!q.exp?`<button class="chip big2 ${TSEL.p===i?"on":""}" onclick="TSEL.p=${i};render()">${q.nick}</button>`:"").join("")}</div>
+    <div class="row wrap">${Object.keys(TAL).map(k=>`<button class="chip big2 ${TSEL.t===k?"on":""}" onclick="TSEL.t='${k}';render()">${TAL[k].e} ${TAL[k].n} Lv${S.pets[TSEL.p]&&S.pets[TSEL.p].tal?tLv(S.pets[TSEL.p],k):0}</button>`).join("")}</div>
+    <button class="btn gold" style="width:100%;margin-top:8px" onclick="enterShow()">🎤 Enter the show!</button>`:'<p class="muted">No hatched pets at home to enter.</p>'}</div>
+  <div class="card"><b>🏆 Trophy case</b> <span class="muted">${v.tro.length} trophies · also displayed in the 🏛️ Museum</span><div class="row wrap" style="margin-top:6px">${v.tro.map(t=>`<span class="chip" title="${t.pet}">${t.e} ${t.pet}</span>`).join("")||'<span class="muted">Win a show to earn your first!</span>'}</div></div>`}
+function enterShow(fast){const v=S.v8,wk=weekNo();if(v.show.wk===wk)return;const p=S.pets[TSEL.p];if(!p||p.stage===0||p.exp)return;const k=TSEL.t;
+  const L=npcs().map(n=>({nick:n.nick,sp:n.sp,v:n.v,t:n.t,sc:Math.round(n.base+Math.random()*25)})),me={nick:p.nick,sp:SPECIES[p.sp],v:p.variant,t:k,sc:Math.round(showScore(p,k)),me:1};
+  const all=L.concat([me]),order=all.slice().sort(()=>Math.random()-.5),rank=all.slice().sort((a,b)=>b.sc-a.sc),place=rank.indexOf(me);
+  const RW=[{s:30,e:"🏆",n:"Gold Trophy"},{s:15,e:"🥈",n:"Silver Trophy"},{s:8,e:"🥉",n:"Bronze Trophy"},{s:3}],rw=RW[place];
+  v.show={wk,pet:p.nick,place,k};S.stars+=rw.s;if(rw.e)v.tro.push({e:rw.e,n:rw.n,pet:p.nick,sp:p.sp,t:k,wk,d:Date.now()});v.st.shows++;if(place===0)v.st.wins++;
+  p.happy=Math.min(100,p.happy+10);typeof jlog==="function"&&jlog(p,rw.e||"🎭",`Performed ${TAL[k].n} at the Cosmic Talent Show — placed ${["1st","2nd","3rd","4th"][place]}`);save();
+  const D=fast?1:900;let i=0;const shown=[];
+  const draw=(act)=>modal(`<h2>🎭 Cosmic Talent Show</h2><div class="showstage">${act?`<div class="perf">${petSVG(act.sp,4,act.v,"happy","pop").replace("<svg",'<svg class="dance"')}<div class="fxl">${TAL[act.t].fx.join(" ")}</div><b>${act.nick}</b> ${TAL[act.t].e} ${TAL[act.t].n}</div>`:"<div class='perf'>🎪 Curtain up!</div>"}</div>
+    <div class="board">${shown.map(a=>`<div class="${a.me?"me":""}"><span>${a.nick}</span><b>${a.sc}</b></div>`).join("")}</div>`);
+  draw(null);const step=()=>{if(i<order.length){const a=order[i++];draw(a);sfx("note",i%4);setTimeout(()=>{shown.push(a);draw(a);sfx("hit");setTimeout(step,D)},D)}else{
+    sfx(place===0?"win":place<3?"reveal":"lose","epic");modal(`<h2>${place===0?"🏆 Champion!":place<3?"🎉 On the podium!":"🙂 Great effort!"}</h2>
+    <div class="podium">${rank.map((a,j)=>`<div class="pod ${a.me?"me":""}">${j<3?["🥇","🥈","🥉"][j]:"4️⃣"} ${petSVG(a.sp,4,a.v,"happy").replace("<svg",'<svg style="width:40px;height:40px"')}<span>${a.nick}</span><b>${a.sc}</b></div>`).join("")}</div>
+    <div class="card">+${rw.s}⭐${rw.e?` · ${rw.e} ${rw.n} added to your trophy case`:""}<br><span class="muted">💖 +10 · next show in ${fmtDur(bannerEnds())}</span></div><button class="btn gold" onclick="closeM()">Bravo!</button>`)}};setTimeout(step,D)}
+// ---------- MUSEUM ----------
+const DEXM=[[25,10],[50,25],[75,50],[100,100]];
+function donate(id){const a=ARTS.find(x=>x.id===id),m=S.v8.mus;if(!a||m.don[id]||!(S.artifacts[id]>0))return;m.don[id]=Date.now();S.stars+=15;let x="";
+  if(ARTS.every(q=>m.don[q.id])&&!m.allArt){m.allArt=1;S.stars+=60;x=" · 🏛️ Collection complete! +60⭐"}save();sfx("reveal","epic");toast(`🏛️ ${a.e} ${a.n} donated! +15⭐${x}`);render()}
+function donateLotus(){const m=S.v8.mus;if(!(S.v8.inv.lotus>0)||m.fruit>=5)return;S.v8.inv.lotus--;m.fruit++;S.stars+=20;save();sfx("reveal","legendary");toast("🪷 Astral Lotus donated to the greenhouse wing! +20⭐");render()}
+function claimDex(pc){const m=S.v8.mus,t=DEXM.find(x=>x[0]===pc);if(!t||m.dex[pc]||dexN()/BASE_N*100<pc)return;m.dex[pc]=1;S.stars+=t[1];save();sfx("coin");toast(`📖 Dex ${pc}% reward: +${t[1]}⭐`);render()}
+function viewMuseum(){const m=S.v8.mus,dn=Object.keys(S.dex).filter(k=>+k<BASE_N).length,pc=dn/BASE_N*100,nd=ARTS.filter(a=>m.don[a.id]).length;
+  const leg=SPECIES.filter(s=>s.id<BASE_N&&s.rarity==="legendary"),ex=ACC.filter(a=>a.ex);
+  return`<div class="card mus-h"><h3>🏛️ Cosmic Museum</h3><div class="muted">Show off your treasures. Donate finds for rewards — your collection stays yours to admire here.</div>
+   <div class="musstats"><div><b>${nd}/${ARTS.length}</b><small>artifacts</small></div><div><b>${S.v8.tro.length}</b><small>trophies</small></div><div><b>${Math.round(pc)}%</b><small>Star-Dex</small></div><div><b>${RECIPES.filter(r=>S.v8.book[r.id]).length}</b><small>recipes</small></div></div></div>
+  <div class="card"><b>🏺 Artifact hall</b> <span class="muted">donate each for +15⭐ · all ${ARTS.length} = +60⭐</span><div class="mgal">${ARTS.map(a=>{const own=S.artifacts[a.id]>0,d=m.don[a.id];
+    return`<div class="case ${d?"don":own?"own":""}"><b>${own||d?a.e:"❔"}</b><span>${own||d?a.n:"Undiscovered"}</span>${d?'<small>🏛️ On display</small>':own?`<button class="btn sm gold" onclick="donate('${a.id}')">Donate</button>`:'<small>Find on expeditions</small>'}</div>`}).join("")}</div></div>
+  <div class="card"><b>🏆 Hall of fame</b><div class="mgal">${S.v8.tro.length?S.v8.tro.slice().reverse().map(t=>`<div class="case don"><b>${t.e}</b><span>${t.pet}</span><small>${TAL[t.t].e} ${t.n}</small></div>`).join(""):'<span class="muted">Trophies from the 🎭 Talent Show appear here.</span>'}</div></div>
+  <div class="card"><b>💎 Rare items</b><div class="mgal">${ex.map(a=>`<div class="case ${S.accOwned[a.id]?"don":""}"><b>${S.accOwned[a.id]?"👑":"❔"}</b><span>${S.accOwned[a.id]?a.n:"???"}</span><small>exclusive accessory</small></div>`).join("")}
+    ${leg.map(s=>`<div class="case ${S.dex[s.id]?"don":""}">${S.dex[s.id]?petSVG(s,4,"radiant","happy").replace("<svg",'<svg style="width:44px;height:44px"'):"<b>❔</b>"}<span>${S.dex[s.id]?s.name:"???"}</span><small>legendary</small></div>`).join("")}
+    <div class="case ${m.fruit?"don":""}"><b>🪷</b><span>Lotus greenhouse ${m.fruit}/5</span>${S.v8.inv.lotus>0&&m.fruit<5?`<button class="btn sm gold" onclick="donateLotus()">Donate +20⭐</button>`:"<small>grow Astral Lotus</small>"}</div></div></div>
+  <div class="card"><b>📖 Star-Dex wing</b> <span class="muted">${dn}/${BASE_N} species</span><div class="bar"><i style="width:${pc}%;background:#ffd86b"></i></div><div class="row wrap" style="margin-top:8px">${DEXM.map(([p,s])=>m.dex[p]?`<span class="chip">✓ ${p}%</span>`:`<button class="chip big2 ${pc>=p?"":"off"}" onclick="claimDex(${p})">${p}% → ${s}⭐</button>`).join("")}</div></div>`}
+// ---------- NAV ----------
+Object.assign(SUBS,{garden:["🌱","Garden","Grow alien fruit"],kitchen:["🍳","Kitchen","Cook meals & buffs"],talent:["🎭","Talent Show","Train & compete weekly"],museum:["🏛️","Museum","Artifacts & trophies"]});
+{const a=SUBS.about;delete SUBS.about;SUBS.about=a}
+const VIEW8={garden:viewGarden,kitchen:viewKitchen,talent:viewTalent,museum:viewMuseum};
+const _viewOf8=viewOf;viewOf=function(t){if(VIEW8[t])return back()+VIEW8[t]();return _viewOf8(t)};
+const _viewMore8=viewMore;viewMore=function(){let h=_viewMore8();const rd=S.v8.plots.filter(pl=>pl.sd&&plotState(pl).ready).length;
+  if(rd)h=h.replace("<small>Grow alien fruit</small>",`<small style="color:#8dff8a">🧺 ${rd} ready to harvest!</small>`);return h};
+// ---------- NEW MINIGAMES ----------
+GAMES.push({id:"match",e:"💎",n:"Nebula Match",d:"Swap neighbouring gems to line up 3 or more. Chain combos for big points! (45s)",max:60},
+  {id:"slide",e:"🧩",n:"Star Slider",d:"Slide the tiles to put the planets back in order 1→8. Fewer moves = more points; solve as many as you can! (75s)",max:40});
+{const a=ACH.find(x=>x.id==="allgames");if(a)a.d="Play all "+GAMES.length+" minigames"}
+const GEMS=["🪐","⭐","🌙","☄️","💎"];
+function gMatch(ga){G.dur=45000;const N=6;let B=[],sel=null,lock=false;const rnd=()=>Math.floor(Math.random()*GEMS.length);
+  for(let r=0;r<N;r++){B[r]=[];for(let c=0;c<N;c++){let g;do g=rnd();while((c>1&&B[r][c-1]===g&&B[r][c-2]===g)||(r>1&&B[r-1][c]===g&&B[r-2][c]===g));B[r][c]=g}}
+  ga.innerHTML=`<div class="m3" id="m3"></div>`+gpetHTML()+`<div class="muted" id="m3m" style="position:absolute;bottom:100px;width:100%;text-align:center">Tap a gem, then a neighbour to swap</div>`;
+  $("gpet").style.transform=`translate(${G.w/2-45}px,${G.h-100}px)`;const el=$("m3");
+  const draw=(clr)=>{el.innerHTML=B.map((row,r)=>row.map((g,c)=>`<div class="g3 ${sel&&sel[0]===r&&sel[1]===c?"sel":""} ${clr&&clr.has(r*N+c)?"clr":""}" data-r="${r}" data-c="${c}">${g<0?"":GEMS[g]}</div>`).join("")).join("")};
+  const find=()=>{const s=new Set();for(let r=0;r<N;r++)for(let c=0;c<N;c++){const g=B[r][c];if(g<0)continue;
+    if(c<N-2&&B[r][c+1]===g&&B[r][c+2]===g){let k=c;while(k<N&&B[r][k]===g)s.add(r*N+k++)}if(r<N-2&&B[r+1][c]===g&&B[r+2][c]===g){let k=r;while(k<N&&B[k][c]===g)s.add(k++*N+c)}}return s};
+  const resolve=(chain)=>{const s=find();if(!s.size){lock=false;draw();return}if(G.over)return;draw(s);const pts=s.size*(chain+1);
+    const r0=el.getBoundingClientRect(),[a]=[...s];addScore(pts,r0.width/2,(Math.floor(a/N)+.5)*r0.height/N+r0.top-ga.getBoundingClientRect().top);gAnim(chain?"i-spin":"i-bounce");if(chain)$("m3m").textContent="Combo ×"+(chain+1)+"! ✨";
+    setTimeout(()=>{s.forEach(i=>B[Math.floor(i/N)][i%N]=-1);for(let c=0;c<N;c++){const col=[];for(let r=N-1;r>=0;r--)if(B[r][c]>=0)col.push(B[r][c]);for(let r=N-1,j=0;r>=0;r--,j++)B[r][c]=j<col.length?col[j]:rnd()}draw();setTimeout(()=>resolve(chain+1),180)},260)};
+  el.addEventListener("pointerdown",e=>{const t=e.target.closest(".g3");if(!t||lock||G.over)return;const r=+t.dataset.r,c=+t.dataset.c;
+    if(!sel){sel=[r,c];sfx("tap");draw();return}const [r1,c1]=sel;sel=null;if(Math.abs(r-r1)+Math.abs(c-c1)!==1){sel=[r,c];draw();return}
+    [B[r][c],B[r1][c1]]=[B[r1][c1],B[r][c]];if(find().size){lock=true;$("m3m").textContent="Nice!";resolve(0)}else{[B[r][c],B[r1][c1]]=[B[r1][c1],B[r][c]];sfx("miss");draw();const q=el.children[r*N+c];q&&q.classList.add("no")}});
+  draw();G.m3={B,find,N}}
+function gSlide(ga){G.dur=75000;let T,blank,moves=0,solved=0;const PL=["🪐","🌍","🌙","☀️","⭐","☄️","🌌","💫"];
+  const fresh=()=>{T=[1,2,3,4,5,6,7,8,0];blank=8;let last=-1;for(let i=0;i<40;i++){const nb=nbrs(blank).filter(x=>x!==last);const n=pick(Math.random,nb);last=blank;T[blank]=T[n];T[n]=0;blank=n}if(T.join()==="1,2,3,4,5,6,7,8,0")return fresh();moves=0};
+  const nbrs=b=>{const r=Math.floor(b/3),c=b%3,o=[];if(r)o.push(b-3);if(r<2)o.push(b+3);if(c)o.push(b-1);if(c<2)o.push(b+1);return o};
+  ga.innerHTML=`<div class="sl3" id="sl3"></div><div class="muted" id="slm" style="position:absolute;top:8px;width:100%;text-align:center">Order: ${PL.map((p,i)=>(i+1)+p).join(" ")}</div>`+gpetHTML();
+  $("gpet").style.transform=`translate(${G.w/2-45}px,${G.h-100}px)`;const el=$("sl3");
+  const draw=()=>{el.innerHTML=T.map((v,i)=>`<div class="t3 ${v?"":"bl"} ${v&&v===i+1?"ok":""}" data-i="${i}">${v?`<b>${PL[v-1]}</b><small>${v}</small>`:""}</div>`).join("")};
+  el.addEventListener("pointerdown",e=>{const t=e.target.closest(".t3");if(!t||G.over)return;const i=+t.dataset.i;if(!nbrs(blank).includes(i)){sfx("miss");return}
+    T[blank]=T[i];T[i]=0;blank=i;moves++;sfx("tap");draw();if(T.join()==="1,2,3,4,5,6,7,8,0"){solved++;const pts=10+Math.max(0,20-Math.floor(moves/2));const r=el.getBoundingClientRect(),ar=ga.getBoundingClientRect();addScore(pts,r.width/2+r.left-ar.left,r.top-ar.top+r.height/2);gAnim("i-spin");sfx("win");
+      $("slm").textContent=`Solved in ${moves} moves! Next puzzle…`;setTimeout(()=>{if(!G||G.over)return;fresh();draw()},900)}});
+  fresh();draw();G.sl={get T(){return T},set:(a)=>{T=a;blank=a.indexOf(0);draw()}}}
+GFN.match=gMatch;GFN.slide=gSlide;
+// lucky buff: +1 star on minigames
+const _endGame8=endGame;endGame=function(){if(!G||G.over)return;const p=S.pets[cur];_endGame8();if(p&&p.buffs&&buffsOn(p).includes("lucky")){S.stars+=1;save();setTimeout(()=>{const c=document.querySelector("#game .card");c&&c.insertAdjacentHTML("beforeend",'<div style="margin-top:6px;color:#8dff8a">🍀 Lucky buff: +1⭐</div>')},480)}};
+// ---------- ACH & CHANGELOG ----------
+ACH.push({id:"harv1",e:"🧺",n:"Green Thumb",d:"Harvest your first garden crop",r:10,c:()=>S.v8&&S.v8.st.harv>=1},
+ {id:"chef5",e:"👩‍🍳",n:"Star Chef",d:"Discover 5 recipes",r:25,c:()=>S.v8&&RECIPES.filter(r=>S.v8.book[r.id]).length>=5},
+ {id:"show1",e:"🎭",n:"Showtime",d:"Win a Cosmic Talent Show",r:25,c:()=>S.v8&&S.v8.st.wins>=1},
+ {id:"cur1",e:"🏛️",n:"Curator",d:"Donate an artifact to the Museum",r:10,c:()=>S.v8&&Object.keys(S.v8.mus.don).length>=1});
+CHANGES.unshift(["8.0","Space garden & alien fruit, cosmic kitchen with recipe book & meal buffs, weekly Talent Show with training, Museum with donations, Nebula Match & Star Slider minigames"]);
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
