@@ -315,6 +315,11 @@ nav button{font-size:11.5px}nav button b{font-size:21px}
 .g3.hint{animation:hintp .4s ease-in-out 4 alternate;background:#8dff8a55}
 @keyframes hintp{to{transform:scale(1.15)}}
 .m3.shuf{animation:shuf .25s 2}@keyframes shuf{25%{transform:translateX(-50%) rotate(-3deg)}75%{transform:translateX(-50%) rotate(3deg)}}
+
+.petbox .brth,.stage .brth,#mbox svg.pet .brth{transform-box:view-box;transform-origin:100px 168px;animation:brth 3.6s ease-in-out infinite}
+@keyframes brth{50%{transform:scale(1.018,1.028)}}
+body.lowfx .brth{animation:none!important}body.lowfx .pfx{filter:none!important}
+@media (prefers-reduced-motion:reduce){.brth{animation:none!important}}
 </style></head><body>
 <div id="app">
 <header><h1>✦ GachiGacha</h1><div class="row"><span class="pill" id="clock"></span><span class="pill">⭐ <span id="stars">0</span></span></div></header>
@@ -1607,7 +1612,7 @@ ACH.push({id:"photo1",n:"Say Cheese!",d:"Take a photo in Photo mode",e:"📸",r:
  {id:"evegg",n:"Limited Edition",d:"Get an event-species egg",e:"🎟️",r:10,c:()=>SPECIES.some(s=>s&&s.ev&&S.dex[s.id])});
 
 // ================= v7: pet journal & keepsakes, species features, about, photo fixes, perf =================
-const VERSION="9.0";
+const VERSION="10.0";
 // ---------- SPECIES FEATURES ----------
 const FEAT={
  arms:{n:"little arms",b:(a,b)=>"",f:(a,b)=>`<g class="ft-arms"><ellipse cx="44" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(-30 44 120)"/><ellipse cx="156" cy="120" rx="15" ry="8" fill="${a}" stroke="#0003" stroke-width="2" transform="rotate(30 156 120)"/></g>`},
@@ -1997,6 +2002,127 @@ PH_TINT["ev-harvest"]=g=>{const gr=g.createLinearGradient(0,0,0,g.canvas.height)
 // harvest event: +1 fruit per garden harvest
 const _harvest9=harvest;harvest=function(i){const pl=S.v8.plots[i],k=pl&&pl.sd,b=k?S.v8.inv[k]||0:0;_harvest9(i);const ev=evNow();if(k&&ev&&ev.k==="harvest"&&(S.v8.inv[k]||0)>b){S.v8.inv[k]++;save();setTimeout(()=>toast(`🌾 Starfall Harvest bonus: +1 ${FRUITS[k].e}`),1900)}};
 CHANGES.unshift(["9.0","6 new species, Starfall Harvest event (Nov) with Harvestar, Nursery babies inherit features from both parents, Nebula Match hints & auto-shuffle, difficulty & talent-show balance, shorter pairing rest (6h), polish"]);
+
+// ================= v10: realistic pet rendering =================
+const petSVGOld=petSVG;
+function hx(c){c=(c||"#888").replace("#","");if(c.length===3)c=c.split("").map(x=>x+x).join("");const n=parseInt(c.slice(0,6),16);return[n>>16&255,n>>8&255,n&255]}
+function mix(a,b,t){const A=hx(a),B=hx(b);return"#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("")}
+const IRIS=["#e8a93a","#3f9de0","#55c464","#b36bff","#ff6a3d","#d8d23a","#2fd1c0"];
+function texOf(s){if(s.body==="ghost"||s.body==="drop")return"jelly";if(s.body==="star")return"energy";if(s.body==="square")return"chitin";return["fur","scales","speckle","fur"][hash(s.name+"tx")%4]}
+let R10N=0;
+function R10(s,stage,variant,mood,cls){
+  const lo=!!S.lowfx,big=/\bpet\b/.test(cls||"")&&!lo,h=hash(s.name),u="r"+s.id+"_"+(R10N++).toString(36);
+  const c1=s.c1,c2=s.c2,L1=mix(c1,"#ffffff",.42),D1=mix(c1,"#140a2a",.55),L2=mix(c2,"#ffffff",.4),D2=mix(c2,"#140a2a",.5),line=mix(c1,"#0a0518",.72);
+  const grad=(id,l,m,d)=>`<radialGradient id="${id}" cx=".34" cy=".28" r=".9" fx=".3" fy=".24"><stop offset="0" stop-color="${l}"/><stop offset=".45" stop-color="${m}"/><stop offset="1" stop-color="${d}"/></radialGradient>`;
+  const shadow=(rx)=>`<ellipse cx="100" cy="173" rx="${rx}" ry="${rx*.17}" fill="url(#cs${u})"/>`;
+  let D=`<radialGradient id="cs${u}"><stop offset="0" stop-color="#05020f" stop-opacity=".62"/><stop offset=".55" stop-color="#05020f" stop-opacity=".28"/><stop offset="1" stop-color="#05020f" stop-opacity="0"/></radialGradient>`;
+  if(stage===0){
+    D+=`<radialGradient id="eg${u}" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="${mix(c1,"#fff",.75)}"/><stop offset=".5" stop-color="${mix(c1,"#fff",.2)}"/><stop offset="1" stop-color="${mix(c1,"#1a0d33",.5)}"/></radialGradient>${grad("es"+u,L2,c2,D2)}
+    <radialGradient id="eh${u}"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>`;
+    const r=rng(h),sp=Array.from({length:lo?4:9},()=>{const x=62+r()*76,y=58+r()*92,rr=2+r()*7;return`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${rr.toFixed(1)}" ry="${(rr*.8).toFixed(1)}" fill="url(#es${u})" opacity=".85"/>`}).join("");
+    const E="M100 35 C140 35 155 110 150 135 C145 170 55 170 50 135 C45 110 60 35 100 35Z";
+    return`<svg class="${cls||''}" viewBox="0 0 200 200"><defs>${D}<clipPath id="ec${u}"><path d="${E}"/></clipPath></defs>${shadow(52)}
+    <path d="${E}" fill="url(#eg${u})"/><g clip-path="url(#ec${u})">${sp}<ellipse cx="100" cy="168" rx="70" ry="34" fill="#0b0420" opacity=".22"/><path d="${E}" fill="none" stroke="${mix(c2,"#fff",.5)}" stroke-width="5" opacity=".35" transform="translate(3 4)"/></g>
+    <ellipse cx="80" cy="70" rx="14" ry="22" transform="rotate(25 80 70)" fill="url(#eh${u})"/><path d="${E}" fill="none" stroke="${RAR[s.rarity].c}" stroke-width="2.5" opacity=".9"/>
+    <path class="crack" d="M58 105 L75 96 L86 110 L100 94 L113 112 L126 98 L143 108" stroke="#2a1a45" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>`}
+  const sc=[0,.62,.78,.9,1][stage],sx=[1,1,.97,.94,.91][stage],tex=texOf(s),glowy=tex==="jelly"||tex==="energy";
+  const bp=bodyPath(s.body);
+  D+=grad("B"+u,L1,c1,D1)+grad("A"+u,L2,c2,D2)+
+   `<linearGradient id="ao${u}" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#0b0420" stop-opacity="0"/><stop offset="1" stop-color="#0b0420" stop-opacity=".42"/></linearGradient>
+   <linearGradient id="rim${u}" x1="0" y1="0" x2="1" y2="1"><stop offset=".55" stop-color="${L2}" stop-opacity="0"/><stop offset="1" stop-color="${mix(c2,"#fff",.6)}" stop-opacity=".9"/></linearGradient>
+   <radialGradient id="sp${u}"><stop offset="0" stop-color="#fff" stop-opacity="${tex==="chitin"||tex==="jelly"?.85:.5}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+   <radialGradient id="bl${u}"><stop offset="0" stop-color="${mix(c1,"#ff3d6a",.55)}" stop-opacity=".45"/><stop offset="1" stop-color="${mix(c1,"#ff3d6a",.55)}" stop-opacity="0"/></radialGradient>
+   <radialGradient id="ir${u}" cx=".45" cy=".42"><stop offset="0" stop-color="${mix(IRIS[h%7],"#fff",.45)}"/><stop offset=".55" stop-color="${IRIS[h%7]}"/><stop offset="1" stop-color="${mix(IRIS[h%7],"#000",.6)}"/></radialGradient>
+   <radialGradient id="sc${u}" cx=".4" cy=".35"><stop offset=".5" stop-color="#fbf8ff"/><stop offset="1" stop-color="#bdb3cf"/></radialGradient>
+   <clipPath id="cb${u}"><path d="${bp}"/></clipPath>`;
+  if(glowy)D+=`<radialGradient id="gl${u}"><stop offset="0" stop-color="${L2}" stop-opacity=".55"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient><radialGradient id="cr${u}" cx=".5" cy=".55"><stop offset="0" stop-color="${mix(c2,"#fff",.7)}" stop-opacity=".9"/><stop offset=".6" stop-color="${c2}" stop-opacity=".25"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient>`;
+  if(!lo){const dk="#0b0420";
+    if(tex==="fur")D+=`<pattern id="tx${u}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(${h%40-20})"><path d="M1 8 l2 -6 M5 9 l1.5 -6 M7.5 5 l1 -4" stroke="${dk}" stroke-opacity=".2" stroke-width="1.1" stroke-linecap="round"/><path d="M2.5 7 l1.6 -5" stroke="#fff" stroke-opacity=".14" stroke-width=".8"/></pattern>`;
+    if(tex==="scales")D+=`<pattern id="tx${u}" width="12" height="10" patternUnits="userSpaceOnUse"><path d="M0 10 A6 6 0 0 1 12 10 M-6 5 A6 6 0 0 1 6 5 M6 5 A6 6 0 0 1 18 5" fill="none" stroke="${dk}" stroke-opacity=".25" stroke-width="1"/><path d="M2 9 A5 5 0 0 1 8 6" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="1"/></pattern>`;
+    if(tex==="speckle"){const r=rng(h+7);D+=`<pattern id="tx${u}" width="26" height="26" patternUnits="userSpaceOnUse">${Array.from({length:7},(_,i)=>`<circle cx="${(r()*26).toFixed(1)}" cy="${(r()*26).toFixed(1)}" r="${(.6+r()*1.8).toFixed(1)}" fill="${i%3?dk:"#fff"}" fill-opacity="${i%3?.28:.25}"/>`).join("")}</pattern>`}
+    if(tex==="chitin")D+=`<pattern id="tx${u}" width="200" height="22" patternUnits="userSpaceOnUse"><path d="M0 20 Q100 13 200 20" stroke="${dk}" stroke-opacity=".35" stroke-width="1.5" fill="none"/><path d="M0 22 Q100 15 200 22" stroke="#fff" stroke-opacity=".2" stroke-width="1" fill="none"/></pattern><linearGradient id="sh${u}" x1="0" y1="0" x2="1" y2="1"><stop offset=".25" stop-color="#fff" stop-opacity="0"/><stop offset=".33" stop-color="#fff" stop-opacity=".35"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/><stop offset=".66" stop-color="#fff" stop-opacity=".18"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
+    if(big&&tex==="fur")D+=`<filter id="fu${u}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${h%50}"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>`;
+  }
+  const B=`url(#B${u})`,A=`url(#A${u})`;
+  const p=[];const pu=x=>p.push(x);
+  pu(shadow(56*sc));
+  pu(`<g transform="translate(100 168) scale(${(sc*sx).toFixed(3)} ${sc}) translate(-100 -168)"><g class="brth">`);
+  if(variant==="radiant")pu(`<radialGradient id="ra${u}"><stop offset="0" stop-color="${mix(c1,"#fff",.5)}" stop-opacity=".45"/><stop offset="1" stop-color="${c1}" stop-opacity="0"/></radialGradient><circle cx="100" cy="102" r="98" fill="url(#ra${u})"/>`);
+  if(glowy)pu(`<ellipse cx="100" cy="104" rx="88" ry="80" fill="url(#gl${u})">${big?`<animate attributeName="opacity" values=".7;1;.7" dur="3.4s" repeatCount="indefinite"/>`:""}</ellipse>`);
+  // tail
+  if(stage>=2){const t={curl:`<path d="M146 140 C176 146 192 118 180 100 C170 86 154 96 162 108" stroke="${D2}" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M146 138 C174 142 188 118 178 102" stroke="${L2}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>`,
+    spike:`<path d="M144 128 Q170 120 194 116 Q172 134 148 150Z" fill="${A}" stroke="${D2}" stroke-width="1.2"/><path d="M150 136 Q170 128 188 119" stroke="#fff" stroke-opacity=".35" stroke-width="1.5" fill="none"/>`,
+    fluff:`<circle cx="162" cy="140" r="17" fill="${A}"/>${lo?"":`<circle cx="162" cy="140" r="17" fill="url(#tx${u})" opacity=".9"/>`}`,
+    comet:`<linearGradient id="ct${u}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${L2}" stop-opacity=".1"/></linearGradient><path d="M150 132 Q184 112 196 70 Q178 122 152 146Z" fill="url(#ct${u})"/><circle cx="196" cy="70" r="5" fill="#fff"/><circle cx="196" cy="70" r="10" fill="#fff" opacity=".25"/>`}[s.tail]||"";pu(t)}
+  // legs: jointed, splayed, longer with age
+  if(s.legs){const kn=[0,5,9,13,16][stage];[-1,1].forEach(sd=>{const hx_=100+sd*26,kx=hx_+sd*kn,fx=hx_+sd*(kn*.55+4);
+    pu(`<path d="M${hx_} 138 Q${kx} ${142} ${kx} ${154} Q${kx-sd*2} ${162} ${fx} 167" stroke="${D1}" stroke-width="${13-stage}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M${hx_-sd*2} 139 Q${kx-sd*3} 143 ${kx-sd*3} 153" stroke="${L1}" stroke-opacity=".55" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="${fx+sd*3}" cy="167" rx="11" ry="5" fill="${B}" stroke="${line}" stroke-opacity=".5" stroke-width="1"/>${[-5,0,5].map(o=>`<circle cx="${fx+sd*3+o+sd*5}" cy="168.5" r="2" fill="${D1}"/>`).join("")}`)})}
+  // ears
+  const er={cat:`<path d="M60 70 Q58 44 62 30 Q80 40 90 55Z M140 70 Q142 44 138 30 Q120 40 110 55Z" fill="${B}" stroke="${line}" stroke-opacity=".4"/><path d="M64 62 Q63 46 65 38 Q76 46 82 55Z M136 62 Q137 46 135 38 Q124 46 118 55Z" fill="${mix(c2,"#ff9ab8",.4)}" opacity=".75"/>`,
+   round:`<circle cx="62" cy="55" r="17" fill="${B}" stroke="${line}" stroke-opacity=".4"/><circle cx="138" cy="55" r="17" fill="${B}" stroke="${line}" stroke-opacity=".4"/><ellipse cx="63" cy="57" rx="9" ry="10" fill="${mix(c2,"#5a2040",.35)}" opacity=".8"/><ellipse cx="137" cy="57" rx="9" ry="10" fill="${mix(c2,"#5a2040",.35)}" opacity=".8"/>`,
+   fin:`<path d="M45 100 Q22 84 15 80 Q26 106 42 125Z M155 100 Q178 84 185 80 Q174 106 158 125Z" fill="${A}" opacity=".9" stroke="${D2}" stroke-width="1"/><path d="M42 104 L22 86 M43 112 L22 96 M158 104 L178 86 M157 112 L178 96" stroke="${L2}" stroke-opacity=".6" stroke-width="1.2"/>`}[s.ears]||"";pu(er);
+  // antennae
+  if(stage>=1){const orb=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${A}"/><circle cx="${x-r*.35}" cy="${y-r*.35}" r="${r*.3}" fill="#fff" opacity=".8"/>`;
+   const an={one:`<path d="M100 46 Q106 26 100 14" stroke="${D2}" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="103" cy="30" r="2.6" fill="${D2}"/>${orb(100,12,7)}`,
+   two:`<path d="M86 48 Q80 30 72 16 M114 48 Q120 30 128 16" stroke="${D2}" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="80" cy="31" r="2.5" fill="${D2}"/><circle cx="120" cy="31" r="2.5" fill="${D2}"/>${orb(72,15,6)}${orb(128,15,6)}`,
+   horns:`<linearGradient id="hn${u}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#cfc4b0"/><stop offset="1" stop-color="#fffaf0"/></linearGradient><path d="M74 54 Q64 34 70 20 Q80 34 90 48Z M126 54 Q136 34 130 20 Q120 34 110 48Z" fill="url(#hn${u})" stroke="#6b5a40" stroke-opacity=".5"/><path d="M72 44 l9 -2 M74 36 l6 -1 M128 44 l-9 -2 M126 36 l-6 -1" stroke="#6b5a40" stroke-opacity=".45"/>`,
+   orb:`<circle cx="100" cy="14" r="13" fill="#fff" opacity=".15"/><circle cx="100" cy="14" r="8" fill="#fff" opacity=".95"/><circle cx="100" cy="14" r="8" fill="${A}" opacity=".35"/>`,
+   leaf:`<linearGradient id="lf${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff9a"/><stop offset="1" stop-color="#2f8f3a"/></linearGradient><path d="M100 46 Q78 16 100 6 Q122 16 100 46Z" fill="url(#lf${u})"/><path d="M100 44 L100 12 M100 26 l-7 -6 M100 32 l7 -6" stroke="#1d5a24" stroke-opacity=".6" stroke-width="1.2"/>`}[s.ant]||"";pu(an)}
+  // back features
+  const fs=featOf(s),fx=x=>x.split(`fill="${c1}"`).join(`fill="${B}"`).split(`fill="${c2}"`).join(`fill="${A}"`);
+  let bk="",fr="";fs.forEach(k=>{const F=FEAT[k];if(F){bk+=F.b(c1,c2);fr+=F.f(c1,c2)}});
+  if(bk)pu(`<g class="ftb">${fx(bk)}</g>`);
+  // body
+  const bod=`<path d="${bp}" fill="${B}" ${tex==="jelly"?'fill-opacity=".86"':""}/><g clip-path="url(#cb${u})">${glowy?`<ellipse cx="100" cy="112" rx="46" ry="40" fill="url(#cr${u})"/>`:""}${!lo&&tex!=="jelly"&&tex!=="energy"?`<rect x="0" y="0" width="200" height="200" fill="url(#tx${u})"/>`:""}${!lo&&tex==="chitin"?`<rect width="200" height="200" fill="url(#sh${u})"/>`:""}
+   ${s.marks==="spots"?[[70,85,8],[135,100,10],[125,140,6],[78,138,5]].map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*.8}" transform="rotate(${x} ${x} ${y})" fill="${D2}" opacity=".55"/>`).join(""):""}
+   ${s.marks==="stripe"?`<path d="M50 96 Q75 90 80 100 Q100 88 120 100 Q130 90 152 96" stroke="${D2}" stroke-width="7" fill="none" opacity=".45" stroke-linecap="round"/>`:""}
+   ${s.marks==="belly"?`<ellipse cx="100" cy="138" rx="30" ry="22" fill="${mix(c1,"#fff",.55)}" opacity=".45"/>`:""}
+   <path d="${bp}" fill="url(#ao${u})"/><ellipse cx="72" cy="68" rx="28" ry="16" transform="rotate(-32 72 68)" fill="url(#sp${u})"/>
+   <path d="${bp}" fill="none" stroke="url(#rim${u})" stroke-width="7"/></g>
+   <path d="${bp}" fill="none" stroke="${line}" stroke-opacity=".55" stroke-width="1.6"/>`;
+  pu(big&&tex==="fur"?`<g filter="url(#fu${u})" class="pfx">${bod}</g>`:bod);
+  if(fr)pu(`<g class="ftf">${fx(fr)}</g>`);
+  // eyes
+  const n=s.eyes,xs=n===1?[100]:n===2?[80,120]:[74,100,126],ey=95,sl=mood==="sleep";
+  let R=({big:13,dot:8.5,sleepy:10,sparkle:11}[s.eyeStyle]||10)*[1,1.12,1,.9,.82][stage];if(n===3)R=Math.min(R,11);
+  const pt=h%3;pu('<g class="eyes">');
+  xs.forEach((x,i)=>{const y=n===3&&i===1?ey-14:ey;const f=v=>v.toFixed(1);
+    const lidY=sl?y+R*1.05:s.eyeStyle==="sleepy"?y-R*.05:y-R*.74,op=`M${f(x-R-1.5)} ${f(y-R*.15)} Q${f(x)} ${f(y-R*1.5)} ${f(x+R+1.5)} ${f(y-R*.15)} Q${f(x)} ${f(lidY)} ${f(x-R-1.5)} ${f(y-R*.15)}Z`,cl=`M${f(x-R-1.5)} ${f(y-R*.15)} Q${f(x)} ${f(y-R*1.5)} ${f(x+R+1.5)} ${f(y-R*.15)} Q${f(x)} ${f(y+R*1.15)} ${f(x-R-1.5)} ${f(y-R*.15)}Z`;
+    pu(`<ellipse cx="${x}" cy="${f(y+1)}" rx="${f(R+3)}" ry="${f(R*.9+3)}" fill="${D1}" opacity=".55"/>`);
+    if(!sl){const ix=x+R*.06,iy=y+R*.05,ir=R*.66;
+      pu(`<ellipse cx="${x}" cy="${y}" rx="${f(R)}" ry="${f(R*.92)}" fill="url(#sc${u})"/><circle cx="${f(ix)}" cy="${f(iy)}" r="${f(ir)}" fill="url(#ir${u})" stroke="#0a0518" stroke-opacity=".55" stroke-width="${f(R*.08)}"/>`);
+      pu(pt===1?`<ellipse cx="${f(ix)}" cy="${f(iy)}" rx="${f(R*.12)}" ry="${f(R*.5)}" fill="#07030f"/>`:pt===2?`<ellipse cx="${f(ix)}" cy="${f(iy)}" rx="${f(R*.42)}" ry="${f(R*.17)}" fill="#07030f"/>`:`<circle cx="${f(ix)}" cy="${f(iy)}" r="${f(R*.32)}" fill="#07030f"/>`);
+      pu(`<ellipse cx="${f(x-R*.32)}" cy="${f(y-R*.34)}" rx="${f(R*.24)}" ry="${f(R*.16)}" transform="rotate(-25 ${f(x-R*.32)} ${f(y-R*.34)})" fill="#fff" opacity=".95"/><circle cx="${f(x+R*.32)}" cy="${f(y+R*.3)}" r="${f(R*.09)}" fill="#fff" opacity=".7"/>`);
+      if(s.eyeStyle==="sparkle")pu(`<path d="M${f(ix+R*.25)} ${f(iy-R*.05)} l${f(R*.1)} ${f(R*.2)} l${f(R*.2)} ${f(R*.1)} l${f(-R*.2)} ${f(R*.1)} l${f(-R*.1)} ${f(R*.2)} l${f(-R*.1)} ${f(-R*.2)} l${f(-R*.2)} ${f(-R*.1)} l${f(R*.2)} ${f(-R*.1)}Z" fill="#fff" opacity=".85"/>`);
+      pu(`<path d="M${f(x-R*.8)} ${f(y+R*.62)} Q${x} ${f(y+R*1.05)} ${f(x+R*.8)} ${f(y+R*.62)}" stroke="${line}" stroke-opacity=".35" stroke-width="1.2" fill="none"/>`)}
+    pu(`<path class="lid" d="${op}" fill="${B}" stroke="${line}" stroke-opacity=".7" stroke-width="1.3">${!sl&&!lo&&/pet|pop/.test(cls||"")?`<animate attributeName="d" values="${op};${op};${cl};${op}" keyTimes="0;.93;.965;1" dur="${(4+(h+i)%4*.7).toFixed(1)}s" repeatCount="indefinite"/>`:""}</path>`)});
+  pu('</g>');
+  // nose, cheeks, mouth
+  pu(`<ellipse cx="94.5" cy="113" rx="1.8" ry="1.2" fill="${line}" opacity=".55"/><ellipse cx="105.5" cy="113" rx="1.8" ry="1.2" fill="${line}" opacity=".55"/>
+   <ellipse cx="68" cy="114" rx="11" ry="7" fill="url(#bl${u})"/><ellipse cx="132" cy="114" rx="11" ry="7" fill="url(#bl${u})"/>`);
+  const my=124;pu('<g class="mouth">');
+  if(sl)pu(`<path d="M92 ${my+2} Q100 ${my+5} 108 ${my+2}" stroke="${line}" stroke-width="2" fill="none" stroke-linecap="round"/><text x="140" y="60" font-size="20" fill="#fff" opacity=".85">z</text><text x="155" y="40" font-size="14" fill="#fff" opacity=".7">z</text>`);
+  else if(mood==="sad")pu(`<path d="M89 ${my+6} Q100 ${my-1} 111 ${my+6}" stroke="${line}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M${xs[0]-4} ${ey+R+2} q-2 6 0 9" stroke="#9fdcff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>`);
+  else if(mood==="sick")pu(`<path d="M88 ${my+2} q6 -4 12 0 q6 4 12 0" stroke="${mix(line,"#3a6",.5)}" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="100" cy="105" rx="40" ry="26" fill="#6c6" opacity=".18"/>`);
+  else pu(`<path d="M89 ${my} Q100 ${my+6} 111 ${my} Q100 ${my+3} 89 ${my}Z" fill="#4a1028" opacity=".85"/><path d="M93 ${my+5.5} Q100 ${my+8} 107 ${my+5.5}" stroke="#fff" stroke-opacity=".22" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M88 ${my-.5} Q100 ${my+6} 112 ${my-.5}" stroke="${line}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M87 ${my-1.5} q-2 -1 -3 1 M113 ${my-1.5} q2 -1 3 1" stroke="${line}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`);
+  pu(`</g><g class="mouthO" opacity="0"><ellipse cx="100" cy="128" rx="12" ry="10" fill="#3a0a20" stroke="${line}" stroke-width="1.5"/><ellipse cx="100" cy="133" rx="7" ry="4" fill="#ff7a9a"/></g>`);
+  if(variant==="radiant")pu(`<path d="M100 0 l3.5 9 l9 3 l-9 3 l-3.5 9 l-3.5 -9 l-9 -3 l9 -3z" fill="#ffe9a0"/><circle cx="100" cy="12" r="12" fill="#fff4c0" opacity=".25"/>`);
+  if(variant==="wild")pu(`<path d="M58 54 l-7 -12 l4 9 l-9 -6 M142 54 l7 -12 l-4 9 l9 -6 M90 44 l-2 -9 M110 44 l3 -8" stroke="${D1}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`);
+  pu(`</g></g>`);
+  return`<svg class="${cls||''}" viewBox="0 0 200 200"><defs>${D}</defs>${p.join("")}</svg>`}
+// realistic feature overrides (arms with elbows & fingers, eye-stalks with irises)
+FEAT.arms.f=(a,b)=>`<g class="ft-arms">${[-1,1].map(sd=>{const sx=100+sd*50,ex=100+sd*62,hx_=100+sd*56;return`<path d="M${sx} 110 Q${ex} 116 ${ex} 126 Q${ex} 134 ${hx_} 140" stroke="${mix(a,"#140a2a",.4)}" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M${sx-sd} 109 Q${ex-sd*3} 114 ${ex-sd*3} 124" stroke="${mix(a,"#fff",.4)}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/><circle cx="${hx_}" cy="141" r="6" fill="${a}"/>${[-4,0,4].map(o=>`<circle cx="${hx_+o}" cy="${145+Math.abs(o)*-.3}" r="1.8" fill="${mix(a,"#140a2a",.45)}"/>`).join("")}`}).join("")}</g>`;
+FEAT.stalks.b=(a,b)=>`<path d="M78 60 Q70 30 56 24 M122 60 Q130 30 144 24" stroke="${mix(a,"#140a2a",.35)}" stroke-width="6" fill="none" stroke-linecap="round"/>${[56,144].map(x=>`<circle cx="${x}" cy="22" r="9.5" fill="#f4f0fa" stroke="#0a0518" stroke-opacity=".5"/><circle cx="${x+1}" cy="23" r="5.5" fill="${b}"/><circle cx="${x+1}" cy="23" r="2.6" fill="#07030f"/><circle cx="${x-2.5}" cy="19" r="2" fill="#fff"/>`).join("")}`;
+const SVG10=new Map();
+petSVG=function(sp,stage,variant,mood,cls){if(!sp)return petSVGOld(sp,stage,variant,mood,cls);stage=stage|0;
+  const key=sp.id+"|"+sp.name+"|"+sp.c1+sp.c2+"|"+stage+"|"+variant+"|"+mood+"|"+cls+"|"+(S&&S.lowfx?1:0);let v=SVG10.get(key);
+  if(!v){v=R10(sp,stage,variant,mood,cls);if(SVG10.size>500)SVG10.clear();SVG10.set(key,v)}return v};
+function setLowfx(on){S.lowfx=!!on;SVG10.clear();document.body.classList.toggle("lowfx",S.lowfx);save();render()}
+const _viewSet10=viewSet;viewSet=function(){return`<div class="card"><h3>🎨 Pet graphics</h3><div class="row" style="justify-content:space-between"><span>Detail level<div class="muted">Low = no fur texture, blinking or breathing. Use on slower phones.</div></span><button class="tog ${S.lowfx?"":"on"}" onclick="setLowfx(!S.lowfx)">${S.lowfx?"LOW":"HIGH"}</button></div></div>`+_viewSet10()};
+const _render10=render;render=function(){if(S)document.body.classList.toggle("lowfx",!!S.lowfx);_render10()};
+CHANGES.unshift(["10.0","Big visual upgrade: pets now have realistic shading and lighting, contact shadows, fur/scale/chitin/speckle textures, glowing jelly & energy bodies, detailed eyes that blink, jointed legs & arms, longer adult proportions and gentle breathing. New Settings → Pet graphics detail toggle for slower phones."]);
 
 load();tick();save();render();requestAnimationFrame(loop);
 setInterval(()=>{tick();save();flush();if(busy){$("stars").textContent=S.stars;return}if($("modal").style.display!=="flex"&&!document.activeElement.matches?.("input"))refresh()},1000);
